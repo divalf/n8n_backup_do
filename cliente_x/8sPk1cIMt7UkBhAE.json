@@ -1,0 +1,913 @@
+{
+  "createdAt": "2024-12-22T01:20:14.845Z",
+  "updatedAt": "2024-12-22T01:22:13.185Z",
+  "id": "8sPk1cIMt7UkBhAE",
+  "name": "Central de Status - Eric",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "[live]clientes_whatsapp",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "number",
+              "keyValue": "={{ $('variaveisFluxo').item.json.number }}"
+            }
+          ]
+        }
+      },
+      "id": "357d7272-76cb-4fc4-bc2f-497be42961cd",
+      "name": "getUsers",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        460,
+        280
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "W40Vqz7D7quG7v0S",
+          "name": "Supabase - LNC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ea7278df-e0c1-4790-bb9d-2157c9a173b3",
+              "leftValue": "={{ $json.number }}",
+              "rightValue": "={{ $('variaveisFluxo').item.json.number.split('@')[0] }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "fb6c3ade-7465-46b8-80ee-c1e3440259ee",
+      "name": "Usuário está cadastrado?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "tableId": "[live]clientes_whatsapp",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "number",
+              "fieldValue": "={{ $('variaveisFluxo').item.json.number }}"
+            },
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $('variaveisFluxo').item.json.nomeLead }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "agent_ai"
+            }
+          ]
+        }
+      },
+      "id": "c7bb0004-ac3c-40cd-afae-87f13c89e318",
+      "name": "cadastraUser",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"mensagemLead\":{\n    \"texto\":\"{{ $('Webhook').item.json.body.data.message.conversation.split('\\n').join('\\\\n') }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "id": "6f82eac0-133e-449c-9ee2-42c76b25df53",
+      "name": "texto",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1520,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "612c4f6e-f9c1-440f-9445-b04adde5c1dd",
+              "name": "audio",
+              "value": "={{ $('Webhook').item.json.body.data.message.base64 }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5bbc7744-b234-492d-8270-ecda701eb4a2",
+      "name": "salvarArquivo",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1520,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a5eab799-9ac7-43ea-95dc-3d3cfb569127",
+              "name": "img",
+              "value": "={{ $('Webhook').item.json.body.data.message.base64 }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fba9bbbd-6e6c-4538-bf42-8ed1ff8ae3d7",
+      "name": "salvarArquivo1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1520,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5fbc3a41-1af9-407c-a177-58582ed3cfdb",
+              "leftValue": "={{ $('Webhook').item.json.body.data.message.imageMessage.caption }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "4d4c3ea6-ef93-4556-b5fb-3691c1eb1a8b",
+      "name": "Possui legenda?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2200,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "binaryPropertyName": "audio64",
+        "options": {}
+      },
+      "id": "9373e361-8dca-4b0c-a16f-0c2f0e7c4e56",
+      "name": "transcreveAudio",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.6,
+      "position": [
+        1980,
+        260
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "v7f08akDjfrWKlNo",
+          "name": "OpenAi account - Uso Geral 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "audio",
+        "binaryPropertyName": "audio64",
+        "options": {
+          "fileName": "teste.ogg",
+          "mimeType": "application/ogg"
+        }
+      },
+      "id": "1a4a46e3-fd31-439d-8e45-72844a48bfe3",
+      "name": "convertAudio64",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1760,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "id": "1bdb0d90-cd82-4390-90e1-de19aef8b658",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        2780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "img",
+        "binaryPropertyName": "img64",
+        "options": {
+          "mimeType": ""
+        }
+      },
+      "id": "6c64ee22-a616-423d-866b-15b380cc331c",
+      "name": "convertImg64",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1760,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "text": "Descreva esta imagem",
+        "inputType": "base64",
+        "binaryPropertyName": "img64",
+        "options": {}
+      },
+      "id": "f31c5073-c669-42ca-b301-5a636dfbf604",
+      "name": "transcreveImg",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.6,
+      "position": [
+        1980,
+        440
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "v7f08akDjfrWKlNo",
+          "name": "OpenAi account - Uso Geral 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b0a23283-2c66-4395-83bb-6f20c4baf745",
+              "name": "number",
+              "value": "={{ $('Webhook').item.json.body.data.key.remoteJid.split('@')[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "a118fc1d-0205-4a5d-bf41-def000813f54",
+              "name": "nomeLead",
+              "value": "={{ $json.body.data.pushName }}",
+              "type": "string"
+            },
+            {
+              "id": "68eccebd-add8-46da-87b0-7c05547db90a",
+              "name": "textoMsg",
+              "value": "={{ $json.body.data.message.conversation }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a54a9919-a409-460f-8805-72144bd44b59",
+      "name": "variaveisFluxo",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Código para o nó Function no n8n\nlet items = [];\n\nfor (const item of $input.all()) {\n  const cleanText = item.json.content\n    .replace(/\\*\\*/g, '')\n    .replace(/\\n/g, ' ')\n    .replace(/\\s+/g, ' ')\n    .replace(/[\"]/g, \"'\")\n    .trim();\n\n  items.push({\n    json: {\n      mensagemLead: {\n        imagem: cleanText,\n        textMsg: \"o que é isto\"\n      }\n    }\n  });\n}\n\nreturn items;\n"
+      },
+      "id": "4593ec89-3334-4c24-baa9-3fb86688fa8d",
+      "name": "img + legenda",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2460,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c3c9737c-42a9-4fe5-9296-b5df1cc760f1",
+              "name": "urlEvo",
+              "value": "={{ $('Webhook').item.json.body.server_url }}",
+              "type": "string"
+            },
+            {
+              "id": "8d033d6a-bbb1-493f-b26f-5c8ae45004b3",
+              "name": "instancia",
+              "value": "={{ $('Webhook').item.json.body.instance }}",
+              "type": "string"
+            },
+            {
+              "id": "0455c7f2-b87d-4d15-94ce-6ae88121a2d0",
+              "name": "eventTexto",
+              "value": "/message/sendText/",
+              "type": "string"
+            },
+            {
+              "id": "b0a23283-2c66-4395-83bb-6f20c4baf745",
+              "name": "number",
+              "value": "={{ $('Webhook').item.json.body.data.key.remoteJid.split('@')[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "a118fc1d-0205-4a5d-bf41-def000813f54",
+              "name": "nomeLead",
+              "value": "={{ $('getUsers').item.json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "68eccebd-add8-46da-87b0-7c05547db90a",
+              "name": "mensagemLead",
+              "value": "={{ $json.mensagemLead }}",
+              "type": "object"
+            },
+            {
+              "id": "e0c9d8c6-8f25-4807-a9ba-7b12aa5dda70",
+              "name": "apikey",
+              "value": "={{ $('Webhook').item.json.body.apikey }}",
+              "type": "string"
+            },
+            {
+              "id": "40cf5712-e2a1-4198-a68f-7024f799d5f4",
+              "name": "time",
+              "value": "={{ $('Webhook').item.json.body.date_time }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4349d4b4-81bf-46d8-ae08-dfb864746bbd",
+      "name": "endpointsEvo",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3000,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Código para o nó Function no n8n\nlet items = [];\n\nfor (const item of $input.all()) {\n  const cleanText = item.json.content\n    .replace(/\\*\\*/g, '')\n    .replace(/\\n/g, ' ')\n    .replace(/\\s+/g, ' ')\n    .replace(/[\"]/g, \"'\")\n    .trim();\n\n  items.push({\n    json: {\n      mensagemLead: {\n        imagem: cleanText,\n      }\n    }\n  });\n}\n\nreturn items;\n"
+      },
+      "id": "f8be9c63-7394-4400-b9df-0221881b6233",
+      "name": "img",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2460,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Código para o nó Function no n8n\nlet items = [];\n\nfor (const item of $input.all()) {\n  const cleanText = item.json.text\n    .replace(/\\*\\*/g, '')\n    .replace(/\\n/g, ' ')\n    .replace(/\\s+/g, ' ')\n    .replace(/[\"]/g, \"'\")\n    .trim();\n\n  items.push({\n    json: {\n      mensagemLead: {\n        áudio: cleanText,\n      }\n    }\n  });\n}\n\nreturn items;\n"
+      },
+      "id": "28b7aee2-0f3c-428c-ae27-54e3a127b51c",
+      "name": "audio",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2200,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "4tugqpxBGuvlorc5",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "95e4d4aa-e872-4577-9c94-a6ec204357a8",
+      "name": "chama agent",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        3200,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
+                    "rightValue": "conversation",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "texto1"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "231409c1-11ec-430b-ad7b-de189c9be1f0",
+                    "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
+                    "rightValue": "extendedTextMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "texto2"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a15aa34d-2ebf-4ff2-82fb-0b4476d6fce2",
+                    "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
+                    "rightValue": "audioMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "809f21b9-16d7-4653-8ed1-a3e55fefd99f",
+                    "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
+                    "rightValue": "imageMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "img"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e8271900-8244-4387-a587-dacaca75fade",
+      "name": "rotasMsg",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1080,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "agent-live",
+        "options": {}
+      },
+      "id": "6a3d6d51-e097-4975-9648-c8d04ed11d93",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        20,
+        280
+      ],
+      "webhookId": "3c891fa5-167f-422e-add8-1980759df8ab"
+    }
+  ],
+  "connections": {
+    "getUsers": {
+      "main": [
+        [
+          {
+            "node": "Usuário está cadastrado?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Usuário está cadastrado?": {
+      "main": [
+        [
+          {
+            "node": "rotasMsg",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "cadastraUser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cadastraUser": {
+      "main": [
+        [
+          {
+            "node": "getUsers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Possui legenda?": {
+      "main": [
+        [
+          {
+            "node": "img",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "img + legenda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "salvarArquivo": {
+      "main": [
+        [
+          {
+            "node": "convertAudio64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "salvarArquivo1": {
+      "main": [
+        [
+          {
+            "node": "convertImg64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "texto": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "transcreveAudio": {
+      "main": [
+        [
+          {
+            "node": "audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "convertAudio64": {
+      "main": [
+        [
+          {
+            "node": "transcreveAudio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "convertImg64": {
+      "main": [
+        [
+          {
+            "node": "transcreveImg",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "transcreveImg": {
+      "main": [
+        [
+          {
+            "node": "Possui legenda?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "variaveisFluxo": {
+      "main": [
+        [
+          {
+            "node": "getUsers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "img + legenda": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "endpointsEvo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "img": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "audio": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "endpointsEvo": {
+      "main": [
+        [
+          {
+            "node": "chama agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "rotasMsg": {
+      "main": [
+        [
+          {
+            "node": "texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "salvarArquivo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "salvarArquivo1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "variaveisFluxo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n.decolehost.com.br",
+            "user-agent": "axios/1.7.5",
+            "content-length": "1046",
+            "accept": "application/json, text/plain, */*",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "content-type": "application/json",
+            "x-forwarded-for": "172.18.0.1",
+            "x-forwarded-host": "n8n.decolehost.com.br",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "c865b4518f16",
+            "x-real-ip": "172.18.0.1"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "event": "messages.upsert",
+            "instance": "Eric - Teste",
+            "data": {
+              "key": {
+                "remoteJid": "557192645593@s.whatsapp.net",
+                "fromMe": false,
+                "id": "3FCF841CC2127757FE63"
+              },
+              "pushName": "Eric Nunes",
+              "message": {
+                "messageContextInfo": {
+                  "deviceListMetadata": {
+                    "senderKeyHash": "l6DMElbpYMErGQ==",
+                    "senderTimestamp": "1732842117",
+                    "recipientKeyHash": "GSAZRvZTUM6fYA==",
+                    "recipientTimestamp": "1732747594"
+                  },
+                  "deviceListMetadataVersion": 2
+                },
+                "conversation": "Preciso de um agendamento para às 13:00 até 14:00 no dia 02/12/2024\nMeu email é ericcontato.nunes@gmail.com\n\nMeu nome é Eric"
+              },
+              "contextInfo": {
+                "expiration": 0,
+                "ephemeralSettingTimestamp": "0",
+                "disappearingMode": {
+                  "initiator": "CHANGED_IN_CHAT"
+                }
+              },
+              "messageType": "extendedTextMessage",
+              "messageTimestamp": 1733186737,
+              "instanceId": "f621ebfb-bd85-4102-aad7-8b98516c025b",
+              "source": "unknown"
+            },
+            "destination": "https://n8n.decolehost.com.br/webhook-test/agent-live",
+            "date_time": "2024-12-02T21:45:37.547Z",
+            "sender": "553195128678@s.whatsapp.net",
+            "server_url": "https://decapi.decolehost.com.br",
+            "apikey": "9BE348379C79-4A0C-A71A-681B2D7B9B4D"
+          },
+          "webhookUrl": "https://webhook.decolehost.com.br/webhook-test/agent-live",
+          "executionMode": "test"
+        }
+      }
+    ]
+  },
+  "versionId": "7dc5ae3f-0902-4656-8db8-381af20b0e34",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-12-22T01:11:10.918Z",
+      "updatedAt": "2024-12-22T01:11:10.918Z",
+      "id": "FgvSuJUvU08VFD1v",
+      "name": "EricNunes"
+    }
+  ]
+}
