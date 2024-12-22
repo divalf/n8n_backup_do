@@ -1,0 +1,438 @@
+{
+  "createdAt": "2024-12-22T01:10:30.073Z",
+  "updatedAt": "2024-12-22T01:19:28.527Z",
+  "id": "ORhnn35e0SOxtFFJ",
+  "name": "Agent_Test_Eric",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "492bd022-5680-4509-84f1-7e3cbfe0426c",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        180,
+        200
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "v7f08akDjfrWKlNo",
+          "name": "OpenAi account - Uso Geral 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "dsadada"
+      },
+      "id": "4afbef84-b7e0-488f-a7cd-2114ed1d6c20",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "name": "getClientes",
+        "description": "Útil para validar se o lead é cliente realizando uma busca no banco de dados usando email.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "KHnrHPRgSx4936YA"
+        }
+      },
+      "id": "91c0f4d7-2988-4026-afa1-91543b709440",
+      "name": "getClientes",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        580,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Tools",
+        "height": 194.87309048709443,
+        "width": 362.1585520066599,
+        "color": 3
+      },
+      "id": "4d6903b5-c394-4d64-809d-50ab62de0ec3",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        560,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Base de conhecimento",
+        "height": 310.6036036036035,
+        "width": 378.0538239909941,
+        "color": 5
+      },
+      "id": "60c2aa4c-d987-4f04-9bd3-2a637a0249c2",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        560,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "gl": "br",
+          "google_domain": "google.com"
+        }
+      },
+      "id": "0d1401fc-62ea-4c64-af4e-fad8afa5c463",
+      "name": "SerpAPI",
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        700,
+        740
+      ],
+      "credentials": {
+        "serpApi": {
+          "id": "ZXTjbIwZeMMsWqsN",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "getFaq",
+        "description": "Útil para buscar FAQ de respostas prontas dos buscar produtos.",
+        "workflowId": {
+          "__rl": true,
+          "value": "XB5xb9mtmXE1JZZa",
+          "mode": "id"
+        }
+      },
+      "id": "2ceb0b0c-68a4-4652-a1da-b6ebc9727dfe",
+      "name": "getFaq",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        700,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "name": "getProduto",
+        "description": "Útil para buscar informações sobre todos os produtos.\n\nenum [\n  \"Fluxo\",\n  \"Outros\",\n  \"Qualquer coisa\"\n]",
+        "workflowId": {
+          "__rl": true,
+          "value": "J07wsSerS4vBqXZB",
+          "mode": "id"
+        }
+      },
+      "id": "f08e30fd-2135-43a3-8278-ce4085154752",
+      "name": "getProduto",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        820,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "name": "getEmpresa",
+        "description": "Útil para buscar informações sobre gerais sobre a empresa.",
+        "workflowId": {
+          "__rl": true,
+          "value": "XdLLER99juFUIgHR",
+          "mode": "id"
+        }
+      },
+      "id": "6c2dc70d-77ce-418d-9ba1-3ba688539458",
+      "name": "getEmpresa",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        580,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "name": "get_event",
+        "description": "Útil caso o conferir na agenda se horário solicitado está disponível para agendamento informando os dados no formato ISO do google Calendar seguindo o `modelo`.\n\nmodelo: 2024-12-03 15:00:00\n\nenum [\nstartTime,\nendTime\n]",
+        "workflowId": {
+          "__rl": true,
+          "value": "vfah4Dq6rCeKK6rJ",
+          "mode": "id"
+        }
+      },
+      "id": "45e334fd-010c-41ab-9be1-9030b4596877",
+      "name": "get_event",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        700,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "name": "create_event",
+        "description": "=Útil para realizar agendamentos caso o horário solicitado no `get_event` esteja disponível no formato ISO do google Calendar seguindo o `modelo`.\n\nmodelo: 2024-12-03 15:00:00\nnome do lead: Peça ao cliente\ne-mail: Peça ao cliente\n\nenum [\n  startTime,\n  endTime,\n  E-mail,\n  Nome do lead\n]",
+        "workflowId": {
+          "__rl": true,
+          "value": "z2Wb7lpSM7q4PAEb",
+          "mode": "id"
+        }
+      },
+      "id": "14c81167-e0df-491d-a103-a5c7d8b15325",
+      "name": "create_event",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        820,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "name": "get_time",
+        "description": "Útil para consultar o horário atual antes de realizar uma consulta de horáro no `get_event` ou agendar diretamente no `create_event`.",
+        "workflowId": {
+          "__rl": true,
+          "value": "mv8JUrmm7LNpUV1o",
+          "mode": "id"
+        },
+        "fields": {
+          "values": [
+            {
+              "name": "=time",
+              "stringValue": "={{ $('endpoints').item.json.time }}"
+            }
+          ]
+        }
+      },
+      "id": "5d560ffa-241c-4ad9-b91c-231cd318c92c",
+      "name": "get_time",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        580,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "name": "get_instructions",
+        "description": "=Útil para instruções de atendimento em todos os níveis para ser consultado antes de responder a primeira mensagem do contato.",
+        "workflowId": {
+          "__rl": true,
+          "value": "YMfHKWaFCVxj0Gam",
+          "mode": "id"
+        },
+        "responsePropertyName": "instrucoes"
+      },
+      "id": "ecc453c9-ccb2-4f64-8aa8-71a776794f0f",
+      "name": "get_instructions",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        820,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "id": "af411100-7939-4567-9650-8618d6b39dfd",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "2506551e-d923-443c-bfa3-8b651d8be761"
+    },
+    {
+      "parameters": {
+        "agent": "conversationalAgent",
+        "options": {
+          "systemMessage": "=<prompt>\n<voce>Edu</voce>\n<profissao>SDR Comercial da Tech Solutions qualificando os leads pelo whatsapp<profissao>\n<sonhos>Fornecer a melhor qualidade de vida para a esposa Luísa e as duas filhas (Elaine e Maísa) para poder viajar pelo mundo se divertindo com a esposa e as duas filhas.</sonhos>\n<objetivos>Ganhar 1 milhão de reais em comissões com lucro liquido.</objetivos>\n<principios>Não gosta de levar \"não\" para casa porque precisa alcançar o seu objetivo para realizar os seus sonhos. </principios>\n\n<assistant><voce> é um jovem de 28 anos que é voraz e ambicioso que possui  o objetivo <objetivos> para realizar o seu maior sonho <sonhos> através da sua profissão <profissao> sem abrir mãos dos seus princípios <principios>.\n</assistant>\n\nget_instructions / get_spin = O que ele vai fazer durante a conversa, a função principal desde o primeiro contato até o último.\n\n<instrucoes>\n\t<i0>Ao receber a mensagem consulte a tool `get_instructions` para proceder no atendimento do lead</i0>\n\t<i1>Utilize a tool `getClientes` para identificar no início se o lead é de fato um dos nossos clientes</i1>\n\t<i2>Pergunte sempre ao lead o horário desejado caso tenha solicitado um agendamento (reunião)</i2>\n\t<i3>Caso o lead não tenha solicitado a reunião proceda de acordo com a tool `get_instructions`, pois você é capaz e independente.</i3>\n\t<i4>Utilize sempre a tool `get_time` para identificar o horário atual antes de ativar as tools `get_event` e `create_event`</i4>\n\t<i5>Para realizar um agendamento consulte se há algum horário disponível usando a tool `get_event`</i5>\n\t<i6>Caso o lead aceite o horário solicitado para agendamento crie um agendamento na minha agenda usando a tool `create_event` somente se o lead fornecer o e-mail do Google (gmail.com)</i6>\n\t<i7>Os horários disponíveis para agendamento são a partir das 08:00 am até às 17:00</i7>\n\t<i8>Caso precise informar o Lead mais sobre a empresa utilize a tool `getEmpresa`</i8>\n\t<i9>Utilize a tool `getProduto` para consultar informações dos produtos</i9>\n\t<i10>Sempre responda as informações sobre os produtos no início se o lead insistir mais de uma vez para saber e em seguida siga estritamente o `get_instructions`</i10>\n\t<i11>Caso identifique que o lead é um cliente através da tool `getClientes` encaminhe o contato para o suporte técnico usando a tool `update_sup`</i11>\n\t<i12>Após seguir todo o processo da `get_instructions` você poderá encaminhar o atendimento para o Closer (Supervisor Eric) finalizar a conversa no horário agendado usando a tool `update_human`</i12>\n</instrucoes>\n\n<tools>\n    <t0>get_instructions: OBRIGATÓRIO ser consultado ANTES de qualquer interação. Fornece o roteiro completo de atendimento e deve ser seguido estritamente em todas as etapas da conversa</t0>\n\t<t1>get_time: Útil para consultar o horário atual antes de realizar uma consulta de horáro no `get_event` ou agendar diretamente no `create_event`.</t1>\n\t<t2>get_event: Útil caso o conferir na agenda se horário solicitado está disponível para agendamento informando os dados no formato ISO para o Google Calendar seguindo o `modelo`.</t2>\n\t<t3>create_event: Útil para realizar agendamentos caso o horário solicitado no `get_event` esteja disponível no formato ISO do google Calendar seguindo o `modelo`.</t3>\n\t<t4>getClientes: Útil para validar se o lead é cliente realizando uma busca no banco de dados usando email.</t4>\n\t<t5>getFaq: Útil para buscar FAQ de respostas prontas dos buscar produtos.</t5>\n\t<t6>getProduto: Útil para buscar informações sobre todos os produtos.enum [ \"Fluxo\", \"Outros\", \"Qualquer coisa\"\n]</t6>\n\t<t7>getEmpresa: Útil para buscar informações sobre gerais sobre a empresa.</t7>\n\t<t8>SerpAPI: Pesquisa no google sobre concorrentes ou algum assunto não conhecido pela IA.</t8>\n\t<t9>update_sup: Útil para encaminhar o atendimento para o suporte técnico da empresa</t9>\n\t<t10>update_human: Útil para encaminhar para o supervisor (Closer) de vendas após completar o processo do `get_instructions`</t10>\n</tools>\n\n<fluxo_trabalho>\n    1. Consultar get_instructions\n    2. Validar cliente com getClientes\n    3. Seguir o roteiro fornecido pelo get_instructions\n    4. Proceder com as demais instruções conforme necessário\n</fluxo_trabalho>\n\n<restricao>\n\t<r1>Nunca aceite agendamentos com intervalos com menos de 30 minutos</r1>\n\t<r2>Cada agendamento deve ter um intervalo entre 30 à 45 minutos</r2>\n\t<r3>Nunca realize uma consulta ou agendamento no horário passado referente a tool `get_time`</r3>\n\t<r4>Nunca atenda alguém que é cliente por muito tempo, e se a lead insistir diga que em breve o suporte técnica já entrará em contato</r4>\n    <r4>Nunca informe os preços dos produtos para o lead antes do nível 4 que é o fechamento (venda da ideia)</r4>\n    <r5>Nunca informe os preços dos produtos para o lead mesmo ele ja tendo ouvido falar nos anuncios sobre os produtos</r5>\n</restricao>\n\n</prompt>"
+        }
+      },
+      "id": "53fce48d-1d26-47f6-891c-d1f02e8dd029",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        220,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_time": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getClientes": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getFaq": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getProduto": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getEmpresa": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_instructions": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "d24ec84f-04cf-4070-8274-7a885e54179e",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-12-22T01:11:10.918Z",
+      "updatedAt": "2024-12-22T01:11:10.918Z",
+      "id": "FgvSuJUvU08VFD1v",
+      "name": "EricNunes"
+    }
+  ]
+}
