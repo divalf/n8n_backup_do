@@ -1,0 +1,204 @@
+{
+  "createdAt": "2024-12-22T19:12:57.705Z",
+  "updatedAt": "2024-12-22T19:15:16.837Z",
+  "id": "sIWVxikJXgYu24PW",
+  "name": "createEvent",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"response\": {\n    \"status\":\"failed\",\n    \"message\":\"O agendamento não foi realizado! Escolha outro horário.\"\n  }\n}",
+        "options": {}
+      },
+      "id": "9720792d-455a-44c2-9a4d-49058a34f347",
+      "name": "response1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -460,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ $json.query }}",
+        "options": {}
+      },
+      "id": "42edf2f4-ee84-41b4-8ff4-aa0c43c267b5",
+      "name": "variaveis2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1160,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "287cee72-0ae6-4b4c-a37b-99be66a29f77",
+              "leftValue": "={{$json[\"status\"]}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "6bffc7f0-8570-40c3-acc1-90152d8ac9ce",
+      "name": "O agendamento foi bem sucedido?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -720,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "cc90b20ed02776e4faba7b5e9003664891e4c03076067f356bf0001be00d8487@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Nakamura"
+        },
+        "start": "={{ $json.startTime }}",
+        "end": "={{ $json.endTime }}",
+        "additionalFields": {
+          "attendees": [
+            "={{ $json['E-mail'] }}"
+          ],
+          "conferenceDataUi": {
+            "conferenceDataValues": {
+              "conferenceSolution": "hangoutsMeet"
+            }
+          },
+          "summary": "=[DV] Consulta com {{ $json['Nome do lead'] }}"
+        }
+      },
+      "id": "96df9b7e-50eb-4ca3-b01f-a1d4c21165bd",
+      "name": "agendando",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.2,
+      "position": [
+        -940,
+        -200
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "4I7PpR7Fj4L6L6sQ",
+          "name": "Google Calendar - Divalf"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = items[0].json;\n\n// Criando as datas diretamente dos valores do input (que já estão no fuso horário correto)\nlet horarioInicio = new Date(input.start.dateTime);\nlet horarioFim = new Date(input.end.dateTime);\n\n// Formatação manual da data para garantir o formato DD/MM/YYYY\nconst dia = String(horarioInicio.getDate()).padStart(2, '0');\nconst mes = String(horarioInicio.getMonth() + 1).padStart(2, '0');\nconst ano = horarioInicio.getFullYear();\nconst dataFormatada = `${dia}/${mes}/${ano}`;\n\n// Formatação manual da hora para garantir o horário correto\nconst horaInicio = String(horarioInicio.getHours()).padStart(2, '0');\nconst minutoInicio = String(horarioInicio.getMinutes()).padStart(2, '0');\nconst horaFim = String(horarioFim.getHours()).padStart(2, '0');\nconst minutoFim = String(horarioFim.getMinutes()).padStart(2, '0');\n\nconst horaInicioFormatada = `${horaInicio}:${minutoInicio}`;\nconst horaFimFormatada = `${horaFim}:${minutoFim}`;\n\nconst output = {\n  \"response\": {\n    \"status\": \"true!\",\n    \"message\": \"O agendamento foi realizado com sucesso!\",\n    \"dados do agendamento\": {\n      \"E-mail\": input.attendees ? input.attendees[0].email : \"Não informado\",\n      \"Horário da reunião\": `${dataFormatada} - ${horaInicioFormatada} às ${horaFimFormatada}`,\n      \"Link da reunião\": input.conferenceData && input.conferenceData.entryPoints ? input.conferenceData.entryPoints[0].uri : \"Não informado\"\n    }\n  }\n};\n\nreturn [{ json: output }];\n"
+      },
+      "id": "a5149b45-f73a-4804-ba92-aed90721fc22",
+      "name": "response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -460,
+        -260
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "827a9cf2-5e61-4bc1-bac0-1b3b386eaf46",
+      "name": "endpoints",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1400,
+        -200
+      ]
+    }
+  ],
+  "connections": {
+    "variaveis2": {
+      "main": [
+        [
+          {
+            "node": "agendando",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "O agendamento foi bem sucedido?": {
+      "main": [
+        [
+          {
+            "node": "response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "response1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "agendando": {
+      "main": [
+        [
+          {
+            "node": "O agendamento foi bem sucedido?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "endpoints": {
+      "main": [
+        [
+          {
+            "node": "variaveis2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "b8fd63ad-828a-42cf-8f48-b7d21e01f819",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-12-22T01:11:10.918Z",
+      "updatedAt": "2024-12-22T01:11:10.918Z",
+      "id": "FgvSuJUvU08VFD1v",
+      "name": "EricNunes"
+    }
+  ]
+}
