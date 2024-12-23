@@ -1,0 +1,205 @@
+{
+  "createdAt": "2024-12-22T19:30:57.410Z",
+  "updatedAt": "2024-12-22T19:32:17.906Z",
+  "id": "27Q95gMT0dyKN2QZ",
+  "name": "getEvent",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "cc90b20ed02776e4faba7b5e9003664891e4c03076067f356bf0001be00d8487@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Nakamura"
+        },
+        "returnAll": true,
+        "options": {
+          "timeMin": "={{ $json.startTime }}",
+          "timeMax": "={{ $json.endTime }}"
+        }
+      },
+      "id": "59009ffa-eca6-4613-be27-edeb3ba4add2",
+      "name": "Google Calendar",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.2,
+      "position": [
+        -740,
+        0
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "4I7PpR7Fj4L6L6sQ",
+          "name": "Google Calendar - Divalf"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"response\": {\n    \"status\":\"failed\",\n    \"message\":\"O horário solicitado não está disponível! Escolha outro.\"\n  }\n}",
+        "options": {}
+      },
+      "id": "1bdf4d3b-6607-43ce-8594-114c17ec45e9",
+      "name": "response1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -360,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"response\": {\n    \"status\":\"true!\",\n    \"message\":\"O horário solicitado está disponível! Confirme o agendamento.\"\n  }\n}",
+        "options": {}
+      },
+      "id": "0d053d96-a735-4b58-9f07-894de622cbed",
+      "name": "response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -360,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "287cee72-0ae6-4b4c-a37b-99be66a29f77",
+              "leftValue": "={{$json[\"status\"]}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b4c7ee35-3f57-4456-a92a-c351c59a3266",
+      "name": "O horário está disponível?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -580,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "f5696e24-f686-44e7-ac29-1f7dc8cd81f6",
+      "name": "endpoints",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ $json.query }}",
+        "options": {}
+      },
+      "id": "2960a3ea-2d35-4216-8828-9891c358cef8",
+      "name": "variaveis2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -920,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Google Calendar": {
+      "main": [
+        [
+          {
+            "node": "O horário está disponível?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "O horário está disponível?": {
+      "main": [
+        [
+          {
+            "node": "response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "response1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "variaveis2": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "endpoints": {
+      "main": [
+        [
+          {
+            "node": "variaveis2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "19fc6b24-9bff-4baf-81c1-fc9f4ce46cf5",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-12-22T01:11:10.918Z",
+      "updatedAt": "2024-12-22T01:11:10.918Z",
+      "id": "FgvSuJUvU08VFD1v",
+      "name": "EricNunes"
+    },
+    {
+      "createdAt": "2024-12-22T01:05:47.979Z",
+      "updatedAt": "2024-12-22T01:05:47.979Z",
+      "id": "7HHhDNdblXcw8ano",
+      "name": "agent - live"
+    }
+  ]
+}
