@@ -1,0 +1,264 @@
+{
+  "createdAt": "2024-12-22T19:34:26.466Z",
+  "updatedAt": "2024-12-22T20:36:52.695Z",
+  "id": "hIu0sjwPncwGam0z",
+  "name": "getProduto",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"response\": {\n    \"status\":\"true\",\n    \"message\":\"O docs do produto {{ $('endpoints').item.json.query }} foi encontrado!\",\n    \"conteudo do docs\":\"{{ $json.content }}\"\n  }\n}",
+        "options": {}
+      },
+      "id": "2cf78475-bbe6-4d56-a0d8-d7d2a6097c5c",
+      "name": "response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        120,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"response\": {\n    \"status\":\"failed\",\n    \"message\":\"Não existem outros produtos!\"\n  }\n}",
+        "options": {}
+      },
+      "id": "899e43e6-cc62-4c03-8532-b0a0981273b0",
+      "name": "response1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -360,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pega o conteúdo diretamente\nconst content = $input.item.json.content;\n\n// Substitui todas as quebras de linha por \\n\nconst contentFormatado = content.replace(/\\n/g, '\\\\n');\n\n// Retorna o texto formatado\nreturn [{\n  json: {\n    content: contentFormatado\n  }\n}];"
+      },
+      "id": "57b494fd-5fbd-4e39-a50b-a514bc0f3c71",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -100,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "=1XUVmpQAlJ3QO8yT6XuE3YA7onC4V0s13F0EVI4twn90"
+      },
+      "id": "f40988df-1412-4320-95be-7221bf737ef7",
+      "name": "lerFluxo",
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        -160
+      ],
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "q0zaKNWjfrOsTEdA",
+          "name": "Google Docs - Criador Digital"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "3a21d529-e140-480b-b514-a7a90c6d2ae8",
+      "name": "endpoints",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1040,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"response\": {\n    \"status\":\"error\",\n    \"message\":\"Busca não elegível!\"\n  }\n}",
+        "options": {}
+      },
+      "id": "b0c6dfac-065f-4ef7-8832-a8bf1b31fd1c",
+      "name": "response2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -360,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.query }}",
+                    "rightValue": "Fluxo",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "fluxo"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6dbbb463-2b6b-4cae-9ad4-7814a86e74c3",
+                    "leftValue": "={{ $json.query }}",
+                    "rightValue": "Outros",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "outros"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4c5eeb7e-51f6-4e98-957b-d4054f5b480c",
+                    "leftValue": "={{ $json.query }}",
+                    "rightValue": "Qualquer coisa",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "busque novamente"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9b096d6e-4da9-4b97-b0cf-b9953269710d",
+      "name": "rotas",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -760,
+        20
+      ]
+    }
+  ],
+  "connections": {
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "lerFluxo": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "endpoints": {
+      "main": [
+        [
+          {
+            "node": "rotas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "rotas": {
+      "main": [
+        [
+          {
+            "node": "lerFluxo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "response1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "response2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "990c83cf-988e-450e-8418-37baedc3b699",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-12-22T01:05:47.979Z",
+      "updatedAt": "2024-12-22T01:05:47.979Z",
+      "id": "7HHhDNdblXcw8ano",
+      "name": "agent - live"
+    }
+  ]
+}
