@@ -1,0 +1,125 @@
+{
+  "createdAt": "2024-12-22T19:24:11.980Z",
+  "updatedAt": "2024-12-22T20:04:38.089Z",
+  "id": "zopK2mFgVyEat2gB",
+  "name": "getEmpresa",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"response\": {\n    \"status\":\"true\",\n    \"message\":\"O docs com informações da empresa foi encontrado com sucesso!\",\n    \"informacoes da empresa\":\"{{ $json.content }}\"\n  }\n}",
+        "options": {}
+      },
+      "id": "566b2a68-fcd5-4453-9925-e46bc666615b",
+      "name": "response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        740,
+        -140
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pega o conteúdo diretamente\nconst content = $input.item.json.content;\n\n// Substitui todas as quebras de linha por \\n\nconst contentFormatado = content.replace(/\\n/g, '\\\\n');\n\n// Retorna o texto formatado\nreturn [{\n  json: {\n    content: contentFormatado\n  }\n}];"
+      },
+      "id": "fbfc4f28-a621-4651-968f-cbd1220169b7",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        540,
+        -140
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "2a7ab9b0-eb7f-4753-85f2-94a6e6acd235",
+      "name": "endpoints",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        60,
+        -140
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "=16bnt6dqra_1skrx3nLwCs8QDjcymlFWXt_RjvHjyqqs"
+      },
+      "id": "7305ca30-2a38-4211-bca6-99bb145fa52b",
+      "name": "lerEmpresa",
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        320,
+        -140
+      ],
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "q0zaKNWjfrOsTEdA",
+          "name": "Google Docs - Criador Digital"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "lerEmpresa": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "endpoints": {
+      "main": [
+        [
+          {
+            "node": "lerEmpresa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "fb8947a9-34b8-4d3d-bc86-5a82c6d90d45",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-12-22T01:11:10.918Z",
+      "updatedAt": "2024-12-22T01:11:10.918Z",
+      "id": "FgvSuJUvU08VFD1v",
+      "name": "EricNunes"
+    },
+    {
+      "createdAt": "2024-12-22T01:05:47.979Z",
+      "updatedAt": "2024-12-22T01:05:47.979Z",
+      "id": "7HHhDNdblXcw8ano",
+      "name": "agent - live"
+    }
+  ]
+}
