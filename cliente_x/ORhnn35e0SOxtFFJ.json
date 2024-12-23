@@ -1,6 +1,6 @@
 {
   "createdAt": "2024-12-22T01:10:30.073Z",
-  "updatedAt": "2024-12-22T01:19:28.527Z",
+  "updatedAt": "2024-12-22T20:36:46.997Z",
   "id": "ORhnn35e0SOxtFFJ",
   "name": "Agent_Test_Eric",
   "active": false,
@@ -14,7 +14,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        180,
+        140,
         200
       ],
       "credentials": {
@@ -34,7 +34,7 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.2,
       "position": [
-        320,
+        300,
         200
       ]
     },
@@ -44,8 +44,8 @@
         "description": "Útil para validar se o lead é cliente realizando uma busca no banco de dados usando email.",
         "workflowId": {
           "__rl": true,
-          "mode": "id",
-          "value": "KHnrHPRgSx4936YA"
+          "value": "sY99aI11vCxqOnHX",
+          "mode": "id"
         }
       },
       "id": "91c0f4d7-2988-4026-afa1-91543b709440",
@@ -53,8 +53,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 1.2,
       "position": [
-        580,
-        620
+        540,
+        500
       ]
     },
     {
@@ -69,15 +69,15 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        560,
+        780,
         220
       ]
     },
     {
       "parameters": {
         "content": "## Base de conhecimento",
-        "height": 310.6036036036035,
-        "width": 378.0538239909941,
+        "height": 311,
+        "width": 478,
         "color": 5
       },
       "id": "60c2aa4c-d987-4f04-9bd3-2a637a0249c2",
@@ -85,8 +85,8 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        560,
-        560
+        460,
+        440
       ]
     },
     {
@@ -101,8 +101,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
       "typeVersion": 1,
       "position": [
-        700,
-        740
+        600,
+        620
       ],
       "credentials": {
         "serpApi": {
@@ -117,7 +117,7 @@
         "description": "Útil para buscar FAQ de respostas prontas dos buscar produtos.",
         "workflowId": {
           "__rl": true,
-          "value": "XB5xb9mtmXE1JZZa",
+          "value": "G6d6V7QCjhrFl5q0",
           "mode": "id"
         }
       },
@@ -126,8 +126,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 1.2,
       "position": [
-        700,
-        620
+        660,
+        500
       ]
     },
     {
@@ -136,7 +136,7 @@
         "description": "Útil para buscar informações sobre todos os produtos.\n\nenum [\n  \"Fluxo\",\n  \"Outros\",\n  \"Qualquer coisa\"\n]",
         "workflowId": {
           "__rl": true,
-          "value": "J07wsSerS4vBqXZB",
+          "value": "hIu0sjwPncwGam0z",
           "mode": "id"
         }
       },
@@ -146,7 +146,7 @@
       "typeVersion": 1.2,
       "position": [
         820,
-        620
+        500
       ]
     },
     {
@@ -155,7 +155,7 @@
         "description": "Útil para buscar informações sobre gerais sobre a empresa.",
         "workflowId": {
           "__rl": true,
-          "value": "XdLLER99juFUIgHR",
+          "value": "zopK2mFgVyEat2gB",
           "mode": "id"
         }
       },
@@ -164,8 +164,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 1.2,
       "position": [
-        580,
-        740
+        480,
+        620
       ]
     },
     {
@@ -174,7 +174,7 @@
         "description": "Útil caso o conferir na agenda se horário solicitado está disponível para agendamento informando os dados no formato ISO do google Calendar seguindo o `modelo`.\n\nmodelo: 2024-12-03 15:00:00\n\nenum [\nstartTime,\nendTime\n]",
         "workflowId": {
           "__rl": true,
-          "value": "vfah4Dq6rCeKK6rJ",
+          "value": "27Q95gMT0dyKN2QZ",
           "mode": "id"
         }
       },
@@ -183,7 +183,7 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 1.2,
       "position": [
-        700,
+        920,
         280
       ]
     },
@@ -193,7 +193,7 @@
         "description": "=Útil para realizar agendamentos caso o horário solicitado no `get_event` esteja disponível no formato ISO do google Calendar seguindo o `modelo`.\n\nmodelo: 2024-12-03 15:00:00\nnome do lead: Peça ao cliente\ne-mail: Peça ao cliente\n\nenum [\n  startTime,\n  endTime,\n  E-mail,\n  Nome do lead\n]",
         "workflowId": {
           "__rl": true,
-          "value": "z2Wb7lpSM7q4PAEb",
+          "value": "sIWVxikJXgYu24PW",
           "mode": "id"
         }
       },
@@ -202,7 +202,7 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 1.2,
       "position": [
-        820,
+        1040,
         280
       ]
     },
@@ -212,7 +212,7 @@
         "description": "Útil para consultar o horário atual antes de realizar uma consulta de horáro no `get_event` ou agendar diretamente no `create_event`.",
         "workflowId": {
           "__rl": true,
-          "value": "mv8JUrmm7LNpUV1o",
+          "value": "6BOcL1WYKsbqFrUg",
           "mode": "id"
         },
         "fields": {
@@ -229,7 +229,7 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 1.2,
       "position": [
-        580,
+        800,
         280
       ]
     },
@@ -239,7 +239,7 @@
         "description": "=Útil para instruções de atendimento em todos os níveis para ser consultado antes de responder a primeira mensagem do contato.",
         "workflowId": {
           "__rl": true,
-          "value": "YMfHKWaFCVxj0Gam",
+          "value": "OzOj0fLTwJKM2aj0",
           "mode": "id"
         },
         "responsePropertyName": "instrucoes"
@@ -249,8 +249,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 1.2,
       "position": [
-        820,
-        740
+        760,
+        620
       ]
     },
     {
@@ -425,8 +425,8 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "d24ec84f-04cf-4070-8274-7a885e54179e",
-  "triggerCount": 0,
+  "versionId": "3b50b89d-caac-4445-9460-b00d2eb1bb62",
+  "triggerCount": 2,
   "tags": [
     {
       "createdAt": "2024-12-22T01:11:10.918Z",
