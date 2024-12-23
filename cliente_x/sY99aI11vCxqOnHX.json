@@ -1,0 +1,125 @@
+{
+  "createdAt": "2024-12-22T19:18:50.947Z",
+  "updatedAt": "2024-12-22T19:21:52.202Z",
+  "id": "sY99aI11vCxqOnHX",
+  "name": "getClientes",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "[live]clientes_whatsapp",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "email",
+              "keyValue": "divalf@gmail.com"
+            }
+          ]
+        }
+      },
+      "id": "ae2cc280-6dd4-417e-aa77-9ef92c964e24",
+      "name": "getClientes",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        -120
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "nuynV0McfUVTsQrg",
+          "name": "Supabase - Criador Digital"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "=",
+        "options": {}
+      },
+      "id": "5949a357-69ac-458f-8cdb-3b5c60256826",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        380,
+        -120
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "id": "31479c09-6afe-4d5f-8b42-922ffd358b3f",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"response\": {\n    \"status\":\"true\",\n    \"message\":\"É Cliente\",\n    \"nome\":\"{{ $json.name }}\",\n    \"numero\":\"{{ $json.number }}\",\n    \"e-mail\":\"{{ $json.email }}\"\n  }\n}",
+        "options": {}
+      },
+      "id": "5a0e948f-6a62-4f49-bcd8-3a9e22bb95a3",
+      "name": "response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        120,
+        -120
+      ]
+    }
+  ],
+  "connections": {
+    "getClientes": {
+      "main": [
+        [
+          {
+            "node": "response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "getClientes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "afcc620f-1be3-4ca3-bee3-9e9835e4d941",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-12-22T01:11:10.918Z",
+      "updatedAt": "2024-12-22T01:11:10.918Z",
+      "id": "FgvSuJUvU08VFD1v",
+      "name": "EricNunes"
+    },
+    {
+      "createdAt": "2024-12-22T01:05:47.979Z",
+      "updatedAt": "2024-12-22T01:05:47.979Z",
+      "id": "7HHhDNdblXcw8ano",
+      "name": "agent - live"
+    }
+  ]
+}
