@@ -1,0 +1,543 @@
+{
+  "createdAt": "2024-12-22T19:38:16.041Z",
+  "updatedAt": "2024-12-22T19:41:40.484Z",
+  "id": "7bwyN4Da9MRfdzUh",
+  "name": "Agent_Producao_Eric",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "aaa882c0-69f5-4309-86fb-d3b4497ba678",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        800,
+        20
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "v7f08akDjfrWKlNo",
+          "name": "OpenAi account - Uso Geral 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=etasda989"
+      },
+      "id": "eb9f9660-2935-418c-be8d-b1ef45878b5b",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.2,
+      "position": [
+        940,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "name": "getClientes",
+        "description": "Útil para validar se o lead é cliente realizando uma busca no banco de dados usando email.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "KHnrHPRgSx4936YA"
+        }
+      },
+      "id": "c8e4fb16-cd0b-4718-b129-320978152052",
+      "name": "getClientes",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1260,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Tools",
+        "height": 308.04712724326487,
+        "width": 362.1585520066599,
+        "color": 3
+      },
+      "id": "4f5defc5-3b31-4bab-8b67-a342411c8f50",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Base de conhecimento",
+        "height": 310.6036036036035,
+        "width": 361.5420311222108,
+        "color": 5
+      },
+      "id": "4a75c6a8-7cdd-47e8-85e4-29a3dc26dc2b",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "gl": "br",
+          "google_domain": "google.com"
+        }
+      },
+      "id": "9d00f844-d8f9-47ef-b194-2b6c006e93cf",
+      "name": "SerpAPI",
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        240
+      ],
+      "credentials": {
+        "serpApi": {
+          "id": "ZXTjbIwZeMMsWqsN",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "getFaq",
+        "description": "Útil para buscar FAQ de respostas prontas dos buscar produtos.",
+        "workflowId": {
+          "__rl": true,
+          "value": "XB5xb9mtmXE1JZZa",
+          "mode": "id"
+        }
+      },
+      "id": "adb00346-e3a5-4a14-8474-4f793c9d6b1e",
+      "name": "getFaq",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1380,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "name": "getProduto",
+        "description": "Útil para buscar informações sobre todos os produtos.\n\nenum [\n  \"Fluxo\",\n  \"Outros\",\n  \"Qualquer coisa\"\n]",
+        "workflowId": {
+          "__rl": true,
+          "value": "J07wsSerS4vBqXZB",
+          "mode": "id"
+        }
+      },
+      "id": "a3d398a0-bff7-444c-b1c2-b598c8fcd3d6",
+      "name": "getProduto",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1500,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "name": "getEmpresa",
+        "description": "Útil para buscar informações sobre gerais sobre a empresa.",
+        "workflowId": {
+          "__rl": true,
+          "value": "XdLLER99juFUIgHR",
+          "mode": "id"
+        }
+      },
+      "id": "742b81c8-834e-44bf-816b-b4721dc3405e",
+      "name": "getEmpresa",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1260,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ $json.mensagemLead }}",
+        "options": {}
+      },
+      "id": "96a77125-3887-460b-89ac-a54b5a59c16c",
+      "name": "trataMsg",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        -140
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2030e412-3d32-4afb-9365-50e59fc9fdb4",
+              "name": "respostaAi",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "63c434a0-199f-475c-8885-42ff956c5940",
+      "name": "mensagemIa",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1240,
+        -140
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('endpoints').item.json.urlEvo }}{{ $('endpoints').item.json.eventTexto }}{{ $('endpoints').item.json.instancia }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apiKey",
+              "value": "={{ $('endpoints').item.json.apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('endpoints').item.json.number }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.respostaAi }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3b59f71c-27c5-4bf5-ba15-19e835ce7e1f",
+      "name": "respondeWhatsapp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1480,
+        -140
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Código para o nó Function no n8n\nlet items = [];\n\nfor (const item of $input.all()) {\n  let jsonString;\n  \n  // Verifica se existe imagem e textMsg\n  if (item.json.imagem && item.json.textMsg) {\n    jsonString = `{\n  \"mensagemLead\": {\n    \"imagem\": \"${item.json.imagem}\",\n    \"textMsg\": \"${item.json.textMsg}\"\n  }\n}`;\n  }\n  // Verifica se existe apenas imagem\n  else if (item.json.imagem) {\n    jsonString = `{\n  \"mensagemLead\": {\n    \"imagem\": \"${item.json.imagem}\"\n  }\n}`;\n  }\n  // Verifica texto ou áudio\n  else {\n    const conteudo = item.json.texto || item.json['áudio'] || '';\n    jsonString = `{\n  \"mensagemLead\": {\n    \"áudio\": \"${conteudo}\"\n  }\n}`;\n  }\n\n  items.push({\n    json: {\n      mensagemLead: jsonString\n    }\n  });\n}\n\nreturn items;\n"
+      },
+      "id": "1e5b4083-7c66-4b03-83fe-70ef9e284272",
+      "name": "convertMsg",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        600,
+        -140
+      ]
+    },
+    {
+      "parameters": {
+        "agent": "conversationalAgent",
+        "promptType": "define",
+        "text": "={{ $json.mensagemLead }}",
+        "options": {
+          "systemMessage": "Você é Pedro, suporte da live dos Criados Digitais.\n\nSolicite sempre ao cliente as informacoes para cada tool que precisar usar.\n\ngetclientes: pedir email\ngetDocs: Enviar produto\ngetEnterprise: Informacoes sobre a empresa"
+        }
+      },
+      "id": "a661c052-79c0-406f-ab23-2cb14e960b24",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        840,
+        -140
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "5643a100-86e2-45d2-a1d1-a50ae8a3e8fc",
+      "name": "endpoints",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        180,
+        -140
+      ]
+    },
+    {
+      "parameters": {
+        "name": "get_event",
+        "description": "Útil caso o conferir na agenda se horário solicitado está disponível para agendamento informando os dados no formato ISO do google Calendar seguindo o `modelo`.\n\nmodelo: 2024-12-03 15:00:00\n\nenum [\nstartTime,\nendTime\n]",
+        "workflowId": {
+          "__rl": true,
+          "value": "vfah4Dq6rCeKK6rJ",
+          "mode": "id"
+        }
+      },
+      "id": "af1f802c-796c-48a5-8e0c-792c1ca01891",
+      "name": "get_event",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1380,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "name": "create_event",
+        "description": "=Útil para realizar agendamentos caso o horário solicitado no `get_event` esteja disponível no formato ISO do google Calendar seguindo o `modelo`.\n\nmodelo: 2024-12-03 15:00:00\nnome do lead: Peça ao cliente\ne-mail: Peça ao cliente\n\nenum [\nstartTime,\nendTime,\nE-mail,\nNome do lead\n]",
+        "workflowId": {
+          "__rl": true,
+          "value": "z2Wb7lpSM7q4PAEb",
+          "mode": "id"
+        }
+      },
+      "id": "f5b14c7f-66e0-4b05-b8dc-228316fd3628",
+      "name": "create_event",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1500,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "name": "get_time",
+        "description": "Útil para consultar o horário atual antes de realizar uma consulta de horáro no `get_event` ou agendar diretamente no `create_event`.",
+        "workflowId": {
+          "__rl": true,
+          "value": "mv8JUrmm7LNpUV1o",
+          "mode": "id"
+        },
+        "fields": {
+          "values": [
+            {
+              "name": "=time",
+              "stringValue": "={{ $('endpoints').item.json.time }}"
+            }
+          ]
+        }
+      },
+      "id": "a0b5e90c-d119-4086-805b-7cb0ef478e0a",
+      "name": "get_time",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1260,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getClientes": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getFaq": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getProduto": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getEmpresa": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "trataMsg": {
+      "main": [
+        [
+          {
+            "node": "convertMsg",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensagemIa": {
+      "main": [
+        [
+          {
+            "node": "respondeWhatsapp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "convertMsg": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "mensagemIa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "endpoints": {
+      "main": [
+        [
+          {
+            "node": "trataMsg",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_time": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "8aea7696-e09f-4bdd-8942-01d0fe3ab477",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-12-22T01:11:10.918Z",
+      "updatedAt": "2024-12-22T01:11:10.918Z",
+      "id": "FgvSuJUvU08VFD1v",
+      "name": "EricNunes"
+    },
+    {
+      "createdAt": "2024-12-22T01:05:47.979Z",
+      "updatedAt": "2024-12-22T01:05:47.979Z",
+      "id": "7HHhDNdblXcw8ano",
+      "name": "agent - live"
+    }
+  ]
+}
