@@ -1,0 +1,267 @@
+{
+  "createdAt": "2024-12-22T19:32:51.698Z",
+  "updatedAt": "2024-12-22T20:35:38.304Z",
+  "id": "G6d6V7QCjhrFl5q0",
+  "name": "getFaq",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b38a0a46-7e01-4bc7-8c9b-ed50b4a4ef91",
+              "name": "nome do arquivo",
+              "value": "={{ $json.query }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "81816382-3151-48c0-a40d-5f381577e1ef",
+      "name": "variaveis",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"response\": {\n    \"status\":\"true\",\n    \"message\":\"Docs encontrado!\",\n    \"nome\":\"{{ $('getDocs').item.json.name }}\",\n    \"conteudo\":\"{{ $json.content }}\"\n  }\n}",
+        "options": {}
+      },
+      "id": "53c0c1df-338c-441d-9ceb-ce427b2ef141",
+      "name": "response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -180,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c3d74b78-01a1-45e8-beaf-e651b487ebc3",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b1e241a0-b7ce-4892-9166-8eebf53b9554",
+      "name": "O arquivo foi encontrado?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -820,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"response\": {\n    \"status\":\"failed\",\n    \"message\":\"Docs não encontrado encontrado!\"\n  }\n}",
+        "options": {}
+      },
+      "id": "1e016a59-95fc-4528-b13f-fd329f9984ff",
+      "name": "response1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -560,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "={{ $json.id }}"
+      },
+      "id": "066bf8bc-0f3c-4b10-af59-ffd19a630350",
+      "name": "lerDocs",
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -560,
+        -80
+      ],
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "q0zaKNWjfrOsTEdA",
+          "name": "Google Docs - Criador Digital"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $json['nome do arquivo'] }}",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "18lnS3Pc8G2tc1FCGpDTp5U2mM5jYk3dDiBF6i3t5T_U",
+            "mode": "id"
+          }
+        },
+        "options": {}
+      },
+      "id": "6b8a5799-5be2-47ca-98f3-d7fe63f02fe8",
+      "name": "getDocs",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1020,
+        0
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BRdD3UKUCiFRqLKy",
+          "name": "Google Drive - Divalf"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pega o conteúdo diretamente\nconst content = $input.item.json.content;\n\n// Substitui todas as quebras de linha por \\n\nconst contentFormatado = content.replace(/\\n/g, '\\\\n');\n\n// Retorna o texto formatado\nreturn [{\n  json: {\n    content: contentFormatado\n  }\n}];"
+      },
+      "id": "d885cca6-b603-47d0-a742-d21d59a28189",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        -80
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "d443e644-f008-40cd-af3f-7b73eabb9b5c",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1420,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "variaveis": {
+      "main": [
+        [
+          {
+            "node": "getDocs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "O arquivo foi encontrado?": {
+      "main": [
+        [
+          {
+            "node": "lerDocs",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "response1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "lerDocs": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getDocs": {
+      "main": [
+        [
+          {
+            "node": "O arquivo foi encontrado?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "variaveis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "15bd9ba8-9c4a-4595-99e5-2b5618b84c2b",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-12-22T01:11:10.918Z",
+      "updatedAt": "2024-12-22T01:11:10.918Z",
+      "id": "FgvSuJUvU08VFD1v",
+      "name": "EricNunes"
+    },
+    {
+      "createdAt": "2024-12-22T01:05:47.979Z",
+      "updatedAt": "2024-12-22T01:05:47.979Z",
+      "id": "7HHhDNdblXcw8ano",
+      "name": "agent - live"
+    }
+  ]
+}
