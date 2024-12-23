@@ -1,0 +1,70 @@
+{
+  "createdAt": "2024-12-22T19:37:01.956Z",
+  "updatedAt": "2024-12-22T19:37:23.564Z",
+  "id": "6BOcL1WYKsbqFrUg",
+  "name": "getTime",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"response\":{\n    \"horário atual\":\"{{ $json.time }}\"\n  }\n}",
+        "options": {}
+      },
+      "id": "d10e487f-2ab2-41f8-ab0c-7da0a95b78a2",
+      "name": "response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -180,
+        -80
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "ea2dbc9c-cf0f-49a1-9dfe-7a6b979e5d24",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -440,
+        -80
+      ]
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "a4ccf745-019d-4f86-897b-837f63652359",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-12-22T01:11:10.918Z",
+      "updatedAt": "2024-12-22T01:11:10.918Z",
+      "id": "FgvSuJUvU08VFD1v",
+      "name": "EricNunes"
+    },
+    {
+      "createdAt": "2024-12-22T01:05:47.979Z",
+      "updatedAt": "2024-12-22T01:05:47.979Z",
+      "id": "7HHhDNdblXcw8ano",
+      "name": "agent - live"
+    }
+  ]
+}
