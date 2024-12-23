@@ -1,6 +1,6 @@
 {
   "createdAt": "2024-12-22T01:20:14.845Z",
-  "updatedAt": "2024-12-22T01:22:13.185Z",
+  "updatedAt": "2024-12-22T19:23:42.320Z",
   "id": "8sPk1cIMt7UkBhAE",
   "name": "Central de Status - Eric",
   "active": false,
@@ -29,8 +29,8 @@
       "alwaysOutputData": true,
       "credentials": {
         "supabaseApi": {
-          "id": "W40Vqz7D7quG7v0S",
-          "name": "Supabase - LNC"
+          "id": "nuynV0McfUVTsQrg",
+          "name": "Supabase - Criador Digital"
         }
       }
     },
@@ -82,7 +82,7 @@
               "fieldValue": "={{ $('variaveisFluxo').item.json.nomeLead }}"
             },
             {
-              "fieldId": "status",
+              "fieldId": "name",
               "fieldValue": "agent_ai"
             }
           ]
@@ -95,7 +95,13 @@
       "position": [
         900,
         400
-      ]
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "nuynV0McfUVTsQrg",
+          "name": "Supabase - Criador Digital"
+        }
+      }
     },
     {
       "parameters": {
@@ -109,7 +115,7 @@
       "typeVersion": 3.4,
       "position": [
         1520,
-        100
+        20
       ]
     },
     {
@@ -859,11 +865,11 @@
             "instance": "Eric - Teste",
             "data": {
               "key": {
-                "remoteJid": "557192645593@s.whatsapp.net",
+                "remoteJid": "5511985401987@s.whatsapp.net",
                 "fromMe": false,
                 "id": "3FCF841CC2127757FE63"
               },
-              "pushName": "Eric Nunes",
+              "pushName": "Dival Filho",
               "message": {
                 "messageContextInfo": {
                   "deviceListMetadata": {
@@ -874,7 +880,7 @@
                   },
                   "deviceListMetadataVersion": 2
                 },
-                "conversation": "Preciso de um agendamento para às 13:00 até 14:00 no dia 02/12/2024\nMeu email é ericcontato.nunes@gmail.com\n\nMeu nome é Eric"
+                "conversation": "Preciso de um agendamento para às 13:00 até 14:00 no dia 24/12/2024\nMeu email é divalf@gmail.com\n\nMeu nome é Dival"
               },
               "contextInfo": {
                 "expiration": 0,
@@ -900,7 +906,7 @@
       }
     ]
   },
-  "versionId": "7dc5ae3f-0902-4656-8db8-381af20b0e34",
+  "versionId": "281a8d73-80af-47a8-9edf-4e4842d00903",
   "triggerCount": 0,
   "tags": [
     {
