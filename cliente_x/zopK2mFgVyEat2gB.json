@@ -1,6 +1,6 @@
 {
   "createdAt": "2024-12-22T19:24:11.980Z",
-  "updatedAt": "2024-12-22T20:04:38.089Z",
+  "updatedAt": "2024-12-26T01:58:12.123Z",
   "id": "zopK2mFgVyEat2gB",
   "name": "getEmpresa",
   "active": false,
@@ -106,7 +106,7 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "fb8947a9-34b8-4d3d-bc86-5a82c6d90d45",
+  "versionId": "737c07df-798d-4d2a-8d20-52ae9c00d2c9",
   "triggerCount": 0,
   "tags": [
     {
@@ -114,12 +114,6 @@
       "updatedAt": "2024-12-22T01:11:10.918Z",
       "id": "FgvSuJUvU08VFD1v",
       "name": "EricNunes"
-    },
-    {
-      "createdAt": "2024-12-22T01:05:47.979Z",
-      "updatedAt": "2024-12-22T01:05:47.979Z",
-      "id": "7HHhDNdblXcw8ano",
-      "name": "agent - live"
     }
   ]
 }
