@@ -1,0 +1,172 @@
+{
+  "createdAt": "2024-12-26T01:47:36.036Z",
+  "updatedAt": "2024-12-26T01:47:53.850Z",
+  "id": "bvMXJ6ZbcOSdfhqZ",
+  "name": "Assistente_Pessoal - Odonto Salvar_Prompt",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "2cdced5a-ac79-476e-a3d5-5dcae400d452",
+      "name": "gatilho",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "content": "! roda para deletar todas as mensagens de controle",
+        "height": 274.7923843700217,
+        "width": 273.1627906976745,
+        "color": 3
+      },
+      "id": "740dcb92-8e00-4f13-8731-8aad5b711794",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM memoria_controle;",
+        "options": {}
+      },
+      "id": "dc73dc67-5ce6-4388-b749-2d7060b205a9",
+      "name": "Deletar_todas_as_mensagens",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        80,
+        80
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "rodar para criar tabela \"cerebro\"",
+        "height": 274.7923843700217,
+        "width": 273.1627906976745,
+        "color": 4
+      },
+      "id": "83b90b81-b01d-4cbf-a388-2cdf757a036d",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Drop the table if it already exists\nDROP TABLE IF EXISTS cerebro;\n\n-- Create the table\nCREATE TABLE cerebro (\n    id SERIAL PRIMARY KEY,\n    prompt TEXT NOT NULL\n);\n\n-- Insert a single row into the table\nINSERT INTO cerebro (prompt) VALUES ('Você é uma assistente virtual, use todas as ferramentas a sua disposição para executar as tarefas solicitadas.');\n",
+        "options": {}
+      },
+      "id": "3ee39d56-37e5-4afe-8b1c-557093d4cbfe",
+      "name": "criar_cerebro",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        400,
+        80
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Drop the table if it already exists\nDROP TABLE IF EXISTS cerebro;\n\n-- Create the table\nCREATE TABLE cerebro (\n    id SERIAL PRIMARY KEY,\n    prompt TEXT NOT NULL\n);\n\n-- Insert a single row into the table\nINSERT INTO cerebro (prompt) VALUES ('{{ $json.query.prompt.replaceAll(\"'\", \"\") }}');\n",
+        "options": {}
+      },
+      "id": "ae7e7ef5-6531-42ca-bc5c-c59e76d4ccd9",
+      "name": "setar_novo_prompt",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        320,
+        320
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "56060925-7cc8-441b-904a-2fe55ef3ecf0",
+              "name": "response",
+              "value": "=Prompt atualizado.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3283ed5c-c6a2-4bee-832e-c4bd4b444d04",
+      "name": "response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        540
+      ]
+    }
+  ],
+  "connections": {
+    "gatilho": {
+      "main": [
+        [
+          {
+            "node": "setar_novo_prompt",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "dc89fa14-2057-43d9-8de1-4669e8dfb320",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-12-25T22:36:34.390Z",
+      "updatedAt": "2024-12-25T22:36:34.390Z",
+      "id": "LEAmzU5MTFbZZxqk",
+      "name": "Dinastia Odonto"
+    }
+  ]
+}
