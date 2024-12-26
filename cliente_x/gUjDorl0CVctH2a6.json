@@ -1,0 +1,171 @@
+{
+  "createdAt": "2024-12-26T01:44:21.261Z",
+  "updatedAt": "2024-12-26T01:49:02.993Z",
+  "id": "gUjDorl0CVctH2a6",
+  "name": "Assistente-Pessoal - Odonto Excluir_Conhecimento",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "51538348-9b8d-48a5-bdf7-725818dce5e8",
+      "name": "gatilho",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "content": "! roda para deletar o conhecimento",
+        "height": 274.7923843700217,
+        "width": 273.1627906976745,
+        "color": 3
+      },
+      "id": "b7b6f8a3-a72b-413e-9228-37a566bcc7f1",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM conhecimento;",
+        "options": {}
+      },
+      "id": "8b61ce66-1f2b-46e4-b335-364fa3bc1288",
+      "name": "deletar_conhecimento",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        80,
+        80
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "conhecimento",
+          "mode": "list",
+          "cachedResultName": "conhecimento"
+        },
+        "deleteCommand": "delete",
+        "where": {
+          "values": [
+            {
+              "column": "id",
+              "value": "={{ $json.query.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bfe796c1-1a96-46e9-a9cd-d63295079c47",
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        240,
+        440
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "172a9791-1a22-4b2b-800f-ac8afa611989",
+              "name": "response",
+              "value": "=O item com o ID \"{{ $('gatilho').item.json.query.id }}\" foi deletado",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        460,
+        440
+      ],
+      "id": "185e334a-a2ef-49b8-bcfb-dbaf83690106",
+      "name": "Edit Fields"
+    }
+  ],
+  "connections": {
+    "gatilho": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "gatilho": [
+      {
+        "json": {
+          "query": {
+            "id": 16
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "9aa54c79-4413-4e92-9e74-f086dd4061ce",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-12-25T22:36:34.390Z",
+      "updatedAt": "2024-12-25T22:36:34.390Z",
+      "id": "LEAmzU5MTFbZZxqk",
+      "name": "Dinastia Odonto"
+    }
+  ]
+}
