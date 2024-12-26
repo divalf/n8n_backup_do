@@ -1,0 +1,330 @@
+{
+  "createdAt": "2024-12-26T01:40:26.657Z",
+  "updatedAt": "2024-12-26T01:56:58.425Z",
+  "id": "GNlgUcYjARmM65CC",
+  "name": "Assistente_Pessoal - Odonto Atualizar_Prompt",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "07e4e35d-b54e-4694-8fd6-c014c5e49c5e",
+      "name": "gatilho",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "content": "rodar para criar tabela \"cerebro\"",
+        "height": 274.7923843700217,
+        "width": 273.1627906976745,
+        "color": 4
+      },
+      "id": "a46703d7-c02b-4e6f-90b6-d55144cf4dee",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Drop the table if it already exists\nDROP TABLE IF EXISTS cerebro;\n\n-- Create the table\nCREATE TABLE cerebro (\n    id SERIAL PRIMARY KEY,\n    prompt TEXT NOT NULL\n);\n\n-- Insert a single row into the table\nINSERT INTO cerebro (prompt) VALUES ('Você é uma assistente virtual, use todas as ferramentas a sua disposição para executar as tarefas solicitadas.');\n",
+        "options": {}
+      },
+      "id": "38d4acf5-d2b8-49bd-a4ec-64235da7a256",
+      "name": "criar_cerebro",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        80,
+        80
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "50bdefab-90b2-44b4-b37b-d494742ea5af",
+              "leftValue": "={{ $json.numero }}",
+              "rightValue": "447928821569@s.whatsapp.net",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "ea55874a-e4cc-4ac2-9056-5d0c20244ca9",
+      "name": "auth",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "errorMessage": "Accesso não autorizado"
+      },
+      "id": "357996b3-769d-4531-8c1a-9ef4da0b05eb",
+      "name": "Stop and Error",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        420,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "30ad9013-1ed3-425a-9cba-8c8c4a31b194",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        620,
+        500
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "v7f08akDjfrWKlNo",
+          "name": "OpenAi account - Uso Geral 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('gatilho').item.json.numero }}",
+        "tableName": "memoria_chat",
+        "contextWindowLength": 50
+      },
+      "id": "ae537b22-e075-4324-b8e1-5e53a86f324d",
+      "name": "Postgres Chat Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.1,
+      "position": [
+        760,
+        540
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "salvar_prompt_final",
+        "description": "Use esta ferramenta apenas para atualizar o prompt final.",
+        "workflowId": {
+          "__rl": true,
+          "value": "FVJAIaTRbb1Od6xt",
+          "mode": "list",
+          "cachedResultName": "Assistente Pessoal - Salvar prompt"
+        },
+        "specifyInputSchema": true,
+        "jsonSchemaExample": "{\n    \"prompt\": \"O prompt final gerado\"\n}"
+      },
+      "id": "0f588f6e-0b41-491b-867b-51a679a1aa5a",
+      "name": "salvar_prompt_final",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        920,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=<mensagem_sobre_prompt>{{ $('gatilho').item.json.mensagem }}</mensagem_sobre_prompt>",
+        "options": {
+          "systemMessage": "=<prompt_atual>{{ $json.prompt }}</prompt_atual>\n\nVocê é um especialista em engenharia de prompts para assistentes virtuais como atendentes ou comercial, focado em criar prompts eficientes e eficazes. Sua função é guiar o processo de criação de prompts através de perguntas estruturadas e análise sistemática.\n\nAnalise a <mensagem_sobre_prompt></mensagem_sobre_prompt> do usuário para atender a suas necessidades, responder as suas duvidas, guia-lo na criação do prompt ou atualizar o prompt.\n\nO seu prompt atual é <prompt_atual></prompt_atual>. Caso o usuário indique na <mensagem_sobre_prompt></mensagem_sobre_prompt> que ele gostaria de apenas atualizar o prompt atual, tenha como base <prompt_atual></prompt_atual>, caso contrário, inicie um novo prompt.\n\nUse a metodologia em <como_criar_ou_atualizar_o_seu_prompt></como_criar_ou_atualizar_o_seu_prompt> para ajudar o usuario na criação ou alteração do seu prompt.\n\n<como_criar_ou_atualizar_o_seu_prompt>\n## Processo de Coleta de Informações\n1. Faça estas perguntas fundamentais:\n   - Qual será o Agente IA que você gostaria de criar? Atendente, Vendedor, Secretária.\n   - De que forma o Agente deverá responder os clientes? Qual o tom a ser usado nas conversas.\n   - Quando que deve ser accessado a ferramenta <RAG>?\n\n2. Banco de dados - Conhecimento:\n   - Pergunte sobre quando e como deve ser usado o banco de dados conhecimento?\n\n## Análise e Seleção de Técnicas\nApós coletar as informações, analise e identifique quais técnicas de prompt engineering são mais apropriadas:\n\n<techniques>\n- Zero-shot vs Few-shot\n- Chain of Thought (para raciocínio passo a passo)\n- Role prompting (definição de personas)\n- Structured Output (formatação específica)\n- Task Decomposition (divisão em subtarefas)\n- XML tags para organização\n- Markdown para formatação\n</techniques>\n\n## Geração do Prompt Final\nCrie o prompt final seguindo esta estrutura:\n\n1. Definição clara da persona/papel\n2. Contexto e informações relevantes\n3. Instruções específicas e restrições\n4. Exemplos (se necessário)\n5. Formato esperado da resposta\n6. Critérios de sucesso\n\n## Verificação de Qualidade\nAntes de apresentar o prompt final, verifique:\n\n- Clareza das instruções\n- Completude das informações\n- Adequação das técnicas escolhidas\n- Potencial de alucinações ou erros\n- Alinhamento com o objetivo original\n\n## Apresentação do Resultado\nApresente o prompt final e solicite a confirmação antes de usar a ferramenta <salvar_prompt_final> para salvar o prompt.\n\n\n# Nota de Uso\nUse tags XML quando apropriado para organizar seções específicas do prompt:\n- <contexto> para informações contextuais\n- <instrucoes> para instruções específicas\n- <exemplos> para exemplos fornecidos\n- <output_format> para formato esperado da resposta\n\n# Acesso a banco de dados para conhecimento:\nVoce tem acesso a um banco de dados seguindo a estrutura abaixo:\n\nconhecimento (\n    numero VARCHAR PRIMARY KEY,\n    data JSONB DEFAULT '{}',\n    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,\n    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP\n)\n\nDe acordo com as informações dadas sobre como o banco de dados deve ser usado. Crie uma descrição do formato em JSON que deve ser usado na hora que guardar as informacões na tabela conhecimento. Explique como que deve ser buscado as informações também. Exemplo: Busca pelo numero de telefone do cliente em data.cliente.telefone\n\n</como_criar_ou_atualizar_o_seu_prompt>"
+        }
+      },
+      "id": "b2c78d42-3efb-4aab-b31f-26a1288d364b",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        660,
+        340
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "a27a84f0-2324-402d-b1d6-f5bf37e423e2",
+      "name": "Evolution API",
+      "type": "n8n-nodes-evolution-api.httpBin",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        340
+      ],
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cerebro",
+          "mode": "list",
+          "cachedResultName": "cerebro"
+        },
+        "limit": 1,
+        "options": {}
+      },
+      "id": "48fb19be-3131-4803-84f2-420054972b07",
+      "name": "puxar_prompt",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        440,
+        340
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "gatilho": {
+      "main": [
+        [
+          {
+            "node": "auth",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "auth": {
+      "main": [
+        [
+          {
+            "node": "puxar_prompt",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "salvar_prompt_final": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "puxar_prompt": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "gatilho": [
+      {
+        "json": {
+          "mensagem": "qual o seu prompt atual?\n\n",
+          "numero": "447928821569@s.whatsapp.net"
+        }
+      }
+    ]
+  },
+  "versionId": "2c5d7b46-0cb7-44d9-ac37-3eabe7386836",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-12-25T22:36:34.390Z",
+      "updatedAt": "2024-12-25T22:36:34.390Z",
+      "id": "LEAmzU5MTFbZZxqk",
+      "name": "Dinastia Odonto"
+    }
+  ]
+}
