@@ -1,0 +1,227 @@
+{
+  "createdAt": "2024-12-26T01:45:58.117Z",
+  "updatedAt": "2024-12-26T01:48:18.702Z",
+  "id": "d42Qcp13bOLp2CPC",
+  "name": "Assistente_Pessoal - Odonto Salvar_Conhecimento",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "ebd4accf-8656-4a88-aaaf-759f863a9b98",
+      "name": "gatilho",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "content": "! roda para deletar o conhecimento",
+        "height": 274.7923843700217,
+        "width": 273.1627906976745,
+        "color": 3
+      },
+      "id": "9c8cfa0a-9692-47ff-a50e-f2ce70813503",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "content": "rodar para criar tabela \"conhecimento\"",
+        "height": 274.7923843700217,
+        "width": 273.1627906976745,
+        "color": 4
+      },
+      "id": "34cf49b6-9b96-4a47-b6ea-e4b2785264d6",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "56060925-7cc8-441b-904a-2fe55ef3ecf0",
+              "name": "response",
+              "value": "=Informação adicionada ao banco de dados de conhecimento.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "549facc6-47c1-4ce0-8eff-ada3e78a9dee",
+      "name": "response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Drop the table if it exists\nDROP TABLE IF EXISTS conhecimento;\n\n-- Create the table\nCREATE TABLE conhecimento (\n    numero VARCHAR PRIMARY KEY,\n    data JSONB DEFAULT '{}',\n    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,\n    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP\n);\n\n-- Create trigger function to automatically update updated_at\nCREATE OR REPLACE FUNCTION update_updated_at_column()\nRETURNS TRIGGER AS $\nBEGIN\n    NEW.updated_at = CURRENT_TIMESTAMP;\n    RETURN NEW;\nEND;\n$ language 'plpgsql';\n\n-- Create trigger that calls the function before each update\nCREATE TRIGGER update_conhecimento_updated_at\n    BEFORE UPDATE ON conhecimento\n    FOR EACH ROW\n    EXECUTE FUNCTION update_updated_at_column();",
+        "options": {}
+      },
+      "id": "38bd8c4f-5b70-4305-8aeb-2d94e528308b",
+      "name": "criar_conhecimento",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        400,
+        80
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM conhecimento;",
+        "options": {}
+      },
+      "id": "a4f13922-f2b7-4063-bbe6-9d35d2b46162",
+      "name": "deletar_conhecimento",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        80,
+        80
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8da3556e-9aa6-47cb-a2e2-370cd33875d5",
+              "name": "data",
+              "value": "={{ $json.query.data ?? {} }}",
+              "type": "object"
+            },
+            {
+              "id": "926d1193-3553-40bd-8fef-2942938609c0",
+              "name": "numero",
+              "value": "={{ $json.query.numero }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        340
+      ],
+      "id": "55976f10-63e9-4773-ab55-4abc928b4568",
+      "name": "tratamento"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO conhecimento (numero, data)\nVALUES ('{{ $json.numero }}', '{{ JSON.stringify($json.data) }}'::jsonb)\nON CONFLICT (numero) \nDO UPDATE SET \n    data = conhecimento.data || EXCLUDED.data,\n    updated_at = CURRENT_TIMESTAMP;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        540,
+        340
+      ],
+      "id": "2f889a5a-98e8-420c-a9d9-825475cff4e2",
+      "name": "Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "gatilho": {
+      "main": [
+        [
+          {
+            "node": "response",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "tratamento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tratamento": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "gatilho": [
+      {
+        "json": {
+          "query": {
+            "numero": "447928821569@s.whatsapp.net",
+            "data": {
+              "interesses": [
+                "clareamento dental"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "d160107c-fc08-4300-b4e5-43c41261ce1e",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-12-25T22:36:34.390Z",
+      "updatedAt": "2024-12-25T22:36:34.390Z",
+      "id": "LEAmzU5MTFbZZxqk",
+      "name": "Dinastia Odonto"
+    }
+  ]
+}
