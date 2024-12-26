@@ -1,6 +1,6 @@
 {
   "createdAt": "2024-12-22T19:38:16.041Z",
-  "updatedAt": "2024-12-22T19:41:40.484Z",
+  "updatedAt": "2024-12-26T01:58:36.398Z",
   "id": "7bwyN4Da9MRfdzUh",
   "name": "Agent_Producao_Eric",
   "active": false,
@@ -524,7 +524,7 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "8aea7696-e09f-4bdd-8942-01d0fe3ab477",
+  "versionId": "4c0f86ad-969f-44c0-b4cc-580d4995a6ed",
   "triggerCount": 0,
   "tags": [
     {
@@ -532,12 +532,6 @@
       "updatedAt": "2024-12-22T01:11:10.918Z",
       "id": "FgvSuJUvU08VFD1v",
       "name": "EricNunes"
-    },
-    {
-      "createdAt": "2024-12-22T01:05:47.979Z",
-      "updatedAt": "2024-12-22T01:05:47.979Z",
-      "id": "7HHhDNdblXcw8ano",
-      "name": "agent - live"
     }
   ]
 }
