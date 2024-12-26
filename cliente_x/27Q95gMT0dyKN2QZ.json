@@ -1,6 +1,6 @@
 {
   "createdAt": "2024-12-22T19:30:57.410Z",
-  "updatedAt": "2024-12-22T19:32:17.906Z",
+  "updatedAt": "2024-12-26T01:58:56.678Z",
   "id": "27Q95gMT0dyKN2QZ",
   "name": "getEvent",
   "active": false,
@@ -186,7 +186,7 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "19fc6b24-9bff-4baf-81c1-fc9f4ce46cf5",
+  "versionId": "eac4ed23-1bb9-4009-a6a4-63c0690e7df3",
   "triggerCount": 0,
   "tags": [
     {
@@ -194,12 +194,6 @@
       "updatedAt": "2024-12-22T01:11:10.918Z",
       "id": "FgvSuJUvU08VFD1v",
       "name": "EricNunes"
-    },
-    {
-      "createdAt": "2024-12-22T01:05:47.979Z",
-      "updatedAt": "2024-12-22T01:05:47.979Z",
-      "id": "7HHhDNdblXcw8ano",
-      "name": "agent - live"
     }
   ]
 }
