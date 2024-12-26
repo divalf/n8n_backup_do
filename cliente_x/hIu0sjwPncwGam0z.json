@@ -1,6 +1,6 @@
 {
   "createdAt": "2024-12-22T19:34:26.466Z",
-  "updatedAt": "2024-12-22T20:36:52.695Z",
+  "updatedAt": "2024-12-26T01:57:27.077Z",
   "id": "hIu0sjwPncwGam0z",
   "name": "getProduto",
   "active": false,
@@ -251,14 +251,14 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "990c83cf-988e-450e-8418-37baedc3b699",
+  "versionId": "5a43a65d-b63d-4f84-ba97-d406e0d0c29e",
   "triggerCount": 0,
   "tags": [
     {
-      "createdAt": "2024-12-22T01:05:47.979Z",
-      "updatedAt": "2024-12-22T01:05:47.979Z",
-      "id": "7HHhDNdblXcw8ano",
-      "name": "agent - live"
+      "createdAt": "2024-12-22T01:11:10.918Z",
+      "updatedAt": "2024-12-22T01:11:10.918Z",
+      "id": "FgvSuJUvU08VFD1v",
+      "name": "EricNunes"
     }
   ]
 }
