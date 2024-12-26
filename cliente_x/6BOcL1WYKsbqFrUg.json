@@ -1,6 +1,6 @@
 {
   "createdAt": "2024-12-22T19:37:01.956Z",
-  "updatedAt": "2024-12-22T19:37:23.564Z",
+  "updatedAt": "2024-12-26T01:57:57.636Z",
   "id": "6BOcL1WYKsbqFrUg",
   "name": "getTime",
   "active": false,
@@ -16,8 +16,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -180,
-        -80
+        -820,
+        -380
       ]
     },
     {
@@ -27,8 +27,8 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1,
       "position": [
-        -440,
-        -80
+        -1080,
+        -380
       ]
     }
   ],
@@ -51,7 +51,7 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "a4ccf745-019d-4f86-897b-837f63652359",
+  "versionId": "d0db2078-6170-446c-a9be-5f43a72a196d",
   "triggerCount": 0,
   "tags": [
     {
@@ -59,12 +59,6 @@
       "updatedAt": "2024-12-22T01:11:10.918Z",
       "id": "FgvSuJUvU08VFD1v",
       "name": "EricNunes"
-    },
-    {
-      "createdAt": "2024-12-22T01:05:47.979Z",
-      "updatedAt": "2024-12-22T01:05:47.979Z",
-      "id": "7HHhDNdblXcw8ano",
-      "name": "agent - live"
     }
   ]
 }
