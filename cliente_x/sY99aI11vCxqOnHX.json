@@ -1,6 +1,6 @@
 {
   "createdAt": "2024-12-22T19:18:50.947Z",
-  "updatedAt": "2024-12-22T19:21:52.202Z",
+  "updatedAt": "2024-12-26T01:57:45.543Z",
   "id": "sY99aI11vCxqOnHX",
   "name": "getClientes",
   "active": false,
@@ -26,6 +26,7 @@
         -140,
         -120
       ],
+      "alwaysOutputData": true,
       "credentials": {
         "supabaseApi": {
           "id": "nuynV0McfUVTsQrg",
@@ -106,7 +107,7 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "afcc620f-1be3-4ca3-bee3-9e9835e4d941",
+  "versionId": "66bcbc8b-8bf9-4f24-8bcc-1169c657e299",
   "triggerCount": 0,
   "tags": [
     {
@@ -114,12 +115,6 @@
       "updatedAt": "2024-12-22T01:11:10.918Z",
       "id": "FgvSuJUvU08VFD1v",
       "name": "EricNunes"
-    },
-    {
-      "createdAt": "2024-12-22T01:05:47.979Z",
-      "updatedAt": "2024-12-22T01:05:47.979Z",
-      "id": "7HHhDNdblXcw8ano",
-      "name": "agent - live"
     }
   ]
 }
