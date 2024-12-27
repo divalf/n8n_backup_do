@@ -1,6 +1,6 @@
 {
   "createdAt": "2024-12-22T01:20:14.845Z",
-  "updatedAt": "2024-12-22T19:23:42.320Z",
+  "updatedAt": "2024-12-27T01:32:47.197Z",
   "id": "8sPk1cIMt7UkBhAE",
   "name": "Central de Status - Eric",
   "active": false,
@@ -215,8 +215,8 @@
       ],
       "credentials": {
         "openAiApi": {
-          "id": "v7f08akDjfrWKlNo",
-          "name": "OpenAi account - Uso Geral 2"
+          "id": "JkiMZM8MKW13d05b",
+          "name": "OpenAi - Uso Geral 3"
         }
       }
     },
@@ -295,8 +295,8 @@
       ],
       "credentials": {
         "openAiApi": {
-          "id": "v7f08akDjfrWKlNo",
-          "name": "OpenAi account - Uso Geral 2"
+          "id": "JkiMZM8MKW13d05b",
+          "name": "OpenAi - Uso Geral 3"
         }
       }
     },
@@ -443,7 +443,7 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "4tugqpxBGuvlorc5",
+          "value": "7bwyN4Da9MRfdzUh",
           "mode": "id"
         },
         "options": {}
@@ -845,68 +845,64 @@
       {
         "json": {
           "headers": {
-            "host": "n8n.decolehost.com.br",
-            "user-agent": "axios/1.7.5",
-            "content-length": "1046",
-            "accept": "application/json, text/plain, */*",
+            "host": "n8n-main.evolutionai.cloud",
+            "user-agent": "axios/1.7.7",
+            "content-length": "1093",
             "accept-encoding": "gzip, compress, deflate, br",
             "content-type": "application/json",
             "x-forwarded-for": "172.18.0.1",
-            "x-forwarded-host": "n8n.decolehost.com.br",
+            "x-forwarded-host": "n8n-main.evolutionai.cloud",
             "x-forwarded-port": "443",
             "x-forwarded-proto": "https",
-            "x-forwarded-server": "c865b4518f16",
+            "x-forwarded-server": "6f0638678d0e",
             "x-real-ip": "172.18.0.1"
           },
           "params": {},
           "query": {},
           "body": {
             "event": "messages.upsert",
-            "instance": "Eric - Teste",
+            "instance": "Criador_Digital",
             "data": {
               "key": {
                 "remoteJid": "5511985401987@s.whatsapp.net",
                 "fromMe": false,
-                "id": "3FCF841CC2127757FE63"
+                "id": "3EB0BE3AE297D4387456D6"
               },
-              "pushName": "Dival Filho",
+              "pushName": "Dival S Filho 😎",
+              "status": "DELIVERY_ACK",
               "message": {
+                "conversation": "confirmo",
                 "messageContextInfo": {
                   "deviceListMetadata": {
-                    "senderKeyHash": "l6DMElbpYMErGQ==",
-                    "senderTimestamp": "1732842117",
-                    "recipientKeyHash": "GSAZRvZTUM6fYA==",
-                    "recipientTimestamp": "1732747594"
+                    "senderKeyHash": "LlVlFAI8v5d28g==",
+                    "senderTimestamp": "1735216517",
+                    "senderAccountType": "E2EE",
+                    "receiverAccountType": "E2EE",
+                    "recipientKeyHash": "7PL+4bs/3JGkRw==",
+                    "recipientTimestamp": "1734734947"
                   },
-                  "deviceListMetadataVersion": 2
-                },
-                "conversation": "Preciso de um agendamento para às 13:00 até 14:00 no dia 24/12/2024\nMeu email é divalf@gmail.com\n\nMeu nome é Dival"
-              },
-              "contextInfo": {
-                "expiration": 0,
-                "ephemeralSettingTimestamp": "0",
-                "disappearingMode": {
-                  "initiator": "CHANGED_IN_CHAT"
+                  "deviceListMetadataVersion": 2,
+                  "messageSecret": "KMlNTyYCn7VpVVXO42qoC0z8rV8c1dQbLat3myRLO5o="
                 }
               },
-              "messageType": "extendedTextMessage",
-              "messageTimestamp": 1733186737,
-              "instanceId": "f621ebfb-bd85-4102-aad7-8b98516c025b",
-              "source": "unknown"
+              "messageType": "conversation",
+              "messageTimestamp": 1735262942,
+              "instanceId": "3b64fd51-8cf2-4a12-a655-f75bd8641211",
+              "source": "web"
             },
-            "destination": "https://n8n.decolehost.com.br/webhook-test/agent-live",
-            "date_time": "2024-12-02T21:45:37.547Z",
-            "sender": "553195128678@s.whatsapp.net",
-            "server_url": "https://decapi.decolehost.com.br",
-            "apikey": "9BE348379C79-4A0C-A71A-681B2D7B9B4D"
+            "destination": "https://n8n-main.evolutionai.cloud/webhook-test/agent-live",
+            "date_time": "2024-12-26T22:29:03.375Z",
+            "sender": "5511932081209@s.whatsapp.net",
+            "server_url": "https://evolution-evolution.mixpb7.easypanel.host",
+            "apikey": "1DED85B31895-4393-97AE-4CB8172D17B2"
           },
-          "webhookUrl": "https://webhook.decolehost.com.br/webhook-test/agent-live",
+          "webhookUrl": "https://n8n-hook.evolutionai.cloud/webhook-test/agent-live",
           "executionMode": "test"
         }
       }
     ]
   },
-  "versionId": "281a8d73-80af-47a8-9edf-4e4842d00903",
+  "versionId": "741aa7a8-04a0-41ea-988f-7e0ab9fa674f",
   "triggerCount": 0,
   "tags": [
     {
