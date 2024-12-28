@@ -1,0 +1,2647 @@
+{
+  "createdAt": "2024-12-27T02:05:14.262Z",
+  "updatedAt": "2024-12-27T18:33:57.312Z",
+  "id": "rsgfnhgnDyrTFAJT",
+  "name": "Assistente_Pessoal - Odonto",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "ab966536-33d4-45c3-8be6-b339d3385c82",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        5400,
+        2540
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "JkiMZM8MKW13d05b",
+          "name": "OpenAi - Uso Geral 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "base64",
+        "options": {
+          "fileName": "file.ogg",
+          "mimeType": "={{ $('Webhook').item.json.body.data.message.audioMessage.mimetype }}"
+        }
+      },
+      "id": "77bfdcc4-678b-4193-92dd-0b744e0bb9bf",
+      "name": "Convert to File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2620,
+        1800
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7066ff08-1370-464f-a588-86aa37025523",
+              "name": "texto",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "09bbb50a-863a-4618-94f2-2b14bc2364ba",
+      "name": "edit1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3160,
+        1800
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "09db48f1-b99e-4760-8a9b-10944a1ce0d2",
+              "name": "texto",
+              "value": "={{ $('Webhook').item.json.body.data.message.conversation }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b5dedb2b-5013-4c41-8d44-ab2cb6513b50",
+      "name": "edit2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3160,
+        2560
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "17b6fa1c-f4ea-4c75-9c9e-1a43900dbc58",
+              "leftValue": "={{ $('Webhook').item.json.body.apikey }}",
+              "rightValue": "={{ $json.evolutionApiKey }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "70c82c3b-7619-4b50-899f-17931323d19d",
+              "leftValue": "={{ $('Webhook').item.json.body.event }}",
+              "rightValue": "messages.upsert",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "1d4b7a6e-2895-42db-97c0-f62cf3c8f08c",
+              "leftValue": "={{ $json.utilizacaoApenasViaAdmin ? $json.numero === $json.adminNumero : true  }}",
+              "rightValue": "={{ $json.numero }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "edbafd60-b5bf-49ea-b0ca-bfb64a72c557",
+      "name": "auth",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2060,
+        2060
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "id": "d1450ce3-9c1f-4232-afec-d40f2a5cdd8c",
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        3800,
+        2020
+      ],
+      "webhookId": "c0def2c7-50d3-47c5-8a1e-4164f3625242"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "mensagem",
+        "key": "={{ $('config').item.json.numero }}",
+        "options": {}
+      },
+      "id": "a2e784e3-cf32-4533-b0c0-5931054ebb8e",
+      "name": "Puxar as Mensagens",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        3980,
+        2020
+      ],
+      "credentials": {
+        "redis": {
+          "id": "0qF1xxY6s73Fh5ad",
+          "name": "Redis - lnc"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "9e9b4155-e399-4936-a5db-2d79c8cb871f",
+              "leftValue": "={{ $json.mensagem.last() }}",
+              "rightValue": "={{ $('mensagem_cliente_inicial').item.json.texto }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0b8cf2bf-fa80-4c74-94f7-3ae9b247ac96",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        3440,
+        2240
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "key": "={{ $('config').item.json.numero }}"
+      },
+      "id": "0c529e3f-b5a0-4588-bf2c-bf84d95d51a6",
+      "name": "Redis",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        3980,
+        2220
+      ],
+      "credentials": {
+        "redis": {
+          "id": "0qF1xxY6s73Fh5ad",
+          "name": "Redis - lnc"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $('config').item.json.numero }}",
+        "messageData": "={{ $json.texto }}",
+        "tail": true
+      },
+      "id": "2b7e695c-b9b1-48b7-aef1-dee3b6228c21",
+      "name": "Lista Mensagens1",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        3620,
+        2020
+      ],
+      "credentials": {
+        "redis": {
+          "id": "0qF1xxY6s73Fh5ad",
+          "name": "Redis - lnc"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bce70488-3d4e-412d-9c28-4858906bc722",
+              "name": "texto",
+              "value": "={{ $('Puxar as Mensagens').item.json.mensagem.join('\\n') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "836b23da-f5f6-418b-9dd2-cfead088e31e",
+      "name": "Edit Fields2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3720,
+        2220
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Buffer Redis - Mensagem picotada",
+        "height": 80,
+        "width": 635,
+        "color": 3
+      },
+      "id": "dfa20d10-a158-48e7-9338-508e9782d095",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3440,
+        1920
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "id": "f121bdda-2cc5-4616-a4f9-70d082659c31",
+      "name": "OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.6,
+      "position": [
+        2880,
+        1800
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "JkiMZM8MKW13d05b",
+          "name": "OpenAi - Uso Geral 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "roda para setar o banco de dados vetorial do supabase",
+        "height": 274.7923843700217,
+        "width": 273.1627906976745,
+        "color": 4
+      },
+      "id": "584a8294-8511-4dab-9411-806e1d53b6d5",
+      "name": "Sticky Note8",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        1580
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Enable the pgvector extension to work with embedding vectors\ncreate extension vector;\n\n-- Create a table to store your documents\ncreate table documents (\n  id bigserial primary key,\n  content text, -- corresponds to Document.pageContent\n  metadata jsonb, -- corresponds to Document.metadata\n  embedding vector(1536) -- 1536 works for OpenAI embeddings, change if needed\n);\n\n-- Create a function to search for documents\ncreate function match_documents (\n  query_embedding vector(1536),\n  match_count int default null,\n  filter jsonb DEFAULT '{}'\n) returns table (\n  id bigint,\n  content text,\n  metadata jsonb,\n  similarity float\n)\nlanguage plpgsql\nas $\n#variable_conflict use_column\nbegin\n  return query\n  select\n    id,\n    content,\n    metadata,\n    1 - (documents.embedding <=> query_embedding) as similarity\n  from documents\n  where metadata @> filter\n  order by documents.embedding <=> query_embedding\n  limit match_count;\nend;\n$;\n",
+        "options": {}
+      },
+      "id": "d3cebb48-7fc0-4cd8-91c6-dc919901eb03",
+      "name": "setar_supabase_tabelas_vectoriais",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1540,
+        1660
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.texto }}",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "=file_id",
+                "value": "={{ $('arquivo_id').item.json.file_id }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "2f00d794-81f7-465f-819e-6d7a3c5bf570",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        3080,
+        1400
+      ]
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-small",
+        "options": {}
+      },
+      "id": "01d5f46f-3655-4687-9a71-492c9cffd5af",
+      "name": "Embeddings OpenAI1",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1,
+      "position": [
+        2940,
+        1380
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "JkiMZM8MKW13d05b",
+          "name": "OpenAi - Uso Geral 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "b09027e6-01bf-40a6-877e-c1108f464cc7",
+      "name": "Recursive Character Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        3120,
+        1520
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "10646eae-ae46-4327-a4dc-9987c2d76173",
+              "name": "file_id",
+              "value": "={{ $(\"Webhook\").item.json.body.data.message.documentWithCaptionMessage.message.documentMessage.title.replaceAll(\" \", \"-\").replaceAll(\"(\", \"-\").replaceAll(\")\", \"-\") }}",
+              "type": "string"
+            },
+            {
+              "id": "c9e1ed84-5dcc-43c3-999b-cf1d095eba32",
+              "name": "file_mime_type",
+              "value": "={{ $(\"Webhook\").item.json.body.data.message.documentWithCaptionMessage.message.documentMessage.mimetype }}",
+              "type": "string"
+            },
+            {
+              "id": "53f6c63c-f9fa-48c5-a83a-922b4caeadd5",
+              "name": "base64",
+              "value": "={{ $(\"Webhook\").item.json.body.data.message.base64 }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4f44dd3c-d0e6-4560-9248-753d1f9c4e61",
+      "name": "arquivo_id",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2620,
+        1600
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "documents",
+        "filterType": "string",
+        "filterString": "=metadata->>file_id=like.*{{ $json.file_id }}*"
+      },
+      "id": "a94bab08-5c60-4a2d-bf61-38afc7fbc3ae",
+      "name": "deletar_arquivos_antigos",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2620,
+        1000
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "YhBY7JAvyD5zeheS",
+          "name": "Supabase - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "id": "127d0e13-693d-4b92-bccf-56bf3528ed41",
+      "name": "extrair_pdf",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        2620,
+        1220
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "aecaf0bd-b800-40b7-b348-c1a8ff636ef1",
+              "name": "texto",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "84b24a2c-ce19-45db-8398-c08986003fd2",
+      "name": "exportar_texto",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2780,
+        1220
+      ]
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-small",
+        "options": {}
+      },
+      "id": "7f6da3db-017c-4830-a921-d356d1e0e00b",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1,
+      "position": [
+        5780,
+        2840
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "JkiMZM8MKW13d05b",
+          "name": "OpenAi - Uso Geral 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "e46466fc-433c-4d87-a2f0-18ca115a97c1",
+      "name": "OpenAI Chat Model2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        6040,
+        2720
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "JkiMZM8MKW13d05b",
+          "name": "OpenAi - Uso Geral 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "id": "57bf740e-ec08-40c2-ac22-59de629ce961",
+      "name": "supabase_vectorstore",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1,
+      "position": [
+        2980,
+        1220
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "YhBY7JAvyD5zeheS",
+          "name": "Supabase - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "agendamentos",
+        "description": "Use essa ferramenta para agendamentos, consultar agenda, deletar eventos/reuniões, criar novo evento/reunião.",
+        "workflowId": {
+          "__rl": true,
+          "value": "UV36gwqlsY3TQocr",
+          "mode": "list",
+          "cachedResultName": "Assistente Pessoal - Agendamentos"
+        },
+        "specifyInputSchema": true,
+        "jsonSchemaExample": "{\n\t\"numero\": \"<numero></numero>\",\n    \"mensagem\": \"Aqui a instrução para gerenciar a agenda\",\n    \"email\": \"Email do recipiente ou email do cliente.\",\n    \"nome\": \"<nome></nome>\"\n}"
+      },
+      "id": "9609100a-a61b-4cbd-a800-1192573f102a",
+      "name": "agendamentos",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        6360,
+        2660
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Drop the table if it already exists\nDROP TABLE IF EXISTS cerebro;\n\n-- Create the table\nCREATE TABLE cerebro (\n    id SERIAL PRIMARY KEY,\n    prompt TEXT NOT NULL\n);\n\n-- Insert a single row into the table\nINSERT INTO cerebro (prompt) VALUES ('Você é uma assistente virtual, use todas as ferramentas a sua disposição para executar as tarefas solicitadas.');\n",
+        "options": {}
+      },
+      "id": "880a0142-8498-49fe-92eb-f675919da0c2",
+      "name": "criar_cerebro",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1540,
+        1360
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "rodar para criar tabela \"cerebro\"",
+        "height": 274.7923843700217,
+        "width": 273.1627906976745,
+        "color": 4
+      },
+      "id": "c68a33bf-8191-44cb-bd39-ea0008c4f93a",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        1280
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cerebro",
+          "mode": "list",
+          "cachedResultName": "cerebro"
+        },
+        "limit": 1,
+        "options": {}
+      },
+      "id": "abd74224-e9aa-40cd-a668-a312cf2087eb",
+      "name": "puxar_prompt",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        4540,
+        2220
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('config').item.json.numero }}",
+        "tableName": "memoria_chat",
+        "contextWindowLength": 50
+      },
+      "id": "a4861357-3be0-47aa-ad6d-35347d3af360",
+      "name": "Postgres Chat Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.1,
+      "position": [
+        5780,
+        2440
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "roda para deletar a memorias",
+        "height": 274.7923843700217,
+        "width": 273.1627906976745,
+        "color": 3
+      },
+      "id": "086786c8-2de7-4d47-a5ab-11375079ba55",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        1580
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DO $\nBEGIN\n    IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'memoria_chat') THEN\n        DELETE FROM memoria_chat;\n    END IF;\n\n    IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'memoria_classificacao') THEN\n        DELETE FROM memoria_classificacao;\n    END IF;\nEND $;",
+        "options": {}
+      },
+      "id": "7477d69e-e512-489d-a201-42d9e78ec36e",
+      "name": "Deletar_todas_as_mensagens1",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1840,
+        1660
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "base64",
+        "options": {}
+      },
+      "id": "d4bad593-5fd1-4ce6-b0d1-27a7ade2af63",
+      "name": "convert_to_file",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        3120,
+        1000
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a6e9330-1f7c-4a38-91a0-3cabc7698dc8",
+              "name": "base64",
+              "value": "={{ $('arquivo_id').item.json.base64 }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d25b91d2-bc64-45b0-a86e-f7659e9bf062",
+      "name": "base64",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2940,
+        1000
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('arquivo_id').item.json.file_mime_type }}",
+                    "rightValue": "={{ $('arquivo_id').item.json.file_mime_type }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2c8fbbee-4e93-45e4-a2ac-5148f817c07e",
+      "name": "tipo_arquivo",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        3300,
+        1000
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "9a1a52af-0fd2-4657-887a-0f74aa9fe163",
+      "name": "OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        3800,
+        1400
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "JkiMZM8MKW13d05b",
+          "name": "OpenAi - Uso Geral 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "pageContent"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6408b64e-3f38-4c30-81cd-23351357848f",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        3340,
+        1220
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $(\"Aggregate\").item.json.pageContent.join(\"\\n\") }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Você é um experiente resumidor de textos, o seu objetivo é criar um resumo simples e objetivo, no máximo 220 caractéres sobre o texto.\n\nO Resumo deve conter os principáis tópicos abordados no texto. Como nome de pessoas importantes e principais categorias de produto e serviço.\n\nO Resumo deve informar e começar como: \"Utilize este texto para saber mais: ...\" E continue com o resumo do texto."
+            }
+          ]
+        }
+      },
+      "id": "8f48a88f-6046-4c41-a396-2f48ab3ad7b3",
+      "name": "resumo",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        3720,
+        1220
+      ]
+    },
+    {
+      "parameters": {
+        "content": "rodar para criar tabela \"rag_controle\"",
+        "height": 274.7923843700217,
+        "width": 273.1627906976745,
+        "color": 4
+      },
+      "id": "4684f967-6543-4f36-b36c-8d8c907c1fd0",
+      "name": "Sticky Note9",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        980
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Drop the table if it already exists\nDROP TABLE IF EXISTS rag_controle;\n\n-- Create the table\nCREATE TABLE rag_controle (\n    id SERIAL PRIMARY KEY,\n    arquivo_id VARCHAR NOT NULL,\n    resumo TEXT NOT NULL\n);\n",
+        "options": {}
+      },
+      "id": "478ce3d2-a049-4241-9b76-7c7052ade0e1",
+      "name": "criar_rag_controle",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1540,
+        1060
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "rag_controle",
+          "mode": "list",
+          "cachedResultName": "rag_controle"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "arquivo_id": "={{ $('arquivo_id').item.json.file_id }}",
+            "resumo": "={{ $json.text }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "arquivo_id",
+              "displayName": "arquivo_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "resumo",
+              "displayName": "resumo",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9066cfb5-3797-4360-a55c-cae828c3da16",
+      "name": "atualizar_lista_de_arquivos",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        4040,
+        1220
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "rag_controle",
+          "mode": "list",
+          "cachedResultName": "rag_controle"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "1dab001f-7f2f-4057-a226-096d5034ca85",
+      "name": "rag_resumos",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        4460,
+        2420
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "id"
+            },
+            {
+              "fieldToAggregate": "arquivo_id"
+            },
+            {
+              "fieldToAggregate": "resumo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c34bcdb2-5613-486e-a59a-4a2dce0e40e2",
+      "name": "Aggregate1",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        4620,
+        2420
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "id": "f301315c-18a1-43ec-bbee-e408822f46c1",
+      "name": "Supabase Vector Store",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1,
+      "position": [
+        5740,
+        2700
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "YhBY7JAvyD5zeheS",
+          "name": "Supabase - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "excluir_rag_arquivo",
+        "description": "Use essa ferramenta para excluir um arquivo da base de conhecimento.",
+        "workflowId": {
+          "__rl": true,
+          "value": "tc2ZbnFDqFEu0Wvs",
+          "mode": "list",
+          "cachedResultName": "Assistente Pessoal - Excluir RAG v1.1"
+        },
+        "specifyInputSchema": true,
+        "jsonSchemaExample": "\n{\n  \"numero\": \"447928821569@whatsapp.us\",\n  \"arquivoId\": \"File--.pdf\",\n  \"id\": 1\n}"
+      },
+      "id": "eca3e5d6-4cb8-4694-85fa-a2761d9384cf",
+      "name": "excluir_rag_arquivo",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        6360,
+        2500
+      ]
+    },
+    {
+      "parameters": {
+        "name": "emails",
+        "description": "Use essa ferramenta para fazer uma busca de emails e/ou enviar emails para alguem",
+        "workflowId": {
+          "__rl": true,
+          "value": "9d9FldPArfeIW8Gu",
+          "mode": "list",
+          "cachedResultName": "Assistente Pessoal - Emails v1.4"
+        },
+        "specifyInputSchema": true,
+        "jsonSchemaExample": "{\n  \"numero\": \"<numero></numero>\",\n  \"email\": \"rodrigo@dinatia.uk\",\n  \"mensagem\": \"Mande um email para 'g@digitunit.com' com o assunto 'reuniao' dizendo que precisamos agendar uma reuniao para amanha. \",\n  \"intencao\": \"novo_email ou buscar_emails\"\n}"
+      },
+      "id": "e6a8724f-c182-4f93-b5f6-53195d6ebaf7",
+      "name": "emails",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        6560,
+        2660
+      ]
+    },
+    {
+      "parameters": {
+        "name": "adicionar_conhecimento",
+        "description": "Use esta ferramenta para adicionar conhecimento no banco de dados de conhecimento. Deve ser especificado um object JSON em \"data\"",
+        "workflowId": {
+          "__rl": true,
+          "value": "PfiqkdXhJ2U65fhQ",
+          "mode": "list",
+          "cachedResultName": "Assistente Pessoal - Salvar conhecimento"
+        },
+        "specifyInputSchema": true,
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"numero\": {\n      \"type\": \"string\",\n      \"description\": \"<numero></numero>\"\n    },\n    \"data\": {\n      \"type\": \"object | undefined\",\n      \"description\": \"campo JSON para objectos\"\n    }\n  }\n}"
+      },
+      "id": "aeca6013-e65b-425a-a7b5-f0fbaa1a23a1",
+      "name": "adicionar_conhecimento",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        6360,
+        2320
+      ]
+    },
+    {
+      "parameters": {
+        "name": "buscar_conhecimento",
+        "description": "Usar essa ferramenta quando precisar buscar alguma informação no banco de dados.",
+        "workflowId": {
+          "__rl": true,
+          "value": "ogfAMw15awJqSPqm",
+          "mode": "list",
+          "cachedResultName": "Assistente Pessoal - Buscar conhecimento"
+        },
+        "specifyInputSchema": true,
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"isAdmin\": {\n      \"type\": \"boolean\",\n      \"description\": \"<isAdmin></isAdmin>\"\n    },\n    \"numero\": {\n      \"type\": \"string\",\n      \"description\": \"<numero></numero>\"\n    },\n    \"query\": {\n      \"type\": \"string\",\n      \"description\": \"Exemplo: buscar dados do cliente, filtrar por data.cliente.telefone = 447928821569@whatsapp.nets\"\n    }\n  }\n}"
+      },
+      "id": "a3163dc1-8b3b-4412-9e24-2112f58b69f2",
+      "name": "buscar_conhecimento",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        6560,
+        2320
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "base64",
+        "options": {}
+      },
+      "id": "1b160b23-aa61-451e-ae2b-84c566584c53",
+      "name": "Convert to File1",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2800,
+        2020
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f553042c-39d5-4bdd-8082-fbd390726fcd",
+              "name": "base64",
+              "value": "={{ $(\"Webhook\").item.json.body.data.message.base64 }}",
+              "type": "string"
+            },
+            {
+              "id": "99bfd97a-4868-47ad-bba4-54b3ff1df3bf",
+              "name": "prompt",
+              "value": "={{ $('Webhook').item.json.body.data.message?.imageMessage?.caption || \"Extraia todo o texto desta imagem. Apenas retorne o texto extraido.\" }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7b1058d0-c1a9-479c-a190-cd2954c5765b",
+      "name": "base",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2620,
+        2020
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e1fdbe70-0c0e-46a1-accd-a79f4fd17098",
+              "name": "texto",
+              "value": "={{ $('base').item.json.prompt }}: {{ $json.content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "07517cfd-bc7c-4e0f-b00b-d390af262751",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3160,
+        2020
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a508445e-1d5f-42f8-ae51-0ce841e24b8f",
+                    "leftValue": "={{ $('Webhook').item.json.body.data.messageType === \"documentWithCaptionMessage\" && $('config').item.json.isAdmin }}",
+                    "rightValue": "documentWithCaptionMessage",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "documento"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Webhook').item.json.body.data.messageType }}",
+                    "rightValue": "audioMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4a719a6f-b912-48ec-81a5-920afde042b6",
+                    "leftValue": "={{ $('Webhook').item.json.body.data.messageType }}",
+                    "rightValue": "imageMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "imagem"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "50c6e2b0-2494-4780-abd8-84a0e4213091",
+                    "leftValue": "={{ $('Webhook').item.json.body.data.messageType }}",
+                    "rightValue": "conversation",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "texto"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "870e4940-1a8a-49a1-ac6c-1b79da58f25e",
+      "name": "mensagem_tipo",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        2320,
+        2020
+      ],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "text": "={{ $('base').item.json.prompt }}",
+        "inputType": "base64",
+        "options": {}
+      },
+      "id": "81f2738d-462b-4d3b-b54f-ead4c5d5ab1e",
+      "name": "OpenAI1",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.6,
+      "position": [
+        2980,
+        2020
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "JkiMZM8MKW13d05b",
+          "name": "OpenAi - Uso Geral 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "id": "8619de0d-d7bb-4e1d-8441-06d6703cc42a",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        4820,
+        2240
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output === \"prompt\" && $('config').item.json.isAdmin }}",
+                    "rightValue": "prompt",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "prompt"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ba240a5c-68fd-45f3-9eb8-2c7233d17dbf",
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "outros",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "outros"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "383ab4a0-195f-4307-8f08-73e4bd9eb3dd",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        5380,
+        2240
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "rlWR7VJ17MrWUHSl",
+          "mode": "list",
+          "cachedResultName": "Assistente Pessoal - Atualizar prompt"
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "id": "ff7a4dc0-271f-4d94-bfc0-9e30181f1c02",
+      "name": "atualizar_prompt",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        5800,
+        1980
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a365188b-6115-463f-9e44-e77de71f879f",
+              "name": "mensagem",
+              "value": "={{ $('mensagem_cliente').item.json.texto }}",
+              "type": "string"
+            },
+            {
+              "id": "ec82f6e2-0582-4fb4-b3c4-1d665bbbafd2",
+              "name": "numero",
+              "value": "={{ $('config').item.json.numero }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "02e89d08-b8b7-4905-b1e0-28feccad3900",
+      "name": "tratamento",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5620,
+        1980
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "81dd8066-f3ed-462b-a538-3bad57450e37",
+        "options": {}
+      },
+      "id": "f92721f5-0790-422d-b7d1-5306ee8c87ba",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        1480,
+        2060
+      ],
+      "webhookId": "81dd8066-f3ed-462b-a538-3bad57450e37"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=<mensagem>{{ $('mensagem_cliente').item.json.texto }}</mensagem>",
+        "options": {
+          "systemMessage": "={{ $('Merge').item.json.prompt }}\n\nResponda apenas com texto. Não use tags XML na sua resposta.\n\n<banco_de_dados_nivel_de_acesso>\n{{ $('config').item.json.isAdmin ? \"O usuário conversando com você, é o seu administrador, ele tem funções que podem ser usadas para acessar todos os outros usuários\" : \"O usuário não pode acessar informações de outros numeros, ou de outros clientes.\" }}\n</banco_de_dados_nivel_de_acesso>\n\n<numero>{{ $('config').item.json.numero }}</numero>\n<nome>{{ $('Webhook').item.json.body.data.pushName }}</nome>\n<isAdmin>{{ $('config').item.json.isAdmin ? \"true\" : \"false\" }}</isAdmin>\n\nQuando usar cada ferramenta:\n\n<atualizar_prompt>\nQuando tiver alguma solicitação para atualizar o prompt.\nQuando tiver alguma resposta sobre a atualização do prompt.\nQuando tiver alguma dúvida sobre o prompt. Exemplo: Qual seu prompt?\nNo Input da plataforma em  \"mensagem\" passe <mensagem></mensagem> \nNo Input da plataforma em \"numero\" passe <numero></numero>\n\nNão interfira na <mensagem></mensagem> quando for passar no input.\nNão modifique a <mensagem></mensagem>.\n</atualizar_prompt>\n\n<RAG>\nUse esta ferramenta \"Retrieve Documents\" para consultar mais informações sobre a empresa e seus produtos baseado nos aquivos abaixo:\n{{  $('Merge').item.json.arquivo_id.map((arquivo, index) => `\n<arquivo>\n  <arquivoId>${arquivo}</arquivoId>\n  <id>${$('Merge').item.json.id[index]}</id>\n</arquivo>\n`) }}\n</RAG>\n\n<agendamentos>\nQuando o cliente quiser agendar uma reunião, confirmar, cancelar, reagendar.\nUse o response desta ferramenta para confirmar, solicitar informações, cancelar, reagendar.\nConsulte esta ferramenta primeiro quando a <mensagem></mensagem> do cliente for referente a agendamentos. Responda usanda a \"response\" da tool.\nQuando o cliente confirmar um agendamento/consulta escreva na query \"confirmado\"\nSempre use a response da tool <agendamentos> após realizar uma query com ela.\n</agendamentos>\n\n<emails>\nQuando precisar checar emails em um determinando período\nQuando precisasr encaminhar emails para alguem, (apenas caso for explicito o email da pessoa na mensagem)\nResponda usando a response da ferramenta\nIdentifique a intenção em relaçåo a emmails, e classifique em novo_email ou buscar_emails.\nUse o response da ferramenta para encaminhar a mensagem ao cliente.\n</emails>\n\n<adicionar_conhecimento>\nQuando precisar salvar alguma informação no banco de dados.\nQuando precisar adicionar alguma informação no banco de dados.\n</adicionar_conhecimento>\n\n<buscar_conhecimento>\nUse quando precisar buscar alguma informação no banco de dados.\n</buscar_conhecimento>\n"
+        }
+      },
+      "id": "281263b9-377e-4fd8-9073-7d96dab9e973",
+      "name": "recepcionista",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        5720,
+        2260
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=<mensagem>{{ $('mensagem_cliente').item.json.texto }}</mensagem>",
+        "options": {
+          "systemMessage": "=Aja como uma classificadora de intenção. A sua função é identificar o objetivo da mensagem, sendo \"prompt\" ou \"outros\".\n\nClassifique como \"prompt\" quando a <mensagem></mensagem> conter informações sobre o prompt deste assistente ou é uma continuação/resposta da conversa sobre prompt.\n\nClassifique como \"outros\" tudo aquilo que não for sobre prompt. \n\nApenas retorne ou a palavra \"prompt\" ou a palavra \"outros\", não retorne nada mais que não seja apenas uma destas 2 palavras.\n\n\n<exemplo>\nHuman: Ola eu gostaria de atualziar o seu prompt\nAi: prompt\n</exemplo>\n\n<exemplo>\nHuman: GOstaria de agendar um horario\nAi: outros\n</exemplo>\n\n<exemplo>\nHuman:Quais as informações na minha base de conhecimento\nAi: outros\n</exemplo>\n\n<exemplo>\nHuman: Ola, quem é voce?\nAi: outros\n</exemplo>"
+        }
+      },
+      "id": "7c2371f0-4026-43b5-9581-3c9ca674163d",
+      "name": "classificador_de_intencao",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        5060,
+        2240
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "f429b87f-1b6e-46f4-8fa9-85a88c43c6cf",
+      "name": "Evolution API2",
+      "type": "n8n-nodes-evolution-api.httpBin",
+      "typeVersion": 1,
+      "position": [
+        6060,
+        1980
+      ],
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2780,
+        1000
+      ],
+      "id": "788b81e4-7c51-4602-b5ac-f74a391d3397",
+      "name": "Aggregate2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-evolution-api.httpBin",
+      "typeVersion": 1,
+      "position": [
+        4200,
+        1220
+      ],
+      "id": "4f862898-194b-4a25-a09d-bf26a0908055",
+      "name": "Evolution API",
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "name": "excluir_conhecimento",
+        "description": "Usar essa ferramenta quando precisar excluir algum conhecimento no banco de conhecimento.",
+        "workflowId": {
+          "__rl": true,
+          "value": "DKc9b8hD2qFGFBzw",
+          "mode": "list",
+          "cachedResultName": "Assistente Pessoal - Excluir conhecimento v1.3"
+        },
+        "specifyInputSchema": true,
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"id\": {\n      \"type\": \"integer\",\n      \"description\": \"id do conhecimento a ser deletado\"\n    }\n  }\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        6560,
+        2500
+      ],
+      "id": "9a4e6b4f-fcb6-43bd-89b9-d4015954e6e1",
+      "name": "excluir_conhecimento"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "95121ad5-245e-4693-9a61-4fa0c8dca182",
+              "name": "adminNumero",
+              "value": "447928821569@s.whatsapp.net",
+              "type": "string"
+            },
+            {
+              "id": "a2d7d0bb-f307-46cd-9a7e-6784493f0444",
+              "name": "numero",
+              "value": "={{ $json.body.data.key.remoteJid }}",
+              "type": "string"
+            },
+            {
+              "id": "ceb09e4b-7f4e-4794-865a-4152424f52de",
+              "name": "utilizacaoApenasViaAdmin",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "50ac7a75-bfc7-4075-9245-ee2c94739474",
+              "name": "evolutionApiKey",
+              "value": "1BEA861EBC63-4328-A016-843243A247FC",
+              "type": "string"
+            },
+            {
+              "id": "0aaea0a8-8882-46ff-8b28-c7208094b1ec",
+              "name": "isAdmin",
+              "value": "={{ $json.body.data.key.remoteJid === \"447928821560@s.whatsapp.net\" }}",
+              "type": "boolean"
+            },
+            {
+              "id": "16ee8d22-4c6e-452a-bb13-529ded76b7d0",
+              "name": "base64",
+              "value": "={{ $json.body.data.message.base64 }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1800,
+        2060
+      ],
+      "id": "637e2d03-e4c4-40af-b897-b1793bf803e1",
+      "name": "config"
+    },
+    {
+      "parameters": {
+        "content": "## Configuração",
+        "height": 300,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        1960
+      ],
+      "id": "82f8be51-5244-4fa2-b7dd-5ed453b5c46e",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "465ce541-a4d5-49cd-85ec-58e5449492cb",
+              "name": "texto",
+              "value": "={{ $json.texto }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4260,
+        2220
+      ],
+      "id": "fc0b8150-4127-4ddc-b079-f53035f2b573",
+      "name": "mensagem_cliente"
+    },
+    {
+      "parameters": {
+        "content": "## RAG - Vector store",
+        "height": 80,
+        "width": 780
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2620,
+        900
+      ],
+      "id": "1369c8bf-89ef-4ba2-a517-681f708917af",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Puxar prompt + rag_controle",
+        "height": 80,
+        "width": 655,
+        "color": 5
+      },
+      "id": "ff212e99-6895-498d-93f0-444d886e8ea7",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        4260,
+        2120
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## rag_controle - Atualizar banco de dados",
+        "height": 80,
+        "width": 760
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3540,
+        1120
+      ],
+      "id": "a8b449f0-9b7e-4e55-95a5-7366b1ab3235",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Ferramentas",
+        "height": 700,
+        "width": 495,
+        "color": 5
+      },
+      "id": "1946dcc9-d07b-44bb-adbb-1eac621c59a4",
+      "name": "Sticky Note10",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        6240,
+        2180
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "60d6b895-fea6-4d7f-932a-b8771c97242e",
+              "name": "texto",
+              "value": "={{ $json.texto || '' }}\n\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f125a37d-9c15-47ce-b246-28bcc689ccd6",
+      "name": "mensagem_cliente_inicial",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3440,
+        2020
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "rag_controle",
+          "mode": "list",
+          "cachedResultName": "rag_controle"
+        },
+        "deleteCommand": "delete",
+        "where": {
+          "values": [
+            {
+              "column": "arquivo_id",
+              "value": "={{ $('arquivo_id').item.json.file_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        3540,
+        1220
+      ],
+      "id": "c7da5c7b-2108-46a5-8cdb-b56e0e22384b",
+      "name": "deletar_arquivo",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('config').item.json.numero }}",
+        "tableName": "memoria_classificacao"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        5140,
+        2440
+      ],
+      "id": "fde2f610-1872-4bb7-9d8a-e56c7c1652ff",
+      "name": "Postgres Chat Memory1",
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM conhecimento;",
+        "options": {}
+      },
+      "id": "001aee37-125a-4849-afaa-11cc3c2a1c12",
+      "name": "deletar_conhecimento",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1840,
+        1360
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "UDj9j4FpSusP0Vje",
+          "name": "Postgres - Dinastia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "roda para deletar o conhecimento",
+        "height": 274.7923843700217,
+        "width": 273.1627906976745,
+        "color": 3
+      },
+      "id": "1218dcec-75e1-49cb-9291-7fdaab2574c9",
+      "name": "Sticky Note11",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        1280
+      ]
+    },
+    {
+      "parameters": {
+        "name": "RAG",
+        "description": "={{ $('Merge').item.json.resumo.join(\"/n\") }}.",
+        "topK": 10
+      },
+      "id": "0d26f644-6e96-48d5-8967-ac781a012065",
+      "name": "RAG",
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1,
+      "position": [
+        5880,
+        2560
+      ]
+    }
+  ],
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "recepcionista",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "classificador_de_intencao",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "edit1": {
+      "main": [
+        [
+          {
+            "node": "mensagem_cliente_inicial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "edit2": {
+      "main": [
+        [
+          {
+            "node": "mensagem_cliente_inicial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "auth": {
+      "main": [
+        [
+          {
+            "node": "mensagem_tipo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Puxar as Mensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Puxar as Mensagens": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis": {
+      "main": [
+        [
+          {
+            "node": "mensagem_cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lista Mensagens1": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Redis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "edit1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "supabase_vectorstore",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "supabase_vectorstore",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "arquivo_id": {
+      "main": [
+        [
+          {
+            "node": "deletar_arquivos_antigos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "deletar_arquivos_antigos": {
+      "main": [
+        [
+          {
+            "node": "Aggregate2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extrair_pdf": {
+      "main": [
+        [
+          {
+            "node": "exportar_texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "exportar_texto": {
+      "main": [
+        [
+          {
+            "node": "supabase_vectorstore",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "RAG",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "supabase_vectorstore": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "agendamentos": {
+      "ai_tool": [
+        [
+          {
+            "node": "recepcionista",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "puxar_prompt": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "recepcionista",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "convert_to_file": {
+      "main": [
+        [
+          {
+            "node": "tipo_arquivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "base64": {
+      "main": [
+        [
+          {
+            "node": "convert_to_file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tipo_arquivo": {
+      "main": [
+        [
+          {
+            "node": "extrair_pdf",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "resumo",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "deletar_arquivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "resumo": {
+      "main": [
+        [
+          {
+            "node": "atualizar_lista_de_arquivos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "rag_resumos": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "RAG",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "excluir_rag_arquivo": {
+      "ai_tool": [
+        [
+          {
+            "node": "recepcionista",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "emails": {
+      "ai_tool": [
+        [
+          {
+            "node": "recepcionista",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "adicionar_conhecimento": {
+      "ai_tool": [
+        [
+          {
+            "node": "recepcionista",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "buscar_conhecimento": {
+      "ai_tool": [
+        [
+          {
+            "node": "recepcionista",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File1": {
+      "main": [
+        [
+          {
+            "node": "OpenAI1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "base": {
+      "main": [
+        [
+          {
+            "node": "Convert to File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "mensagem_cliente_inicial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensagem_tipo": {
+      "main": [
+        [
+          {
+            "node": "arquivo_id",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "base",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "edit2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "classificador_de_intencao",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "tratamento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "recepcionista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tratamento": {
+      "main": [
+        [
+          {
+            "node": "atualizar_prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "classificador_de_intencao": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate2": {
+      "main": [
+        [
+          {
+            "node": "base64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "excluir_conhecimento": {
+      "ai_tool": [
+        [
+          {
+            "node": "recepcionista",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "config": {
+      "main": [
+        [
+          {
+            "node": "auth",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensagem_cliente": {
+      "main": [
+        [
+          {
+            "node": "puxar_prompt",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "rag_resumos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensagem_cliente_inicial": {
+      "main": [
+        [
+          {
+            "node": "Lista Mensagens1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "deletar_arquivo": {
+      "main": [
+        [
+          {
+            "node": "resumo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "classificador_de_intencao",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RAG": {
+      "ai_tool": [
+        [
+          {
+            "node": "recepcionista",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "aula-n8n.jnsbgu.easypanel.host",
+            "user-agent": "axios/1.7.7",
+            "content-length": "17397",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "content-type": "application/json",
+            "x-forwarded-for": "172.18.0.1",
+            "x-forwarded-host": "aula-n8n.jnsbgu.easypanel.host",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "37ade96d3958",
+            "x-real-ip": "172.18.0.1"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "event": "messages.upsert",
+            "instance": "aula",
+            "data": {
+              "key": {
+                "remoteJid": "447928821569@s.whatsapp.net",
+                "fromMe": false,
+                "id": "3EB0FBEDA55318132A5333"
+              },
+              "pushName": "Guilherme Reis 👑",
+              "message": {
+                "audioMessage": {
+                  "url": "https://mmg.whatsapp.net/v/t62.7117-24/35262890_9272427426109359_6158624800190321394_n.enc?ccb=11-4&oh=01_Q5AaINmy46KfeR_2hy6A0d0dx8jxqVvkX1394uefgU9qT309&oe=677C253D&_nc_sid=5e03e0&mms3=true",
+                  "mimetype": "audio/ogg; codecs=opus",
+                  "fileSha256": "xZuyN68x94Z+BkxOTvz4ock0gnhxI/q2r3elreeJmPw=",
+                  "fileLength": "11736",
+                  "seconds": 5,
+                  "ptt": true,
+                  "mediaKey": "5N5uF0SJmAIXgxf+FNP1XVzU2rjsIkTqQircF8Y2NTQ=",
+                  "fileEncSha256": "flGWo2+/9d3lasG8SvM7kMsKqTHKL6lr8q63E7gfsdw=",
+                  "directPath": "/v/t62.7117-24/35262890_9272427426109359_6158624800190321394_n.enc?ccb=11-4&oh=01_Q5AaINmy46KfeR_2hy6A0d0dx8jxqVvkX1394uefgU9qT309&oe=677C253D&_nc_sid=5e03e0",
+                  "mediaKeyTimestamp": "1733610375",
+                  "waveform": "E1BXUVdXTz81REtNST8rKDpOSj05PEA5OzxCVERGRTQVBQAKLy8vLzFCQEdSVEIwGgc7RkRDTlZTRCwKAQAAAA==",
+                  "viewOnce": false
+                },
+                "messageContextInfo": {
+                  "deviceListMetadata": {
+                    "senderKeyHash": "Dlsz/Xi/tgSStA==",
+                    "senderTimestamp": "1732459357",
+                    "senderAccountType": "E2EE",
+                    "receiverAccountType": "E2EE",
+                    "recipientKeyHash": "83Ny1mlYbMBoCA==",
+                    "recipientTimestamp": "1733328817"
+                  },
+                  "deviceListMetadataVersion": 2,
+                  "messageSecret": "IwUst7jBR7B3raoDJX4q3aMf/c2Jw99j3P9DTsoCtQM="
+                },
+                "base64": "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"
+              },
+              "contextInfo": null,
+              "messageType": "audioMessage",
+              "messageTimestamp": 1733610376,
+              "instanceId": "16079feb-8a83-493e-866f-e6b146b0d655",
+              "source": "web"
+            },
+            "destination": "https://aula-n8n.jnsbgu.easypanel.host/webhook/81dd8066-f3ed-462b-a538-3bad57450e37",
+            "date_time": "2024-12-07T19:26:17.018Z",
+            "sender": "447821721714@s.whatsapp.net",
+            "server_url": "http://localhost:8080",
+            "apikey": "1BEA861EBC63-4328-A016-843243A247FC"
+          },
+          "webhookUrl": "https://aula-n8n.jnsbgu.easypanel.host/webhook/81dd8066-f3ed-462b-a538-3bad57450e37",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "versionId": "c7af50d2-f689-4b4a-8441-c6019a372ab3",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-12-25T22:36:34.390Z",
+      "updatedAt": "2024-12-25T22:36:34.390Z",
+      "id": "LEAmzU5MTFbZZxqk",
+      "name": "Dinastia Odonto"
+    }
+  ]
+}
