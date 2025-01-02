@@ -1,6 +1,6 @@
 {
   "createdAt": "2024-12-30T18:51:32.345Z",
-  "updatedAt": "2024-12-30T19:10:41.604Z",
+  "updatedAt": "2025-01-01T20:50:53.612Z",
   "id": "DEgHCNEQbUb6gYpQ",
   "name": "Aula 1 - Webhook mais categoria de menssagem - DNA",
   "active": false,
@@ -13,8 +13,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        -700,
-        -160
+        -1440,
+        -420
       ],
       "id": "ed404300-8b79-4ab7-bdeb-faede1ab32a2",
       "name": "Webhook",
@@ -129,8 +129,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -440,
-        -180
+        -1180,
+        -440
       ],
       "id": "10583159-304e-445a-9a7f-c6626b36289a",
       "name": "Switch"
@@ -237,7 +237,7 @@
       }
     ]
   },
-  "versionId": "b42b06d7-4836-4604-80ac-e73a6b61955f",
+  "versionId": "2bf5c24a-feda-41de-8926-d227a6d8e062",
   "triggerCount": 0,
   "tags": [
     {
