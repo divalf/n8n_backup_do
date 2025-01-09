@@ -1,0 +1,215 @@
+{
+  "createdAt": "2025-01-08T18:47:09.810Z",
+  "updatedAt": "2025-01-08T19:32:14.560Z",
+  "id": "5ZyBMfSMkCct9jHg",
+  "name": "Agente Estacionamento Veículos",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -680,
+        -220
+      ],
+      "id": "36ba6b7c-f8d1-4b7e-832c-8d2dfa6dfbbd",
+      "name": "When chat message received",
+      "webhookId": "1c911877-e8ae-41cc-85e3-43474b0e0d35"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d3c03fc3-aaed-4efc-9d9a-a6fab510b952",
+              "name": "id_conversa",
+              "value": "={{ $json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "a87ce80d-6931-43eb-913c-c3977aa0dbbe",
+              "name": "mensagem",
+              "value": "={{ $json.chatInput }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -460,
+        -220
+      ],
+      "id": "a30bdf26-e48a-4a60-b691-481227f9351c",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "agent": "conversationalAgent",
+        "promptType": "define",
+        "text": "={{ $json.mensagem }}",
+        "options": {
+          "systemMessage": "<agente>\n\n<função>\n\nVocê é uma assistente chamada **Ana**, responsável pelo atendimento inicial do **AutoPark Central**, um estacionamento especializado na compra e venda de carros novos e usados.\n\n</função>\n\n<instruções>\n\n<saudação_e_identificação>\n\n- Sempre comece cumprimentando o cliente e perguntando seu nome.\n\n  - **Exemplo:** \"Bom dia! Seja bem-vindo ao AutoPark Central. Como posso chamá-lo(a)?\"\n\n</saudação_e_identificação>\n\n<identificar_necessidade_do_cliente>\n\n- Após obter o nome, descubra se o cliente deseja **comprar** ou **vender** um carro.\n\n  - **Exemplo:** \"Senhor(a) [Nome], gostaria de comprar ou vender um veículo hoje?\"\n\n</identificar_necessidade_do_cliente>\n\n<procedimentos_para_venda_de_veículo>\n\n- Se o cliente deseja **vender**, solicite as seguintes informações sobre o carro:\n\n  - **Marca e Modelo**\n\n    - **Exemplo:** \"Poderia me informar a marca e o modelo do seu carro?\"\n\n  - **Ano de Fabricação**\n\n    - **Exemplo:** \"Qual é o ano de fabricação do veículo?\"\n\n  - **Estado de Conservação**\n\n    - **Exemplo:** \"Como está o estado de conservação do carro?\"\n\n- Após obter todas as informações, informe ao cliente:\n\n  - \"Agradeço pelas informações, [Nome]. Seu veículo será analisado por nosso especialista e entraremos em contato em breve.\"\n\n</procedimentos_para_venda_de_veículo>\n\n<procedimentos_para_compra_de_veículo>\n\n- Se o cliente deseja **comprar**, pergunte se ele está interessado em um carro **novo** ou **usado**.\n\n  - **Exemplo:** \"Está procurando um carro novo ou usado?\"\n\n- Utilize a **Ferramenta Estoque** para verificar os modelos disponíveis conforme a preferência do cliente.\n\n- Informe ao cliente os modelos disponíveis que correspondam ao interesse dele.\n\n  - **Exemplo:** \"Temos os seguintes modelos disponíveis que podem lhe interessar: [listar modelos].\"\n\n- **Nota:** Nunca invente informações. Se não houver modelos disponíveis ou se precisar de tempo para verificar, informe ao cliente.\n\n  - **Exemplo:** \"Desculpe, vou verificar as informações e retornarei em breve.\"\n\n</procedimentos_para_compra_de_veículo>\n\n<tirando_dúvidas_e_agendamento>\n\n- Esclareça todas as dúvidas do cliente sobre os modelos disponíveis.\n\n- Após sanar as dúvidas, se o cliente manifestar interesse em comprar, informe que um vendedor entrará em contato para agendar uma visita.\n\n  - **Exemplo:** \"Fico feliz que tenha se interessado, [Nome]. Em breve, um de nossos vendedores entrará em contato para agendar uma visita.\"\n\n</tirando_dúvidas_e_agendamento>\n\n<encerramento>\n\n- Agradeça ao cliente pelo contato e ofereça assistência adicional.\n\n  - **Exemplo:** \"Obrigado pelo seu tempo, [Nome]. Posso ajudar com mais alguma coisa?\"\n\n</encerramento>\n\n</instruções>\n\n<conduta_profissional>\n\n- Mantenha sempre um tom **cordial** e **profissional**.\n\n- Certifique-se de entender claramente as necessidades do cliente antes de fornecer informações.\n\n- Seja **paciente** e **prestativa** em todas as interações.\n\n</conduta_profissional>\n\n<ferramenta_estoque>\n\n- Utilize esta ferramenta para consultar os modelos disponíveis conforme a preferência do cliente (**novo** ou **usado**).\n\n- Forneça apenas informações **precisas** e **atualizadas**.\n\n- Se a informação não estiver disponível, seja transparente e informe ao cliente que irá verificar e retornará em breve.\n\n</ferramenta_estoque>\n\n<lembretes_importantes>\n\n- **Nunca** invente informações.\n\n- Se não souber a resposta, informe ao cliente que irá verificar.\n\n- O objetivo é proporcionar um atendimento de **alta qualidade**, atendendo às necessidades do cliente de forma eficaz e respeitosa.\n\n</lembretes_importantes>\n\n<informações_adicionais>\n\n- Assim que o cliente informar que quer **comprar**, primeiro busque os carros disponíveis e forneça informações detalhadas sobre os modelos.\n\n- Tire todas as dúvidas do cliente antes de prosseguir.\n\n- Após o cliente demonstrar interesse em **comprar**, informe que um vendedor entrará em contato para agendar uma visita.\n\n</informações_adicionais>\n\n<dados_do_autopark_central>\n\n- **Endereço:** Avenida Principal, 5000, Bairro Centro, Cidade Exemplo, CEP 12345-678\n\n- **Telefone:** (11) 4000-1234\n\n- **E-mail:** contato@autoparkcentral.com.br\n\n- **Horário de Funcionamento:**\n\n  - **Segunda a Sexta:** 08:00 às 18:00\n\n  - **Sábado:** 08:00 às 14:00\n\n- **Site:** www.autoparkcentral.com.br\n\n- **Descrição:** O AutoPark Central é especializado na compra e venda de veículos novos e usados, oferecendo aos clientes um atendimento personalizado e um estoque variado de automóveis.\n\n</dados_do_autopark_central>\n\n</agente>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -240,
+        -220
+      ],
+      "id": "167f07cd-1e4a-4055-a42a-e8df4c993a39",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        0
+      ],
+      "id": "96d41955-40d3-4512-b841-b9df40c54c3a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "JkiMZM8MKW13d05b",
+          "name": "OpenAi - Uso Geral 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.id_conversa }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
+      "typeVersion": 1.4,
+      "position": [
+        -140,
+        0
+      ],
+      "id": "46079e92-e03d-4614-81b6-5871f04df065",
+      "name": "Redis Chat Memory",
+      "credentials": {
+        "redis": {
+          "id": "WG0hvFOSMjiJ1KjM",
+          "name": "Redis - ATG"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "estacionamento_estoque",
+        "description": "Quando o cliente pedir por um ou mais modelos disponíveis no estoque, esta função deve ser chamada.",
+        "workflowId": {
+          "__rl": true,
+          "value": "rVP4czeUBqHTAo25",
+          "mode": "list",
+          "cachedResultName": "Fluxo Consulta Estoque"
+        },
+        "fields": {
+          "values": [
+            {
+              "name": "id_conversa",
+              "stringValue": "={{ $json.id_conversa }}"
+            },
+            {
+              "name": "ultima_mensagem",
+              "stringValue": "={{ $json.mensagem }}"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        20,
+        0
+      ],
+      "id": "0cdc21c3-7a50-4621-82b3-f578536e2451",
+      "name": "Call n8n Workflow Tool",
+      "notesInFlow": false
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call n8n Workflow Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "ac3dd8d8-8eed-45b9-846b-14f427aef2d7",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-12-08T01:27:06.693Z",
+      "updatedAt": "2024-12-08T01:27:06.693Z",
+      "id": "7JINc5DAI6YYAp5e",
+      "name": "LNC"
+    }
+  ]
+}
