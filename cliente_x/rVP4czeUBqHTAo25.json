@@ -1,0 +1,443 @@
+{
+  "createdAt": "2025-01-08T19:28:15.028Z",
+  "updatedAt": "2025-01-09T01:50:06.842Z",
+  "id": "rVP4czeUBqHTAo25",
+  "name": "Fluxo Consulta Estoque",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2120,
+        -700
+      ],
+      "id": "04662f72-e22a-44ca-942f-3e62ca59aa06",
+      "name": "Execute Workflow Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "key": "={{ $json.id_conversa }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -1700,
+        -700
+      ],
+      "id": "0929bf9c-bbad-424d-a670-57bbf07ef163",
+      "name": "Redis",
+      "credentials": {
+        "redis": {
+          "id": "WG0hvFOSMjiJ1KjM",
+          "name": "Redis - ATG"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -1520,
+        -700
+      ],
+      "id": "144352e4-16a1-4ca2-9b3e-8cff6ae2e8ae",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Mensagem Atual:{{ $json.conversaAtual }}\n\nHistórico Conversa:{{ $json.historicoConversa }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=<PAPEL>  Sua tarefa e categorizar as mensagens de acordo o histórico da conversa do humano com a IA onde só há 3 cassificações possíveis:  carronovo, carrousado, indefinido.\ncarronovo – quando o cliente quer comprar um carro novo ou zero km, o sem uso.\ncarrousado – quando o cliente está interessado em comprar um carro usado ou seminovo.\nindefinido  - quando não for possível definir que tipo de carro o cliente quer comprar.   \nNão invente informações.\n</PAPEL>"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        -1160,
+        -700
+      ],
+      "id": "dc5d6823-2847-49c3-9995-dd6500433c7d",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -1140,
+        -520
+      ],
+      "id": "fb2ae493-81a7-4f8d-8e93-75de8c32a797",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "JkiMZM8MKW13d05b",
+          "name": "OpenAi - Uso Geral 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f876fd3d-f7c0-4f54-bd41-780778265c1d",
+              "name": "historicoConversa",
+              "value": "={{ $json[\"data\"][0][\"propertyName\"].map(entry => {\n    const message = JSON.parse(entry);\n    const type = message.type === \"ai\" ? \"AI\" : \"Human\";\n    const content = message.data.content;\n    return `${type}: ${content}`;\n}).join(\"\\n\") }}\n",
+              "type": "string"
+            },
+            {
+              "id": "3963cb0b-9db0-4128-be34-0013379a63c6",
+              "name": "conversaAtual",
+              "value": "={{ $('informacoesIniciais').item.json.ultima_conversa }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1340,
+        -700
+      ],
+      "id": "b214bd37-ef93-434c-8a97-1229f7e02b35",
+      "name": "campoFormatacao"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1b08bd1a-cd41-45ff-886e-753502476e09",
+              "name": "id_conversa",
+              "value": "={{ $json.id_conversa }}",
+              "type": "string"
+            },
+            {
+              "id": "0c7595a0-cad9-4cad-a2ad-b7a53e0ef912",
+              "name": "ultima_conversa",
+              "value": "={{ $json.ultima_mensagem }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1900,
+        -700
+      ],
+      "id": "ef4a3747-12d4-4f32-8163-4cb7993c06c2",
+      "name": "informacoesIniciais"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\n  \"type\": \"object\",\n\n  \"properties\": {\n\n    \"labels\": {\n\n      \"type\": \"array\",\n\n      \"items\": {\n\n        \"type\": \"string\",\n\n        \"enum\": [\"carronovo\", \"carrousado\", \"indefinido\"]\n\n      }\n\n    }\n\n  },\n\n  \"required\": [\"labels\"]\n\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -980,
+        -520
+      ],
+      "id": "b240f01a-d9c4-4582-9777-2944ff8877b9",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a13b254-cc7c-43fe-ac5d-a571f9dbc29f",
+              "name": "classificacao",
+              "value": "={{ $json.output.type }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -820,
+        -700
+      ],
+      "id": "7c337803-7a22-470e-a3ac-0e98bac87921",
+      "name": "classificacao"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6e3fbf7e-724f-42b6-a0aa-b71c1ea3770c",
+                    "leftValue": "={{ $json.classificacao }}",
+                    "rightValue": "carronovo",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Novo"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "420fdd3f-4162-4410-9165-f1503d91e096",
+                    "leftValue": "={{ $json.classificacao }}",
+                    "rightValue": "carrousado",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Usado"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.classificacao }}",
+                    "rightValue": "indefinido",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Indefinido"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -640,
+        -700
+      ],
+      "id": "c54b2c7c-5271-4c8f-a92d-5ba1f46cc9b9",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8f2b0b46-f083-44bc-b345-98eb42675abf",
+              "name": "response",
+              "value": "Esta é uma mensagem automática, não responda. Pergunte ao Cliente se ele quer comprar um carro novo ou usado.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -420,
+        -580
+      ],
+      "id": "40a31c56-9e63-4e67-ba17-28ac37df0379",
+      "name": "Edit Fields"
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "informacoesIniciais",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "campoFormatacao",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "campoFormatacao": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "informacoesIniciais": {
+      "main": [
+        [
+          {
+            "node": "Redis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "classificacao",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "classificacao": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [],
+        [],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "Execute Workflow Trigger": [
+      {
+        "json": {
+          "query": "novo",
+          "id_conversa": "ad1a350d68174eefbbd506703ed14cd29",
+          "ultima_mensagem": "gostaria de comprar um carro"
+        }
+      }
+    ]
+  },
+  "versionId": "bd883685-5791-4005-8e0f-8cc772d4bbd6",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-12-08T01:27:06.693Z",
+      "updatedAt": "2024-12-08T01:27:06.693Z",
+      "id": "7JINc5DAI6YYAp5e",
+      "name": "LNC"
+    }
+  ]
+}
