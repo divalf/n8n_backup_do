@@ -1,12 +1,14 @@
 {
   "createdAt": "2025-01-08T18:47:09.810Z",
-  "updatedAt": "2025-01-08T19:32:14.560Z",
+  "updatedAt": "2025-01-10T01:15:02.333Z",
   "id": "5ZyBMfSMkCct9jHg",
   "name": "Agente Estacionamento Veículos",
   "active": false,
   "nodes": [
     {
       "parameters": {
+        "public": true,
+        "initialMessages": "Olá!\nMeu nome é Nathan. Como posso ajudar-lhe agora?",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
@@ -107,8 +109,8 @@
     },
     {
       "parameters": {
-        "name": "estacionamento_estoque",
-        "description": "Quando o cliente pedir por um ou mais modelos disponíveis no estoque, esta função deve ser chamada.",
+        "name": "estoquedisponivel",
+        "description": "Quando um cliente falar que quer saber os modelos de carros disponíveis esta função deve ser chamada. ",
         "workflowId": {
           "__rl": true,
           "value": "rVP4czeUBqHTAo25",
@@ -122,21 +124,20 @@
               "stringValue": "={{ $json.id_conversa }}"
             },
             {
-              "name": "ultima_mensagem",
+              "name": "ultimaConversa",
               "stringValue": "={{ $json.mensagem }}"
             }
           ]
         }
       },
+      "id": "9a8f748d-40ad-4e67-a474-19d145cdda56",
+      "name": "Call n8n Workflow Tool1",
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
-      "typeVersion": 1.3,
+      "typeVersion": 1.2,
       "position": [
         20,
         0
-      ],
-      "id": "0cdc21c3-7a50-4621-82b3-f578536e2451",
-      "name": "Call n8n Workflow Tool",
-      "notesInFlow": false
+      ]
     }
   ],
   "connections": {
@@ -184,7 +185,7 @@
         ]
       ]
     },
-    "Call n8n Workflow Tool": {
+    "Call n8n Workflow Tool1": {
       "ai_tool": [
         [
           {
@@ -202,8 +203,8 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "ac3dd8d8-8eed-45b9-846b-14f427aef2d7",
-  "triggerCount": 0,
+  "versionId": "9f2a237c-4c12-4a0c-a12d-77e49db8e7d8",
+  "triggerCount": 2,
   "tags": [
     {
       "createdAt": "2024-12-08T01:27:06.693Z",
