@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-01-08T19:28:15.028Z",
-  "updatedAt": "2025-01-09T01:50:06.842Z",
+  "updatedAt": "2025-01-10T01:13:07.598Z",
   "id": "rVP4czeUBqHTAo25",
   "name": "Fluxo Consulta Estoque",
   "active": false,
@@ -10,8 +10,8 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1,
       "position": [
-        -2120,
-        -700
+        -2520,
+        -820
       ],
       "id": "04662f72-e22a-44ca-942f-3e62ca59aa06",
       "name": "Execute Workflow Trigger"
@@ -25,8 +25,8 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        -1700,
-        -700
+        -2100,
+        -820
       ],
       "id": "0929bf9c-bbad-424d-a670-57bbf07ef163",
       "name": "Redis",
@@ -45,8 +45,8 @@
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
       "position": [
-        -1520,
-        -700
+        -1920,
+        -820
       ],
       "id": "144352e4-16a1-4ca2-9b3e-8cff6ae2e8ae",
       "name": "Aggregate"
@@ -59,7 +59,7 @@
         "messages": {
           "messageValues": [
             {
-              "message": "=<PAPEL>  Sua tarefa e categorizar as mensagens de acordo o histórico da conversa do humano com a IA onde só há 3 cassificações possíveis:  carronovo, carrousado, indefinido.\ncarronovo – quando o cliente quer comprar um carro novo ou zero km, o sem uso.\ncarrousado – quando o cliente está interessado em comprar um carro usado ou seminovo.\nindefinido  - quando não for possível definir que tipo de carro o cliente quer comprar.   \nNão invente informações.\n</PAPEL>"
+              "message": "=<PAPEL>  Sua tarefa e categorizar as mensagens de acordo o histórico da conversa do humano com a IA onde só há 3 cassificações possíveis:  carronovo, carrousado ou indefinido.\ncarronovo – quando o cliente quer comprar um carro novo ou zero km, ou sem uso.\ncarrousado – quando o cliente está interessado em comprar um carro usado ou seminovo.\nindefinido  - quando não for possível definir que tipo de carro o cliente quer comprar.   \nNão invente informações.\n</PAPEL>"
             }
           ]
         }
@@ -67,8 +67,8 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.5,
       "position": [
-        -1160,
-        -700
+        -1560,
+        -820
       ],
       "id": "dc5d6823-2847-49c3-9995-dd6500433c7d",
       "name": "Basic LLM Chain"
@@ -80,8 +80,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        -1140,
-        -520
+        -1540,
+        -640
       ],
       "id": "fb2ae493-81a7-4f8d-8e93-75de8c32a797",
       "name": "OpenAI Chat Model",
@@ -115,8 +115,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1340,
-        -700
+        -1740,
+        -820
       ],
       "id": "b214bd37-ef93-434c-8a97-1229f7e02b35",
       "name": "campoFormatacao"
@@ -134,7 +134,7 @@
             {
               "id": "0c7595a0-cad9-4cad-a2ad-b7a53e0ef912",
               "name": "ultima_conversa",
-              "value": "={{ $json.ultima_mensagem }}",
+              "value": "={{ $json.ultimaConversa }}",
               "type": "string"
             }
           ]
@@ -144,21 +144,22 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1900,
-        -700
+        -2300,
+        -820
       ],
       "id": "ef4a3747-12d4-4f32-8163-4cb7993c06c2",
       "name": "informacoesIniciais"
     },
     {
       "parameters": {
-        "jsonSchemaExample": "{\n\n  \"type\": \"object\",\n\n  \"properties\": {\n\n    \"labels\": {\n\n      \"type\": \"array\",\n\n      \"items\": {\n\n        \"type\": \"string\",\n\n        \"enum\": [\"carronovo\", \"carrousado\", \"indefinido\"]\n\n      }\n\n    }\n\n  },\n\n  \"required\": [\"labels\"]\n\n}"
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"labels\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\",\n        \"enum\": [\n          \"carronovo\",\n          \"carrousado\",\n          \"indefinido\"\n        ]\n      }\n    }\n  },\n  \"required\": [\n    \"labels\"\n  ]\n}"
       },
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.2,
       "position": [
-        -980,
-        -520
+        -1380,
+        -640
       ],
       "id": "b240f01a-d9c4-4582-9777-2944ff8877b9",
       "name": "Structured Output Parser"
@@ -170,7 +171,7 @@
             {
               "id": "9a13b254-cc7c-43fe-ac5d-a571f9dbc29f",
               "name": "classificacao",
-              "value": "={{ $json.output.type }}",
+              "value": "={{ $json.output.labels[0] }}",
               "type": "string"
             }
           ]
@@ -180,8 +181,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -820,
-        -700
+        -1220,
+        -820
       ],
       "id": "7c337803-7a22-470e-a3ac-0e98bac87921",
       "name": "classificacao"
@@ -270,8 +271,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -640,
-        -700
+        -1040,
+        -820
       ],
       "id": "c54b2c7c-5271-4c8f-a92d-5ba1f46cc9b9",
       "name": "Switch"
@@ -293,11 +294,93 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -420,
-        -580
+        -820,
+        -620
       ],
       "id": "40a31c56-9e63-4e67-ba17-28ac37df0379",
       "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "carrosnovos2",
+        "returnAll": true,
+        "filterType": "none"
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -820,
+        -1000
+      ],
+      "id": "9e120d60-08e2-42f4-b7bb-cfcf0da948a5",
+      "name": "Supabase - Carros Novos",
+      "executeOnce": false,
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "W40Vqz7D7quG7v0S",
+          "name": "Supabase - LNC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "carrosusados2",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -820,
+        -820
+      ],
+      "id": "f20f7339-9602-4f2d-87f3-4f121f0506e4",
+      "name": "Supabase - Carros Usados",
+      "credentials": {
+        "supabaseApi": {
+          "id": "W40Vqz7D7quG7v0S",
+          "name": "Supabase - LNC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        -900
+      ],
+      "id": "14a476b6-ab6f-40bc-9dd2-ee50a2b70b1c",
+      "name": "Aggregate1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9522ecfc-82dc-454a-a755-f1036814ac7f",
+              "name": "response",
+              "value": "={{ $json.data }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -300,
+        -900
+      ],
+      "id": "979db41c-4e24-492c-b8d3-99cb3e71d984",
+      "name": "Edit Fields1"
     }
   ],
   "connections": {
@@ -402,11 +485,56 @@
     },
     "Switch": {
       "main": [
-        [],
-        [],
+        [
+          {
+            "node": "Supabase - Carros Novos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Supabase - Carros Usados",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase - Carros Novos": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase - Carros Usados": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
             "type": "main",
             "index": 0
           }
@@ -423,14 +551,13 @@
     "Execute Workflow Trigger": [
       {
         "json": {
-          "query": "novo",
-          "id_conversa": "ad1a350d68174eefbbd506703ed14cd29",
-          "ultima_mensagem": "gostaria de comprar um carro"
+          "id_conversa": "880c62fcbeac4250b53c551580ee0696",
+          "ultimaConversa": "carro usado"
         }
       }
     ]
   },
-  "versionId": "bd883685-5791-4005-8e0f-8cc772d4bbd6",
+  "versionId": "bf314b44-2160-4758-a19f-0052a0d0d844",
   "triggerCount": 0,
   "tags": [
     {
