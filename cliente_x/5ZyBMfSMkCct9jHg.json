@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-01-08T18:47:09.810Z",
-  "updatedAt": "2025-01-10T01:15:02.333Z",
+  "updatedAt": "2025-01-10T15:47:08.495Z",
   "id": "5ZyBMfSMkCct9jHg",
   "name": "Agente Estacionamento Veículos",
   "active": false,
@@ -14,8 +14,8 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.1,
       "position": [
-        -680,
-        -220
+        -1100,
+        -440
       ],
       "id": "36ba6b7c-f8d1-4b7e-832c-8d2dfa6dfbbd",
       "name": "When chat message received",
@@ -44,8 +44,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -460,
-        -220
+        -880,
+        -440
       ],
       "id": "a30bdf26-e48a-4a60-b691-481227f9351c",
       "name": "Edit Fields"
@@ -62,8 +62,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.7,
       "position": [
-        -240,
-        -220
+        -660,
+        -440
       ],
       "id": "167f07cd-1e4a-4055-a42a-e8df4c993a39",
       "name": "AI Agent"
@@ -75,8 +75,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        -320,
-        0
+        -740,
+        -220
       ],
       "id": "96d41955-40d3-4512-b841-b9df40c54c3a",
       "name": "OpenAI Chat Model",
@@ -95,8 +95,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
       "typeVersion": 1.4,
       "position": [
-        -140,
-        0
+        -560,
+        -220
       ],
       "id": "46079e92-e03d-4614-81b6-5871f04df065",
       "name": "Redis Chat Memory",
@@ -135,8 +135,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 1.2,
       "position": [
-        20,
-        0
+        -400,
+        -220
       ]
     }
   ],
@@ -203,7 +203,7 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "9f2a237c-4c12-4a0c-a12d-77e49db8e7d8",
+  "versionId": "fb109e41-2993-47ba-9e13-25b56bd3669d",
   "triggerCount": 2,
   "tags": [
     {
