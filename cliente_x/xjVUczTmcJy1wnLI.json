@@ -1,0 +1,200 @@
+{
+  "createdAt": "2025-01-11T13:32:01.687Z",
+  "updatedAt": "2025-01-11T19:48:43.403Z",
+  "id": "xjVUczTmcJy1wnLI",
+  "name": "cal_com_list_bookings",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "84f80d6e-919a-4b7c-8942-779bb7c86471",
+      "name": "Execute Workflow Trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "return { \n'response':JSON.stringify($input.all().map(x =>x.json))\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        240
+      ],
+      "id": "a0f8daf3-d342-4dd1-ba92-0cc98da587c5",
+      "name": "Code",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.api_url }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "apiKey",
+              "value": "={{ $json.cal_key }}"
+            },
+            {
+              "name": "startTime",
+              "value": "={{ $json.startTime }}"
+            },
+            {
+              "name": "endTime",
+              "value": "={{ $json.endTime }}"
+            },
+            {
+              "name": "eventTypeId",
+              "value": "={{ $json.eventTypeId }}"
+            },
+            {
+              "name": "timeZone",
+              "value": "America/Sao_Paulo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        0
+      ],
+      "id": "0b90c0fd-6fdb-4f0e-8559-a797a95c08c0",
+      "name": "HTTP Request",
+      "executeOnce": false,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1bb41e4e-1574-49d3-bfd2-783e2e2eaafe",
+              "name": "api_url",
+              "value": "https://api.cal.com/v1/bookings",
+              "type": "string"
+            },
+            {
+              "id": "04b28227-7506-4cf1-8837-3c617fa5e984",
+              "name": "cal_key",
+              "value": "cal_live_744be7a0c19be8df98c7153d85cd2395",
+              "type": "string"
+            },
+            {
+              "id": "8ead661b-e929-4dfd-80e9-9060067737b3",
+              "name": "startTime",
+              "value": "={{ new Date($now).toISOString() }}",
+              "type": "string"
+            },
+            {
+              "id": "775c1304-2a8c-4bfa-9dd4-0229c4227016",
+              "name": "endTime",
+              "value": "={{ new Date($now.plus(30,'days')).toISOString() }}",
+              "type": "string"
+            },
+            {
+              "id": "d61a239e-fbe4-4741-96d7-7ab400ebc538",
+              "name": "eventTypeId",
+              "value": "1199706",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        0
+      ],
+      "id": "b3efd305-7ce9-46bb-9ecc-9a321ee868d9",
+      "name": "Config"
+    },
+    {
+      "parameters": {
+        "jsCode": "const out = [];\nconst bookings = $input.all()[0]?.json?.bookings || []\n//console.log('bookings->',bookings)\n const today = new Date();\n\nfor (const item of bookings) {\n\n  const bookings = item;\n  const status = item.status;\n  const startTime = new Date(item.startTime);\n  //console.log('status->',item)\n  if(status==='ACCEPTED' && startTime >= today){\n  out.push({'json': item})\n  }\n}\n\nreturn out;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        0
+      ],
+      "id": "069a5d7c-9bf5-4448-8780-ddbc33905d44",
+      "name": "FilterACCEPTED",
+      "alwaysOutputData": true
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "FilterACCEPTED",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FilterACCEPTED": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "90aa821e-3283-4262-9c6a-e9ead165b10c",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-01-11T03:19:29.221Z",
+      "updatedAt": "2025-01-11T03:19:29.221Z",
+      "id": "NvT4D0248D72xsFk",
+      "name": "Andre_Alencar"
+    }
+  ]
+}
