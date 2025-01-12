@@ -1,0 +1,64 @@
+{
+  "createdAt": "2025-01-11T15:05:22.399Z",
+  "updatedAt": "2025-01-11T15:05:25.633Z",
+  "id": "UhBFFFNOp5F15mC0",
+  "name": "get_time_cal",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"response\":{\n    \"horário atual\":\"{{ $json.time }}\"\n  }\n}",
+        "options": {}
+      },
+      "id": "4aedd3d3-6d4b-499c-a02e-6a917dc12b09",
+      "name": "response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "d8116079-57c4-4fc3-af0e-a95eef71026b",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "d37451f6-e2ac-470e-b24d-97f209b7cb8a",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-01-11T03:19:29.221Z",
+      "updatedAt": "2025-01-11T03:19:29.221Z",
+      "id": "NvT4D0248D72xsFk",
+      "name": "Andre_Alencar"
+    }
+  ]
+}
