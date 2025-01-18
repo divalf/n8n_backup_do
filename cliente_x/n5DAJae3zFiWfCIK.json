@@ -1,0 +1,477 @@
+{
+  "createdAt": "2025-01-18T05:23:20.588Z",
+  "updatedAt": "2025-01-18T05:52:21.641Z",
+  "id": "n5DAJae3zFiWfCIK",
+  "name": "BACKUP_N8N_GITHUB",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $('Edit Fields').first().json.owner }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('Edit Fields').first().json.repository }}",
+          "mode": "name"
+        },
+        "filePath": "=cliente_x/{{ $json.id }}.json",
+        "additionalParameters": {}
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "28ea7d3c-7a78-400f-b0f7-d292d4be221c",
+      "name": "GitHub - Backup",
+      "alwaysOutputData": true,
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "6jt1bOw6iwx0vZca",
+          "name": "GitHub - Backup"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "933a3d8f-81a3-4b7c-863d-3381f5bcf3a2",
+              "name": "owner",
+              "value": "divalf",
+              "type": "string"
+            },
+            {
+              "id": "0e58603a-3d6c-46b9-add5-82d3e02e421c",
+              "name": "repository",
+              "value": "n8n_backup_do",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -520,
+        180
+      ],
+      "id": "92ed98f8-3e79-4c51-b228-cad216d0a8ef",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5704ff5a-49b8-4fbb-8ee9-123a61fa5e3d",
+              "name": "data",
+              "value": "={{ $json }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        100,
+        400
+      ],
+      "id": "358e4efe-0b41-49db-a009-d5946abfa2ed",
+      "name": "Workflows Dados"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "mode": "each",
+        "options": {
+          "format": true,
+          "fileName": "={{ $json.id }}.json"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1020,
+        400
+      ],
+      "id": "9d827ca0-6422-4d75-a905-2d7d93d8a2a4",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ],
+      "id": "cdf972aa-3b3a-4ff7-9890-87a515658ae1",
+      "name": "Extract from File",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "data.id",
+              "field2": "data.id"
+            }
+          ]
+        },
+        "resolve": "preferInput2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.compareDatasets",
+      "typeVersion": 2.3,
+      "position": [
+        520,
+        160
+      ],
+      "id": "d65c128f-8377-4bae-8ac5-53be720dcb25",
+      "name": "Compare Datasets"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ $json.data }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        820,
+        400
+      ],
+      "id": "52a0609a-f95d-432f-89b9-1dff4c9c81e1",
+      "name": "Workflow"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $('Edit Fields').first().json.owner }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('Edit Fields').first().json.repository }}",
+          "mode": "name"
+        },
+        "filePath": "=cliente_x/{{ $('Workflow').item.json.id }}.json",
+        "binaryData": true,
+        "commitMessage": "={{ $('Workflow').item.json.name }}{{ $now.toString() }}"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        400
+      ],
+      "id": "be4a7ceb-5095-4460-8586-39f72158cf2f",
+      "name": "GitHub - Create File",
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "6jt1bOw6iwx0vZca",
+          "name": "GitHub - Backup"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "mode": "each",
+        "options": {
+          "format": true,
+          "fileName": "={{ $json.id }}.json"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1020,
+        200
+      ],
+      "id": "24fdca48-1530-4ad1-a54e-42407e4da9cb",
+      "name": "Convert to File1"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ $json.data }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        820,
+        200
+      ],
+      "id": "d5eda776-ff5c-420f-8fd6-313bb490934b",
+      "name": "Workflow1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        820,
+        0
+      ],
+      "id": "659224d9-f9cc-410c-af5f-2c4f855fdd41",
+      "name": "Nada a fazer"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $('Edit Fields').first().json.owner }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('Edit Fields').first().json.repository }}",
+          "mode": "name"
+        },
+        "filePath": "=cliente_x/{{ $('Workflow1').item.json.id }}.json",
+        "binaryData": true,
+        "commitMessage": "={{ $('Workflow1').item.json.name }}{{ $now.toString() }}"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        200
+      ],
+      "id": "ef2060d2-5d5e-4790-b89c-e8aacee66c76",
+      "name": "GitHub - Edit File",
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "6jt1bOw6iwx0vZca",
+          "name": "GitHub - Backup"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        180
+      ],
+      "id": "d8792c9b-1b84-4611-8158-8996a4181b3e",
+      "name": "Obter fluxos",
+      "credentials": {
+        "n8nApi": {
+          "id": "NChzYBtT6Clmutzl",
+          "name": "n8n - backup"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 23
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -760,
+        180
+      ],
+      "id": "330263a7-7a8b-486b-bd44-2f51b5aa9b71",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Obter fluxos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflows Dados": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "GitHub - Create File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub - Backup": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compare Datasets": {
+      "main": [
+        [
+          {
+            "node": "Nada a fazer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Nada a fazer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Workflow1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File1": {
+      "main": [
+        [
+          {
+            "node": "GitHub - Edit File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obter fluxos": {
+      "main": [
+        [
+          {
+            "node": "GitHub - Backup",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Workflows Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "50215d88-f12e-44a2-8d67-c0116a5cce9d",
+  "triggerCount": 0,
+  "tags": []
+}
