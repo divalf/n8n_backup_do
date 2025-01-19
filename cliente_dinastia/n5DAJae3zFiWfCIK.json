@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-01-18T05:23:20.588Z",
-  "updatedAt": "2025-01-18T06:04:33.538Z",
+  "updatedAt": "2025-01-18T12:45:47.186Z",
   "id": "n5DAJae3zFiWfCIK",
   "name": "BACKUP_N8N_GITHUB",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -467,12 +467,23 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "891ede88-b707-4a70-b93a-c992baba0249",
-  "triggerCount": 0,
-  "tags": []
+  "versionId": "fd543d1e-475c-4c36-916b-08e85ca16c0d",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2025-01-18T12:45:43.202Z",
+      "updatedAt": "2025-01-18T12:45:43.202Z",
+      "id": "7B7qTAU2yw7dt0xZ",
+      "name": "black"
+    }
+  ]
 }
