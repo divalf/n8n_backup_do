@@ -1,0 +1,555 @@
+{
+  "createdAt": "2025-01-18T20:45:55.001Z",
+  "updatedAt": "2025-01-18T21:50:51.310Z",
+  "id": "Qu7tKwr5OeR1Flt2",
+  "name": "My workflow",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "2903079d-4833-4565-9037-4b29ab5f6ecb",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        600,
+        160
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=etasda990"
+      },
+      "id": "1cd2355d-3040-4f00-a7d7-d27d639a81e3",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.2,
+      "position": [
+        740,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "name": "getClientes",
+        "description": "Útil para validar se o lead é cliente realizando uma busca no banco de dados usando email.",
+        "workflowId": {
+          "__rl": true,
+          "value": "sY99aI11vCxqOnHX",
+          "mode": "id"
+        }
+      },
+      "id": "0359a8cf-f219-4e3a-afe1-6167e9ab7870",
+      "name": "getClientes",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1080,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Tools",
+        "height": 308.04712724326487,
+        "width": 362.1585520066599,
+        "color": 3
+      },
+      "id": "f1a2f282-6386-4934-a3fe-25db31921344",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Base de conhecimento",
+        "height": 310.6036036036035,
+        "width": 361.5420311222108,
+        "color": 5
+      },
+      "id": "ca381721-682b-44ae-9d88-68c1c75a473e",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "name": "getFaq",
+        "description": "Útil para buscar FAQ de respostas prontas dos buscar produtos.",
+        "workflowId": {
+          "__rl": true,
+          "value": "G6d6V7QCjhrFl5q0",
+          "mode": "id"
+        }
+      },
+      "id": "df5c2c4f-3245-430c-ba64-a4d34cda3fdc",
+      "name": "getFaq",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "name": "getProduto",
+        "description": "Útil para buscar informações sobre todos os produtos.\n\nenum [\n  \"Fluxo\",\n  \"Outros\",\n  \"Qualquer coisa\"\n]",
+        "workflowId": {
+          "__rl": true,
+          "value": "hIu0sjwPncwGam0z",
+          "mode": "id"
+        }
+      },
+      "id": "a44481d6-dbb8-4813-a90a-a3aa2b5901a5",
+      "name": "getProduto",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1320,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "name": "getEmpresa",
+        "description": "Útil para buscar informações sobre gerais sobre a empresa.",
+        "workflowId": {
+          "__rl": true,
+          "value": "zopK2mFgVyEat2gB",
+          "mode": "id"
+        }
+      },
+      "id": "fd823b8a-85ec-40ab-b9cc-eb1f96eb66b3",
+      "name": "getEmpresa",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1080,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ $json.mensagemLead }}",
+        "options": {}
+      },
+      "id": "1393b52c-153f-41b2-8ce7-521a3d457351",
+      "name": "trataMsg",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2030e412-3d32-4afb-9365-50e59fc9fdb4",
+              "name": "respostaAi",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3d21a598-8d73-44d1-af82-827739f2d5ae",
+      "name": "mensagemIa",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1060,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('endpoints').item.json.urlEvo }}{{ $('endpoints').item.json.eventTexto }}{{ $('endpoints').item.json.instancia }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apiKey",
+              "value": "={{ $('endpoints').item.json.apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('endpoints').item.json.number }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.respostaAi }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1571d0ee-c06a-455a-8d43-e67c68e5d4f9",
+      "name": "respondeWhatsapp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Código para o nó Function no n8n\nlet items = [];\n\nfor (const item of $input.all()) {\n  let jsonString;\n  \n  // Verifica se existe imagem e textMsg\n  if (item.json.imagem && item.json.textMsg) {\n    jsonString = `{\n  \"mensagemLead\": {\n    \"imagem\": \"${item.json.imagem}\",\n    \"textMsg\": \"${item.json.textMsg}\"\n  }\n}`;\n  }\n  // Verifica se existe apenas imagem\n  else if (item.json.imagem) {\n    jsonString = `{\n  \"mensagemLead\": {\n    \"imagem\": \"${item.json.imagem}\"\n  }\n}`;\n  }\n  // Verifica texto ou áudio\n  else {\n    const conteudo = item.json.texto || item.json['áudio'] || '';\n    jsonString = `{\n  \"mensagemLead\": {\n    \"áudio\": \"${conteudo}\"\n  }\n}`;\n  }\n\n  items.push({\n    json: {\n      mensagemLead: jsonString\n    }\n  });\n}\n\nreturn items;\n"
+      },
+      "id": "649546c2-3960-4937-b0e7-c14dc7b30d80",
+      "name": "convertMsg",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "agent": "conversationalAgent",
+        "promptType": "define",
+        "text": "={{ $json.mensagemLead }}",
+        "options": {
+          "systemMessage": "Você é Pedro, suporte da live dos Criados Digitais.\n\nSolicite sempre ao cliente as informacoes para cada tool que precisar usar.\n\ngetclientes: pedir email\ngetDocs: Enviar produto\ngetEnterprise: Informacoes sobre a empresa",
+          "maxIterations": 100
+        }
+      },
+      "id": "b634340b-d627-4a90-a378-7f1011f45803",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "fad1eee8-bb14-406e-8b1c-3c5e0bdc10ef",
+      "name": "endpoints",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "name": "get_event",
+        "description": "Útil caso o conferir na agenda se horário solicitado está disponível para agendamento informando os dados no formato ISO do google Calendar seguindo o `modelo`.\n\nmodelo: 2024-12-03 15:00:00\n\nenum [\nstartTime,\nendTime\n]",
+        "workflowId": {
+          "__rl": true,
+          "value": "27Q95gMT0dyKN2QZ",
+          "mode": "id"
+        }
+      },
+      "id": "c71b9f4f-ce46-4686-9e47-dd7cfd1ece1d",
+      "name": "get_event",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "name": "create_event",
+        "description": "=Útil para realizar agendamentos caso o horário solicitado no `get_event` esteja disponível no formato ISO do google Calendar seguindo o `modelo`.\n\nmodelo: 2024-12-03 15:00:00\nnome do lead: Peça ao cliente\ne-mail: Peça ao cliente\n\nenum [\nstartTime,\nendTime,\nE-mail,\nNome do lead\n]",
+        "workflowId": {
+          "__rl": true,
+          "value": "sIWVxikJXgYu24PW",
+          "mode": "id"
+        }
+      },
+      "id": "8bb5776d-aaf4-4684-a0bd-ff28b9f74066",
+      "name": "create_event",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1320,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "name": "get_time",
+        "description": "Útil para consultar o horário atual antes de realizar uma consulta de horáro no `get_event` ou agendar diretamente no `create_event`.",
+        "workflowId": {
+          "__rl": true,
+          "value": "6BOcL1WYKsbqFrUg",
+          "mode": "id"
+        },
+        "fields": {
+          "values": [
+            {
+              "name": "=time",
+              "stringValue": "={{ $('endpoints').item.json.time }}"
+            }
+          ]
+        }
+      },
+      "id": "2e2c3784-131f-4c51-9832-daa4ff0d9c61",
+      "name": "get_time",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1080,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "name": "get_instructions",
+        "description": "=Útil para instruções de atendimento em todos os níveis para ser consultado antes de responder a primeira mensagem do contato.",
+        "workflowId": {
+          "__rl": true,
+          "value": "OzOj0fLTwJKM2aj0",
+          "mode": "id"
+        },
+        "responsePropertyName": "instrucoes"
+      },
+      "id": "9b658a51-62be-492a-846c-28dc88b29bad",
+      "name": "get_instructions",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1260,
+        700
+      ]
+    }
+  ],
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getClientes": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getFaq": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getProduto": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getEmpresa": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "trataMsg": {
+      "main": [
+        [
+          {
+            "node": "convertMsg",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensagemIa": {
+      "main": [
+        [
+          {
+            "node": "respondeWhatsapp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "convertMsg": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "mensagemIa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "endpoints": {
+      "main": [
+        [
+          {
+            "node": "trataMsg",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_time": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_instructions": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "endpoints": [
+      {
+        "json": {
+          "urlEvo": "https://dinastia-evolution.lfigsi.easypanel.host",
+          "instancia": "black",
+          "eventTexto": "/message/sendText/",
+          "number": "5511985401987",
+          "nomeLead": "agent_ai",
+          "mensagemLead": {
+            "texto": "Boa tarde!"
+          },
+          "apikey": "20C4F7FB433E-415A-BE5B-DC6A0221DE87",
+          "time": "2025-01-18T18:46:09.248Z"
+        }
+      }
+    ]
+  },
+  "versionId": "2f276abf-1054-483f-a7aa-071b9d6b404d",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-01-18T20:40:59.648Z",
+      "updatedAt": "2025-01-18T20:40:59.648Z",
+      "id": "XMu28SYqcvCkme2F",
+      "name": "EricNunes"
+    }
+  ]
+}
