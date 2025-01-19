@@ -1,0 +1,2379 @@
+{
+  "createdAt": "2025-01-18T13:31:30.620Z",
+  "updatedAt": "2025-01-19T00:21:46.922Z",
+  "id": "lE4YmGJ1z1id3Nkm",
+  "name": "Atendente_Plaenge",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "body.data.message.base64",
+        "options": {
+          "fileName": "file.ogg",
+          "mimeType": "={{ $json.body.data.message.audioMessage.mimetype }}"
+        }
+      },
+      "id": "f32bae26-be66-466c-afd0-3d063d189d7d",
+      "name": "Convert to File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -2000,
+        100
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "34fb7486-05e1-409b-b149-9a7ae7dd2466",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -960,
+        460
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7066ff08-1370-464f-a588-86aa37025523",
+              "name": "texto",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "167d37ca-8cad-457c-b88d-4bfc89bbb331",
+      "name": "edit1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1560,
+        100
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "09db48f1-b99e-4760-8a9b-10944a1ce0d2",
+              "name": "texto",
+              "value": "={{ $json.body.data.message.conversation }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a9669037-8a62-435d-b31c-86076a7471fc",
+      "name": "edit2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1780,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "5e0c27eb-5065-483b-b12e-07c0e8929963",
+      "name": "OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        700
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "cc90b20ed02776e4faba7b5e9003664891e4c03076067f356bf0001be00d8487@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Nakamura"
+        },
+        "returnAll": true,
+        "options": {
+          "timeMin": "={{ $now.format('yyyy-MM-dd hh:mm:ss') }}",
+          "timeMax": "={{ $now.plus(7, \"days\").format('yyyy-MM-dd hh:mm:ss') }}"
+        }
+      },
+      "id": "263d51b9-86c8-49d3-b6dc-3f7e4e63a22d",
+      "name": "calendario_7dias",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.2,
+      "position": [
+        1080,
+        0
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Autenticação",
+        "height": 388.0773038435652,
+        "width": 497.35749825591427
+      },
+      "id": "ed0a337d-2a3a-44ab-9c6a-5f1764fb2960",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2920,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Processar audio + texto",
+        "height": 455.88406985111124,
+        "width": 1224.7391699732286
+      },
+      "id": "cbb9035b-ba6e-4c20-8651-7540f9894735",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2360,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "cfb1f3dc-f1d2-48ba-b402-9117cffe3348",
+      "name": "OpenAI Chat Model2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        180
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=agendamento_{{ $(\"auth\").item.json.body.data.key.remoteJid }}",
+        "contextWindowLength": 20
+      },
+      "id": "3a31fad2-1d93-411e-be36-2406989ab9c3",
+      "name": "Redis Chat Memory3",
+      "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
+      "typeVersion": 1.3,
+      "position": [
+        1740,
+        180
+      ],
+      "credentials": {
+        "redis": {
+          "id": "jm7Z6lqHaHegQqJ0",
+          "name": "Redis - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "cc90b20ed02776e4faba7b5e9003664891e4c03076067f356bf0001be00d8487@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Nakamura"
+        },
+        "start": "={{ $json.output.startDate }}",
+        "end": "={{ $json.output.endDate }}",
+        "additionalFields": {
+          "attendees": [],
+          "summary": "=Visita com {{ $('auth').item.json.body.data.pushName }}"
+        }
+      },
+      "id": "0b18e66d-8f08-4880-9fe8-31228269b2a2",
+      "name": "Google Calendar",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.2,
+      "position": [
+        1520,
+        1040
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"retorno\": \"Mensagem aqui.\"\n}"
+      },
+      "id": "3c649ce5-e3ca-4040-8ac5-6b42a8b1413f",
+      "name": "Structured Output Parser4",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2000,
+        1220
+      ]
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=intencao_{{ $(\"auth\").item.json.body.data.key.remoteJid }}",
+        "contextWindowLength": 20
+      },
+      "id": "977b83eb-02d4-48eb-a643-63826469dd5e",
+      "name": "Redis Chat Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
+      "typeVersion": 1.3,
+      "position": [
+        -760,
+        460
+      ],
+      "credentials": {
+        "redis": {
+          "id": "jm7Z6lqHaHegQqJ0",
+          "name": "Redis - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=chat_{{ $(\"auth\").item.json.body.data.key.remoteJid }}",
+        "contextWindowLength": 20
+      },
+      "id": "2cb8ad33-3afc-4e75-86c1-6d71933b161d",
+      "name": "Redis Chat Memory1",
+      "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
+      "typeVersion": 1.3,
+      "position": [
+        220,
+        200
+      ],
+      "credentials": {
+        "redis": {
+          "id": "jm7Z6lqHaHegQqJ0",
+          "name": "Redis - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=agendamento_{{ $(\"auth\").item.json.body.data.key.remoteJid }}",
+        "contextWindowLength": 20
+      },
+      "id": "0369bef1-cbcc-4d1e-b2c5-a85df99ecfb4",
+      "name": "Redis Chat Memory2",
+      "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        700
+      ],
+      "credentials": {
+        "redis": {
+          "id": "jm7Z6lqHaHegQqJ0",
+          "name": "Redis - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "1c7fbab5-f517-4ddf-ac42-6fbf7680cf53",
+      "name": "OpenAI Chat Model3",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        1340
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=agendamento_{{ $(\"auth\").item.json.body.data.key.remoteJid }}",
+        "contextWindowLength": 20
+      },
+      "id": "3b20358b-72bf-4c4c-8b15-25c79d21bee1",
+      "name": "Redis Chat Memory4",
+      "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
+      "typeVersion": 1.3,
+      "position": [
+        1640,
+        1340
+      ],
+      "credentials": {
+        "redis": {
+          "id": "jm7Z6lqHaHegQqJ0",
+          "name": "Redis - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=agendamento_{{ $(\"auth\").item.json.body.data.key.remoteJid }}",
+        "contextWindowLength": 20
+      },
+      "id": "f50f2d45-c6d4-406c-960a-aca14fccba87",
+      "name": "Redis Chat Memory5",
+      "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
+      "typeVersion": 1.3,
+      "position": [
+        1160,
+        700
+      ],
+      "credentials": {
+        "redis": {
+          "id": "jm7Z6lqHaHegQqJ0",
+          "name": "Redis - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "9b39d7ea-aa80-46c5-ae47-b8af94dad839",
+      "name": "OpenAI Chat Model4",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        980,
+        700
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"sucesso\": true,\n  \"eventId\": \"google-calendar-event-id\",\n  \"mensagemError\": \"\"\n}"
+      },
+      "id": "42e0718d-f8ef-4a25-8733-7c23531861c3",
+      "name": "Structured Output Parser5",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1340,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"intencoes\": [\n    \"cancelar_reuniao\",\n    \"agendar_nova_reuniao\"\n  ]\n}"
+      },
+      "id": "a6919a1e-e69c-4d2a-bedd-3684d5946819",
+      "name": "Structured Output Parser1",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "7f4b10b0-a2d3-4e3c-b777-1270b2f3643c",
+      "name": "Auto-fixing Output Parser1",
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        220,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "d9a665b2-2179-4630-9d38-4bfc14158264",
+      "name": "Auto-fixing Output Parser2",
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        1960,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "c84d19c3-d752-49b5-952a-443548381ccd",
+      "name": "OpenAI Chat Model7",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1940,
+        300
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"resposta\": \"Texto do agente para o cliente\"\n}"
+      },
+      "id": "9baa8f61-37e4-4745-86df-a7098be9f709",
+      "name": "Structured Output Parser2",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2140,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "4e2d6a1a-e31c-4ab3-9f24-3ff99c59a28b",
+      "name": "OpenAI Chat Model6",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        220,
+        820
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "f58f18f6-c509-496d-8c56-6de1456167fd",
+      "name": "OpenAI Chat Model5",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        580
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "17b6fa1c-f4ea-4c75-9c9e-1a43900dbc58",
+              "leftValue": "={{ $json.body.apikey }}",
+              "rightValue": "20C4F7FB433E-415A-BE5B-DC6A0221DE87",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "70c82c3b-7619-4b50-899f-17931323d19d",
+              "leftValue": "={{ $json.body.event }}",
+              "rightValue": "messages.upsert",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5249d005-4f8f-4da3-a430-1040407633df",
+      "name": "auth",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2620,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "5fab40d9-e065-4c64-96a5-edf9a3061d75",
+      "name": "Auto-fixing Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": " \"agendamentos\""
+      },
+      "id": "35dce054-a920-437b-8cdf-9a0c8a037ce8",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -340,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "fa0d461f-31a2-4f32-ada1-d25e2108bfae",
+      "name": "OpenAI Chat Model8",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        2460,
+        680
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=agendamento_{{ $(\"auth\").item.json.body.data.key.remoteJid }}",
+        "contextWindowLength": 20
+      },
+      "id": "cc61dd59-fe0a-4445-9718-28c4dc9c5a2f",
+      "name": "Redis Chat Memory6",
+      "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
+      "typeVersion": 1.3,
+      "position": [
+        2640,
+        680
+      ],
+      "credentials": {
+        "redis": {
+          "id": "jm7Z6lqHaHegQqJ0",
+          "name": "Redis - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "b667aade-d3a4-48b0-a31f-0d3b6a0a5073",
+      "name": "Auto-fixing Output Parser3",
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        2860,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "46fe7669-57c4-453f-a90c-d9a0f420bed4",
+      "name": "OpenAI Chat Model9",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        2820,
+        820
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"resposta\": \"Texto do agente para o cliente\"\n}"
+      },
+      "id": "a999f64f-c5b7-4ff4-8335-fb04beab9e6b",
+      "name": "Structured Output Parser6",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        3060,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "cc90b20ed02776e4faba7b5e9003664891e4c03076067f356bf0001be00d8487@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Nakamura"
+        },
+        "eventId": "={{ $json.output.eventId }}",
+        "options": {}
+      },
+      "id": "538a076f-558b-486a-b65a-83c7e684333d",
+      "name": "cancelar_reuniao",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.2,
+      "position": [
+        1740,
+        420
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cfdc47c2-2c87-428c-bc72-85aa7d8737db",
+              "name": "texto",
+              "value": "reunião cancelada",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4476c83c-adc0-4565-a0ef-5950afcfb656",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2040,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.sucesso }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "sucesso"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e770ec4d-25f0-44b3-90bc-7845ba026118",
+                    "leftValue": "={{ $json.output.sucesso }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "false",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "erro"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "id": "4a16d286-046e-42da-9153-1802e1e3183e",
+      "name": "sucesso",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1460,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "35b8d26f-c06e-4c9b-815d-9a2b291d393f",
+              "name": "texto",
+              "value": "={{ $json.output.mensagemError }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7768be72-9925-45d5-ba67-8bb66f79e3f1",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2040,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "id": "3cb54317-1efc-4d43-ab4a-c6aae15c1ad5",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "id": "1f35de9a-cfd7-4264-9dd5-a23c730494a0",
+      "name": "OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.6,
+      "position": [
+        -1780,
+        100
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.data.messageType }}",
+                    "rightValue": "audioMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "50c6e2b0-2494-4780-abd8-84a0e4213091",
+                    "leftValue": "={{ $json.body.data.messageType }}",
+                    "rightValue": "conversation",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "texto"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "id": "57da4ba1-4f4a-4504-87c7-f1adb3c86cab",
+      "name": "mensagem_tipo",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -2300,
+        280
+      ],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "id": "37662e8b-5d23-4121-9779-e9a995b3d9e9",
+      "name": "mensagem_cliente",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        -1280,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_lg4YkKKrrTg3XC8nAvhsdqqr",
+          "mode": "list",
+          "cachedResultName": "plaenge"
+        },
+        "prompt": "define",
+        "text": "={{ $('mensagem_cliente').item.json.texto }}",
+        "options": {}
+      },
+      "id": "2d628508-aead-4695-983b-8499c622818d",
+      "name": "Assistente_comercial",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.6,
+      "position": [
+        0,
+        0
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.texto }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que não esteja dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nVocê é uma especialista em classificar mensagens de clientes. \n\nA sua função é identificar a intenção na mensagem deste cliente em apenas 3 categorias: \"informações\" ou \"agendamentos\" ou \"indefinido\".\n\nPara qualquer pergunta envolvendo horário ou data, a intenção será \"agendamentos\".\n\n\n</INSTRUCAO>"
+        }
+      },
+      "id": "0479669a-c50f-4d8c-8ce6-93f44529ecb9",
+      "name": "recepcionista",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        -820,
+        260
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.output }}",
+                    "rightValue": "informações",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "informações"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b9cf9869-8857-4e8e-bc38-e9716c978784",
+                    "leftValue": "={{ $json.output.output }}",
+                    "rightValue": "agendamentos",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "agendamentos"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "7b33f42b-1c0a-4b11-ae37-ed605a007242",
+                    "leftValue": "={{ JSON.parse($json.output).output }}\n\n",
+                    "rightValue": "informações",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "informações"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6a919694-1dec-41f4-8658-950917722144",
+                    "leftValue": "={{ JSON.parse($json.output).output }}",
+                    "rightValue": "agendamentos",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "agendamentos"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "eaea0d28-7391-4946-b793-1bcc0193485c",
+                    "leftValue": "={{ $json.output.output }}",
+                    "rightValue": "indefinido",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "indefinido"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1cb2fb13-ef43-498f-83d7-8cd8ea9bd0a2",
+                    "leftValue": "={{ JSON.parse($json.output).output }}",
+                    "rightValue": "indefinido",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "indefinido"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e427a2a2-483b-433a-82de-4e6faae26f28",
+      "name": "intencao",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -260,
+        260
+      ],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Reunião agendada:\n\ninicio: {{ $json.start.dateTime }}\nfim: {{ $json.end.dateTime }}\ntimezone: {{ $json.start.timeZone }}\neventId: {{ $json.id }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que esteje dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nVocê é uma secretária focada em agendamentos. Seu nome é \"Dama IA\". Você trabalha para a empresa \"Plaenge\" e estará cuidando de agendamentos para clientes visitarem o decorado do imóvel \"Bossanova\".\n\nbaseado nas informações da confirmação da reunião agendada, escreva uma mensagem breve e curta indicando que a reunião foi confirmada.\n\nResponda sempre no timezone: Europe/London\n</INSTRUCAO>"
+        }
+      },
+      "id": "50d4b042-9997-4912-b042-9f7a2c8553cd",
+      "name": "secretaria_confirmacao",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        1800,
+        1040
+      ],
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('mensagem_cliente').item.json.texto }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que não esteja dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nVocê é uma especialista em classificar mensagens de clientes. Específicamente sobre agendamentos.\n\nA sua função é identificar a intenção na mensagem deste cliente em apenas 3 categories: \"checar_calendario\" e/ou \"cancelar_reuniao\" e/ou \"agendar_nova_reuniao\".\n\nCaso voce identifique mais de uma única intenção, retorne todas as intencões identificadas.\n\nApenas indique a intenção \"agendar_nova_reuniao\" quando você tiver uma data específica como dia e hora e já a confirmação para criar este agendamento. Caso contrário, é necessário checar_calendario primeiro, sugerir datas para o cliente e confirmar a data.\n\n<EXEMPLO>\nUser: Sim, você teria disponibilidade para segunda às 13?\nRetorno: checar_calendario\n</EXEMPLO>\n\n<EXEMPLO>\nUser: Sim, você teria disponibilidade para segunda às 13?\nIA: Agradeço a sua mensagem! Infelizmente, segunda-feira às 13h já está reservada. Gostaria de sugerir uma visita na segunda-feira, dia 18 de novembro, às 10h ou às 15h. Você poderia nesses horários?\nUser: As 10h poder ser\nRetorno: agendar_nova_reuniao\n</EXEMPLO>\n\n<EXEMPLO>\nUser: Pode agendar uma reunião para terça as 10. Obrigado.\nRetorno: agendar_nova_reuniao\n</EXEMPLO>\n</INSTRUCAO>"
+        }
+      },
+      "id": "59f4b849-c506-470b-9f1d-a046cceb44cc",
+      "name": "secretaria",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        0,
+        520
+      ],
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.intencoes }}",
+                    "rightValue": "checar_calendario",
+                    "operator": {
+                      "type": "array",
+                      "operation": "contains",
+                      "rightType": "any"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "checar_calendario"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ecca9851-b6fa-405c-9234-261c49245287",
+                    "leftValue": "={{ $json.output.intencoes }}",
+                    "rightValue": "cancelar_reuniao",
+                    "operator": {
+                      "type": "array",
+                      "operation": "contains",
+                      "rightType": "any"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "cancelar_reuniao"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a0f2e5a9-e77a-4c5f-b32d-d4be5c8f60da",
+                    "leftValue": "={{ $json.output.intencoes }}",
+                    "rightValue": "agendar_nova_reuniao",
+                    "operator": {
+                      "type": "array",
+                      "operation": "contains",
+                      "rightType": "any"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "agendar_nova_reuniao"
+            }
+          ]
+        },
+        "options": {
+          "allMatchingOutputs": true
+        }
+      },
+      "id": "6cb12651-f432-4565-aed8-8cb9da1ad59c",
+      "name": "agendamento_intencoes",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        580,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('mensagem_cliente').item.json.texto }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que esteje dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nBaseado no histórico das conversar estráia o dia e hora da reunião a ser cancelada.\n\nCaso não localizar o evento para cancelar, retorno false para o successo com uma mensagemError \n\npara referencia, agora o dia e horario é: \"{{ $now.format('EEEE') }}, {{ $now.format('yyyy-MM-dd hh:mm:ii') }}\". \n</INSTRUCAO>"
+        }
+      },
+      "id": "9f38549e-1bf9-4680-a69e-2f8e1cdac68c",
+      "name": "secretaria_cancelar_reuniao",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        1080,
+        520
+      ],
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "id": "4bf30c29-76d1-45cd-bca5-b3918cfee074",
+      "name": "texto",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        2300,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=<TEXTO>{{ $json.texto }}</TEXTO>",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que esteje dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nVocê é uma secretária focada em agendamentos. Seu nome é \"Dama IA\". Você trabalha para a empresa \"Plaenge\" e estará cuidando de agendamentos para clientes visitarem o decorado do imóvel \"Bossanova\".\n\nCaso o <TEXTO></TEXTO> seja \"reunião cancelada\" crie uma mensagem confirmando que a reunião foi cancelada com sucesso.\n\nCaso o <TEXTO></TEXTO> for algo diferente de \"reunião cancelada\", retorne uma mensagem baseado no que está escrito no <TEXTO></TEXTO>\n</INSTRUCAO>"
+        }
+      },
+      "id": "f5a7388e-2b65-4c65-b97c-810ce40ce1b9",
+      "name": "secretaria_cancelar_reiuniao",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        2540,
+        500
+      ],
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "evolution",
+        "options": {}
+      },
+      "id": "9d57b9b3-a60d-4159-ae6a-7f695d69b091",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -2840,
+        600
+      ],
+      "webhookId": "39880e20-6b3c-4dff-a13b-7f98d4cc03df"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=<CLIENTE>\n{{ $('mensagem_cliente').item.json.texto }}\n</CLIENTE>\n\n<AGENDA>\n{{ $json.data.map(agenda => `start: ${agenda.start.dateTime} - end: ${agenda.end.dateTime} - timezone: ${agenda.start.timeZone}`) }}\n</AGENDA>",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que não esteja dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nVocê é uma secretária focada em agendamentos. Seu nome é \"Dama IA\". Você trabalha para a empresa \"Plaenge\" e estará cuidando de agendamentos para clientes visitarem o decorado do imóvel \"Bossanova\".\n\nA sua função é checar a <AGENDA></AGENDA> para os próximos 7 dias e ver a disponibilidade de acordo com o texto do <CLIENTE></CLIENTE>.\n\nSe o cliente sugeriu uma data e hora, veja se esta data e hora esta dentro dos 7 dias apartir de hoje \"{{ $now.format('yyyy-MM-dd hh:mm:ii') }}\". \n\nSe a data não estiver disponível, faça uma sugestão para uma data próxima. \n\nPara referencia, a data e hora agora é: {{ $now.format('EEEE, yyyy-MM-dd hh:mm:ii') }}\n\nApenas sugira datas em horário comercial, das 8 as 18 de segunda a sexta e das 9 as 12 as sábados e domingos.\n\nCaso o cliente sugeriu uma data após {{ $now.plus(7, \"days\").format('yyyy-MM-dd') }}, fale que você só pode agendar para os próximos 7 dias.\n\nCaso o cliente não sugeriu nenhuma data, faça você a sua gestão para a data mais próxima disponivel no calendário.\n\nO seu calendário está na timezone \"America/Sao_Paulo\".\n\nResponda de uma forma cordial apenas sobre a disponibilidade e pergunta se poderia confirmar.\n\n<AVOID>\nNão responda já confirmando o agendamento.\nNão faça a sugestão de data que já possui na <AGENDA></AGENDA>. Neste caso sugira uma data mais próxima.\n</AVOID>\n</INSTRUCAO>"
+        }
+      },
+      "id": "07593716-ede7-464b-b384-fce07d04e331",
+      "name": "secretaria_checar_calendario",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        1640,
+        0
+      ],
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('mensagem_cliente').item.json.texto }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que esteje dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nBaseado no histórico das conversar estráia o dia e hora da reunião para ser agendada.\n\npara referencia, agora o dia e horario é: \"{{ $now.format('EEEE') }}, {{ $now.format('yyyy-MM-dd hh:mm:ii') }}\". \n</INSTRUCAO>"
+        }
+      },
+      "id": "96756733-a2af-4c7f-9b3a-5eb0dad66d3b",
+      "name": "secretaria_agendar_reuniao",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        1080,
+        1040
+      ],
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "50e8e032-bfd3-46f9-9544-9a3fba5349d9",
+      "name": "Auto-fixing Output Parser4",
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        1280
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "8bd3d77b-b040-4fba-9307-db770a5ba1a4",
+      "name": "OpenAI Chat Model10",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        1400
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"startDate\": \"2024-11-18T10:00:00\",\n  \"endDate\": \"2024-11-18T11:00:00\",\n  \"timezone\": \"Europe/London\"\n}"
+      },
+      "id": "c6ee1c71-706a-4bc0-b7e9-4b9f61fabe6a",
+      "name": "Structured Output Parser3",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1240,
+        1420
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://dinastia-evolution.lfigsi.easypanel.host/message/sendText/e80916b1-4dec-4f49-9fd0-d1ad2d650a29",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "20C4F7FB433E-415A-BE5B-DC6A0221DE87"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "5511932081209@s.whatsapp.net"
+            },
+            {
+              "name": "delay",
+              "value": 3000
+            },
+            {
+              "name": "linkPreview",
+              "value": true
+            },
+            {
+              "name": "mentionsEveryOne",
+              "value": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2300,
+        0
+      ],
+      "id": "2526c43a-b20e-41fb-b1ac-c2a164b6f482",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('mensagem_tipo').item.json.body.server_url }}/message/sendText/{{ $('mensagem_tipo').item.json.body.instance }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apiKey",
+              "value": "={{ $('Webhook').item.json.body.apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Webhook').item.json.body.data.key.remoteJid }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "81525030-bbc5-46e0-9a78-fcd7349f6c0b",
+      "name": "respondeWhatsapp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        460,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('mensagem_tipo').item.json.body.server_url }}/message/sendText/{{ $('mensagem_tipo').item.json.body.instance }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apiKey",
+              "value": "={{ $('Webhook').item.json.body.apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Webhook').item.json.body.data.key.remoteJid }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "279868b6-62cc-4358-9d3b-e978584a4a0c",
+      "name": "respondeWhatsapp2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2320,
+        1040
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('mensagem_tipo').item.json.body.server_url }}/message/sendText/{{ $('mensagem_tipo').item.json.body.instance }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apiKey",
+              "value": "={{ $('Webhook').item.json.body.apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Webhook').item.json.body.data.key.remoteJid }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8ca5aca0-288f-4eb3-85a1-4f44786fad42",
+      "name": "respondeWhatsapp3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3140,
+        500
+      ]
+    }
+  ],
+  "connections": {
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "recepcionista",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "edit1": {
+      "main": [
+        [
+          {
+            "node": "mensagem_cliente",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "edit2": {
+      "main": [
+        [
+          {
+            "node": "mensagem_cliente",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "secretaria",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "secretaria_checar_calendario",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calendario_7dias": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Chat Memory3": {
+      "ai_memory": [
+        [
+          {
+            "node": "secretaria_checar_calendario",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar": {
+      "main": [
+        [
+          {
+            "node": "secretaria_confirmacao",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser4": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "secretaria_confirmacao",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "recepcionista",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Chat Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "Assistente_comercial",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Chat Memory2": {
+      "ai_memory": [
+        [
+          {
+            "node": "secretaria",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "secretaria_agendar_reuniao",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "secretaria_confirmacao",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Chat Memory4": {
+      "ai_memory": [
+        [
+          {
+            "node": "secretaria_agendar_reuniao",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "secretaria_confirmacao",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Chat Memory5": {
+      "ai_memory": [
+        [
+          {
+            "node": "secretaria_cancelar_reuniao",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "secretaria_cancelar_reuniao",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser5": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "secretaria_cancelar_reuniao",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "secretaria",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "secretaria_checar_calendario",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser2",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "auth": {
+      "main": [
+        [
+          {
+            "node": "mensagem_tipo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "recepcionista",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model8": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "secretaria_cancelar_reiuniao",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Chat Memory6": {
+      "ai_memory": [
+        [
+          {
+            "node": "secretaria_cancelar_reiuniao",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser3": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "secretaria_cancelar_reiuniao",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model9": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser3",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser6": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser3",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cancelar_reuniao": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "sucesso": {
+      "main": [
+        [
+          {
+            "node": "cancelar_reuniao",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "texto",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "texto",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "secretaria_checar_calendario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "edit1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensagem_tipo": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "edit2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "mensagem_cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensagem_cliente": {
+      "main": [
+        [
+          {
+            "node": "recepcionista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "recepcionista": {
+      "main": [
+        [
+          {
+            "node": "intencao",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "intencao": {
+      "main": [
+        [
+          {
+            "node": "Assistente_comercial",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "secretaria",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Assistente_comercial",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "secretaria",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Assistente_comercial",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Assistente_comercial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "secretaria": {
+      "main": [
+        [
+          {
+            "node": "agendamento_intencoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "agendamento_intencoes": {
+      "main": [
+        [
+          {
+            "node": "calendario_7dias",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "secretaria_cancelar_reuniao",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "secretaria_agendar_reuniao",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "secretaria_cancelar_reuniao": {
+      "main": [
+        [
+          {
+            "node": "sucesso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "texto": {
+      "main": [
+        [
+          {
+            "node": "secretaria_cancelar_reiuniao",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "auth",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "secretaria_agendar_reuniao": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser4": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "secretaria_agendar_reuniao",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model10": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser4",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser3": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser4",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "secretaria_checar_calendario": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assistente_comercial": {
+      "main": [
+        []
+      ]
+    },
+    "secretaria_confirmacao": {
+      "main": [
+        [
+          {
+            "node": "respondeWhatsapp2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "secretaria_cancelar_reiuniao": {
+      "main": [
+        [
+          {
+            "node": "respondeWhatsapp3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "dinastia-n8n-editor.lfigsi.easypanel.host",
+            "user-agent": "axios/1.7.7",
+            "content-length": "983",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "content-type": "application/json",
+            "x-forwarded-for": "172.18.0.1",
+            "x-forwarded-host": "dinastia-n8n-editor.lfigsi.easypanel.host",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "89a0f4e4d949",
+            "x-real-ip": "172.18.0.1"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "event": "messages.upsert",
+            "instance": "black",
+            "data": {
+              "key": {
+                "remoteJid": "5511985401987@s.whatsapp.net",
+                "fromMe": false,
+                "id": "3EB0B111E949D281D2D8B3"
+              },
+              "pushName": "Dival S Filho 😎",
+              "status": "DELIVERY_ACK",
+              "message": {
+                "conversation": "Que dia da semana é hoje?",
+                "messageContextInfo": {
+                  "deviceListMetadata": {
+                    "senderKeyHash": "f2Icf9z+qvuSnA==",
+                    "senderTimestamp": "1736189132",
+                    "senderAccountType": "E2EE",
+                    "receiverAccountType": "E2EE",
+                    "recipientKeyHash": "7TLLEfuASeSJCw==",
+                    "recipientTimestamp": "1737206781"
+                  },
+                  "deviceListMetadataVersion": 2,
+                  "messageSecret": "f64+Z0hHGNJSl+FMjmNuRrs1rJ33OMxWVWAacUIRCyw="
+                }
+              },
+              "messageType": "conversation",
+              "messageTimestamp": 1737212014,
+              "instanceId": "e80916b1-4dec-4f49-9fd0-d1ad2d650a29",
+              "source": "web"
+            },
+            "destination": "https://dinastia-n8n-editor.lfigsi.easypanel.host/webhook-test/evolution",
+            "date_time": "2025-01-18T11:53:34.608Z",
+            "sender": "5511932081209@s.whatsapp.net",
+            "server_url": "https://dinastia-evolution.lfigsi.easypanel.host",
+            "apikey": "20C4F7FB433E-415A-BE5B-DC6A0221DE87"
+          },
+          "webhookUrl": "https://dinastia-n8n-webhook.lfigsi.easypanel.host/webhook-test/evolution",
+          "executionMode": "test"
+        }
+      }
+    ]
+  },
+  "versionId": "7c32bdc6-23c9-4fa5-938b-c3fdd8ffc411",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-01-18T12:45:43.202Z",
+      "updatedAt": "2025-01-18T12:45:43.202Z",
+      "id": "7B7qTAU2yw7dt0xZ",
+      "name": "black"
+    }
+  ]
+}
