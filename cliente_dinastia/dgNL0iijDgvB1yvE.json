@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-01-19T00:30:35.493Z",
-  "updatedAt": "2025-01-19T02:58:12.780Z",
+  "updatedAt": "2025-01-20T00:29:46.854Z",
   "id": "dgNL0iijDgvB1yvE",
   "name": "REFRESH - Agendamentos - Do zero a expert. V4",
   "active": false,
@@ -460,8 +460,8 @@
     {
       "parameters": {
         "content": "IA",
-        "height": 733.5790773482283,
-        "width": 1548.5017621736583,
+        "height": 734,
+        "width": 1649,
         "color": 4
       },
       "id": "cd74138f-ae02-461a-902b-501451b888f4",
@@ -469,7 +469,7 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1560,
+        1580,
         260
       ]
     },
@@ -657,8 +657,8 @@
     {
       "parameters": {
         "content": "Espera da mensagem (picotada)",
-        "height": 545.8820982430003,
-        "width": 1095.0962743108616,
+        "height": 646,
+        "width": 1095,
         "color": 3
       },
       "id": "a55104df-4600-41d6-b322-362cd43e1c57",
@@ -673,15 +673,15 @@
     {
       "parameters": {
         "content": "Classificador de interesse",
-        "height": 316.0503087655747,
-        "width": 1009.2970279264118
+        "height": 356,
+        "width": 1009
       },
       "id": "c916137f-baa3-493e-bc74-5777da5ebe0f",
       "name": "Sticky Note4",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1560,
+        1580,
         1020
       ]
     },
@@ -798,12 +798,11 @@
         "resource": "assistant",
         "assistantId": {
           "__rl": true,
-          "value": "asst_lg4YkKKrrTg3XC8nAvhsdqqr",
-          "mode": "list",
-          "cachedResultName": "plaenge"
+          "mode": "id",
+          "value": "asst_lg4YkKKrrTg3XC8nAvhsdqqr"
         },
         "prompt": "define",
-        "text": "=Para referencia, o dia e horario atual é:{{ (() => {\n  const date = new Date(); // Obtém a data atual\n  const days = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado']; // Dias da semana em português\n  const pad = n => n.toString().padStart(2, '0'); // Adiciona zero à esquerda\n  const dayName = days[date.getDay()]; // Obtém o nome do dia\n  const day = pad(date.getDate());\n  const month = pad(date.getMonth() + 1); // Mês começa em 0\n  const year = date.getFullYear();\n  const hours = pad(date.getHours());\n  const minutes = pad(date.getMinutes());\n  const seconds = pad(date.getSeconds());\n  return `${dayName}, ${day}/${month}/${year} ${hours}:${minutes}:${seconds}`; // Formato brasileiro de data e hora\n})() }}\n{{ $('mensagem_cliente').item.json.texto }}",
+        "text": "={{ $('mensagem_cliente').item.json.texto }}\nPara referencia, o dia e horario atual é:{{ (() => {\n  const date = new Date(); // Obtém a data atual\n  const days = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado']; // Dias da semana em português\n  const pad = n => n.toString().padStart(2, '0'); // Adiciona zero à esquerda\n  const dayName = days[date.getDay()]; // Obtém o nome do dia\n  const day = pad(date.getDate());\n  const month = pad(date.getMonth() + 1); // Mês começa em 0\n  const year = date.getFullYear();\n  const hours = pad(date.getHours());\n  const minutes = pad(date.getMinutes());\n  const seconds = pad(date.getSeconds());\n  return `${dayName}, ${day}/${month}/${year} ${hours}:${minutes}:${seconds}`; // Formato brasileiro de data e hora\n})() }}\n",
         "options": {}
       },
       "id": "d3bc8b0b-f49c-466b-834e-35f3657cff9b",
@@ -811,7 +810,7 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.6,
       "position": [
-        2600,
+        2620,
         320
       ],
       "credentials": {
@@ -849,8 +848,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        -180,
-        420
+        -200,
+        400
       ],
       "webhookId": "25592133-90db-45a5-9db4-a88cc190699d"
     },
@@ -915,7 +914,7 @@
       "typeVersion": 1.1,
       "position": [
         2360,
-        800
+        880
       ],
       "credentials": {
         "postgres": {
@@ -959,7 +958,7 @@
         "promptType": "define",
         "text": "={{ $json.texto }}",
         "options": {
-          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que não esteja dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nVocê é uma especialista em classificar mensagens de clientes. \n\nA sua função é identificar a intenção na mensagem deste cliente em apenas 2 categories: \"informacoes\" ou \"agendamentos\".\n\nCaso você não identifique nenhuma opção, retorne sempre \"informacoes\"\n\nApenas retorne o texto \"informacoes\" ou \"agendamentos\", mais nada.\n\n<EXEMPLO>\nUser: Não precisa mais fazer o reagendamento\nAI: agendamentos\n</EXEMPLO>\n\n<EXEMPLO>\nHuman: Olá eu gostaria de agendar uma reunião para amanhã as 9h\nAI: agendamentos\nHuman: Olá eu gostaria de agendar uma reunião para amanha as 9h\nAI: Amanhã, dia 25 de novembro, às 9h está disponível. Poderia confirmar esse horário?\nHuman: pode confirmar\nAI: agendamentos\n</EXEMPLO>\n</INSTRUCAO>"
+          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que não esteja dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nVocê é uma especialista em classificar mensagens de clientes. \n\nA sua função é identificar a intenção na mensagem deste cliente em apenas 2 categories: \"informacoes\" ou \"agendamentos\".\n\nCaso você não identifique nenhuma opção, retorne sempre a intenção \"informacoes\"\n\nAnalise sempre o histórico da conversa antes de decidir, principalmente de a frase anterior for sobre \"agendamentos\".\n\nApenas retorne o texto \"informacoes\" ou \"agendamentos\", mais nada.\n\n<EXEMPLO>\nUser: Não precisa mais fazer o reagendamento\nAI: agendamentos\n</EXEMPLO>\n\n<EXEMPLO>\nHuman: Olá eu gostaria de agendar uma reunião para amanhã as 9h\nAI: agendamentos\nHuman: Olá eu gostaria de agendar uma reunião para amanha as 9h\nAI: Amanhã, dia 25 de novembro, às 9h está disponível. Poderia confirmar esse horário?\nHuman: pode confirmar\nAI: agendamentos\n</EXEMPLO>\n</INSTRUCAO>"
         }
       },
       "id": "fc195e2d-f122-41fd-9085-d88a0082c7aa",
@@ -979,7 +978,7 @@
         "promptType": "define",
         "text": "={{ $('mensagem_cliente').item.json.texto }}",
         "options": {
-          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO> Você é uma secretária virtual projetada para gerenciar de forma eficiente e amigável os agendamentos e cancelamentos de reuniões e visitas. Seu nome é \"Dama IA\" e você trabalha para a construtora \"Plaenge\".\n\n Focada em oferecer uma experiência prática e personalizada, você exibe horários disponíveis, pergunta se o cliente concorda com a data e hora antes de confirmar o agendamento e fornece todos os detalhes essenciais após a marcação. Você também deve respeitar o formato brasileiro de data e hora (DD/MM/AAAA e HH) e opera no fuso horário \"America/Sao_Paulo\".\n\nVerificar disponibilidade no calendário (<AGENDA></AGENDA>) para os próximos 7 dias úteis, dentro do horário de funcionamento:\nSegunda a sexta: das 8h às 21h.\nSábado: das 8h às 12h. \nDomingo: Fechado.\nNunca agende fora do horario de funcionamento.\nUse como referencia para a data e hora atual: {{ (() => {\n  const date = new Date(); // Obtém a data atual\n  const days = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado']; // Dias da semana em português\n  const pad = n => n.toString().padStart(2, '0'); // Adiciona zero à esquerda\n  const dayName = days[date.getDay()]; // Obtém o nome do dia\n  const year = date.getFullYear();\n  const month = pad(date.getMonth() + 1); // Mês começa em 0\n  const day = pad(date.getDate());\n  const hours = pad(date.getHours());\n  const minutes = pad(date.getMinutes());\n  const seconds = pad(date.getSeconds());\n  return `${dayName}, ${year}-${month}-${day} ${hours}:${minutes}:${seconds}`; // Retorna no formato desejado\n})() }}\n\nCaso o cliente sugira uma data fora deste período ou após {{ $now.plus(7, \"days\").format('dd/MM/yyyy') }}, informe que só é possível agendar para os próximos 7 dias.\nSe não houver data sugerida, proponha a mais próxima disponível.\nfaça agendamentos de 15 minutos de duração.\nse o horario pedido pelo cliente ja tiver alguma reuniao marcada, sugira o mais proximo 15 minutos antes ou 15 minutos depois da reunião  existente, mas esta proibido marcar em um horario que ja exista reuniao\nPergunte se o cliente pode confirmar, mas não confirme diretamente o agendamento.\n\nSempre utilize o timezone \"America/Sao_Paulo\" para todas as operações.\n\n<REAGENDAMENTO>\nDe acordo com o histórico de mensagens, siga o processo de reagendamento nesta ordem:\n1. use a calculadora(apenas some numeros inteiros, sem usar textos) para identificar a data e hora especifica que o cliente gostaria de marcar o <NOVO_AGENDAMENTO>.\n2. Busque todos os eventos apartir do horario do <NOVO_AGENDAMENTO> até para os próximos 2 dias.\n2.1 Caso já houver um agendamento o mesmo horário, sugira uma data mais próxima.\n2.2 Caso não houver nenhum agendamento no mesmo horário, confirme com o usuário o <NOVO_AGENDAMENTO>.\n3. Quando o usário confirmar, delete o agendamento anterior usando o eventId. Crie o <NOVO_AGENDAMENTO>.\n</REAGENDAMENTO>\n\n<CANCELAMENTO>\nBaseado no histórico de mensagens, extraia as informações do evento a ser cancelado (data, hora e eventId).\nCaso não localize o evento, retorne false com uma mensagem de erro.\n</CANCELAMENTO>\n\n<CONFIRMACAO>\nEscreva mensagens breves e cordiais confirmando a reunião com base no evento já agendado, respeitando o timezone America/Sao_Paulo.\n</CONFIRMACAO>\n\n\nExceções:\n\nCaso identifique uma situação específica de exceção, retorne a mensagem correspondente definida na exceção (<EXCESSAO></EXCESSAO>).\n\nRegras Importantes:\n\nSeja cordial e direta.\nResponda sempre no timezone: America/Sao_Paulo.\nNunca confirme agendamentos automaticamente; peça confirmação ao cliente.\nApenas responda sobre agendamentos; ignore qualquer outro contexto.\nRetorne mensagens no formato texto, sem códigos ou informações adicionais.\n\nExemplo de Resposta:\n\nUser: \"Pode marcar uma reunião para terça às 14h?\"\nResposta: \"Terça-feira às 14h está disponível. Poderia confirmar esse horário?\"\n\nUtilize a calculadora para calcular diferença de datas, horarios e dias.\n\n<OUTPUT>\nVoce sempre irá responder usando o formato JSON, sem commas, ou aspas, apenas o JSON.\n\nExemplo com eventId:\n\n{\n  \"mensagem\": \"sua mensagem aqui\",\n  \"eventId\": \"o eventId do agendamento criado aqui\"\n}\n\nExemplo sem eventId:\n\n{\n  \"mensagem\": \"sua mensagem aqui\"\n}\n</OUTPUT>\n\n</INSTRUCAO>\n\n\n"
+          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO> Você é uma secretária virtual projetada para gerenciar de forma eficiente e amigável os agendamentos e cancelamentos de reuniões e visitas. Seu nome é \"Dama IA\" e você trabalha para a construtora \"Plaenge\".\n\n Focada em oferecer uma experiência prática e personalizada, você exibe horários disponíveis, pergunta se o cliente concorda com a data e hora antes de confirmar o agendamento e fornece todos os detalhes essenciais após a marcação. Você também deve respeitar o formato brasileiro de data e hora (DD/MM/AAAA e HH) e opera no fuso horário \"America/Sao_Paulo\".\n\nVerificar disponibilidade no calendário (<AGENDA></AGENDA>) para os próximos 7 dias úteis, dentro do horário de funcionamento:\nSegunda a sexta: das 8h às 21h.\nSábado: das 8h às 12h. \nDomingo: Fechado.\nNunca agende fora do horario de funcionamento.\nUse como referencia para a data e hora atual: {{ (() => {\n  const date = new Date();\n  const options = {\n    timeZone: 'America/Sao_Paulo',\n    weekday: 'long',\n    year: 'numeric',\n    month: '2-digit',\n    day: '2-digit',\n    hour: '2-digit',\n    minute: '2-digit',\n    second: '2-digit',\n    hour12: false,\n  };\n  const formatter = new Intl.DateTimeFormat('pt-BR', options);\n  const parts = formatter.formatToParts(date);\n  const getPart = (type) => parts.find(part => part.type === type).value;\n  const dayName = getPart('weekday').toLowerCase();\n  const year = getPart('year');\n  const month = getPart('month');\n  const day = getPart('day');\n  const hours = getPart('hour');\n  const minutes = getPart('minute');\n  const seconds = getPart('second');\n  return `${dayName}, ${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;\n})() }}\n\n\nCaso o cliente sugira uma data fora deste período ou após {{ $now.plus(7, \"days\").format('dd/MM/yyyy') }}, informe que só é possível agendar para os próximos 7 dias.\nSe não houver data sugerida, proponha a mais próxima disponível.\nfaça agendamentos de 30 minutos de duração.\nse o horario pedido pelo cliente ja tiver alguma reuniao marcada, sugira o mais proximo 30 minutos antes ou 30 minutos depois da reunião  existente, mas esta proibido marcar em um horario que ja exista reuniao\nPergunte se o cliente pode confirmar, mas não confirme diretamente o agendamento.\n\nSempre utilize o timezone \"America/Sao_Paulo\" para todas as operações.\n\n<REAGENDAMENTO>\nDe acordo com o histórico de mensagens, siga o processo de reagendamento nesta ordem:\n1. use a calculadora(apenas some numeros inteiros, sem usar textos) para identificar a data e hora especifica que o cliente gostaria de marcar o <NOVO_AGENDAMENTO>.\n2. Busque todos os eventos apartir do horario do <NOVO_AGENDAMENTO> até para os próximos 2 dias.\n2.1 Caso já houver um agendamento o mesmo horário, sugira uma data mais próxima.\n2.2 Caso não houver nenhum agendamento no mesmo horário, confirme com o usuário o <NOVO_AGENDAMENTO>.\n3. Quando o usário confirmar, delete o agendamento anterior usando o eventId. Crie o <NOVO_AGENDAMENTO>.\n</REAGENDAMENTO>\n\n<CANCELAMENTO>\nBaseado no histórico de mensagens, extraia as informações do evento a ser cancelado (data, hora e eventId).\nCaso não localize o evento, retorne false com uma mensagem de erro.\n</CANCELAMENTO>\n\n<CONFIRMACAO>\nEscreva mensagens breves e cordiais confirmando a reunião com base no evento já agendado, respeitando o timezone America/Sao_Paulo.\n</CONFIRMACAO>\n\n\nExceções:\n\nCaso identifique uma situação específica de exceção, retorne a mensagem correspondente definida na exceção (<EXCESSAO></EXCESSAO>).\n\nRegras Importantes:\n\nSeja cordial e direta.\nResponda sempre no timezone: America/Sao_Paulo.\nNunca confirme agendamentos automaticamente; peça confirmação ao cliente.\nApenas responda sobre agendamentos; ignore qualquer outro contexto.\nRetorne mensagens no formato texto, sem códigos ou informações adicionais.\n\nExemplo de Resposta:\n\nUser: \"Pode marcar uma reunião para terça às 14h?\"\nResposta: \"Terça-feira às 14h está disponível. Poderia confirmar esse horário?\"\n\nUtilize a calculadora para calcular diferença de datas, horarios e dias.\n\n<OUTPUT>\nVoce sempre irá responder usando o formato JSON, sem commas, ou aspas, apenas o JSON.\n\nExemplo com eventId:\n\n{\n  \"mensagem\": \"sua mensagem aqui\",\n  \"eventId\": \"o eventId do agendamento criado aqui\"\n}\n\nExemplo sem eventId:\n\n{\n  \"mensagem\": \"sua mensagem aqui\"\n}\n</OUTPUT>\n\n</INSTRUCAO>\n\n\n"
         }
       },
       "id": "644b26e0-fa4e-463a-95cc-63a14991d1ca",
@@ -987,11 +986,98 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.6,
       "position": [
-        2240,
+        2260,
         560
       ],
       "retryOnFail": true,
       "maxTries": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('mensagem_tipo').item.json.body.server_url }}/message/sendText/{{ $('mensagem_tipo').item.json.body.instance }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apiKey",
+              "value": "={{ $('Webhook').item.json.body.apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Webhook').item.json.body.data.key.remoteJid }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "323e1de6-de91-4cd0-8bba-28257c825bd2",
+      "name": "respondeWhatsapp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3000,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('mensagem_tipo').item.json.body.server_url }}/message/sendText/{{ $('mensagem_tipo').item.json.body.instance }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apiKey",
+              "value": "={{ $('Webhook').item.json.body.apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Webhook').item.json.body.data.key.remoteJid }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.mensagem }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e263aeaf-ab0b-4ae9-8214-ea7c4a606caf",
+      "name": "respondeWhatsapp1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3000,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const outputString = $input.item.json.output;\n\n// Função para adicionar aspas às chaves do JSON\nconst adicionarAspasChaves = (str) => {\n  return str.replace(/([{,]\\s*)(\\w+)(\\s*:)/g, '$1\"$2\"$3');\n};\n\n// Ajustar a string JSON\nconst jsonAjustado = adicionarAspasChaves(outputString);\n\n// Parsear o JSON ajustado\nlet parsedOutput;\ntry {\n  parsedOutput = JSON.parse(jsonAjustado);\n} catch (error) {\n  throw new Error('Erro ao parsear o JSON ajustado: ' + error.message);\n}\n\n// Verificar se a chave 'mensagem' existe\nif (!parsedOutput.mensagem) {\n  throw new Error('A chave \"mensagem\" não foi encontrada no JSON.');\n}\n\n// Retornar apenas a mensagem\nreturn {\n  json: {\n    mensagem: parsedOutput.mensagem\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2680,
+        560
+      ],
+      "id": "bbe7c8a8-279b-4c07-8d02-85aea8a1d3e9",
+      "name": "Code"
     }
   ],
   "connections": {
@@ -1291,11 +1377,6 @@
       "ai_memory": [
         [
           {
-            "node": "Assistente_comercial",
-            "type": "ai_memory",
-            "index": 0
-          },
-          {
             "node": "Assistente_comercial_classificador",
             "type": "ai_memory",
             "index": 0
@@ -1329,6 +1410,39 @@
         [
           {
             "node": "intencao",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assistente_comercial": {
+      "main": [
+        [
+          {
+            "node": "respondeWhatsapp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Secretaria agendamento": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "respondeWhatsapp1",
             "type": "main",
             "index": 0
           }
@@ -1374,7 +1488,7 @@
               "pushName": "Dival S Filho 😎",
               "status": "DELIVERY_ACK",
               "message": {
-                "conversation": "Qual a área do imóvel?",
+                "conversation": "gostaria",
                 "messageContextInfo": {
                   "deviceListMetadata": {
                     "senderKeyHash": "f2Icf9z+qvuSnA==",
@@ -1405,7 +1519,7 @@
       }
     ]
   },
-  "versionId": "70d94f32-fa03-4027-9f09-57792c6eb75f",
+  "versionId": "c976aa83-caf9-44c4-a120-a539aa3f4d6b",
   "triggerCount": 0,
   "tags": [
     {
