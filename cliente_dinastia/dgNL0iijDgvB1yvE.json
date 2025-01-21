@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-01-19T00:30:35.493Z",
-  "updatedAt": "2025-01-20T00:29:46.854Z",
+  "updatedAt": "2025-01-21T02:55:11.298Z",
   "id": "dgNL0iijDgvB1yvE",
   "name": "REFRESH - Agendamentos - Do zero a expert. V4",
   "active": false,
@@ -958,7 +958,7 @@
         "promptType": "define",
         "text": "={{ $json.texto }}",
         "options": {
-          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que não esteja dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nVocê é uma especialista em classificar mensagens de clientes. \n\nA sua função é identificar a intenção na mensagem deste cliente em apenas 2 categories: \"informacoes\" ou \"agendamentos\".\n\nCaso você não identifique nenhuma opção, retorne sempre a intenção \"informacoes\"\n\nAnalise sempre o histórico da conversa antes de decidir, principalmente de a frase anterior for sobre \"agendamentos\".\n\nApenas retorne o texto \"informacoes\" ou \"agendamentos\", mais nada.\n\n<EXEMPLO>\nUser: Não precisa mais fazer o reagendamento\nAI: agendamentos\n</EXEMPLO>\n\n<EXEMPLO>\nHuman: Olá eu gostaria de agendar uma reunião para amanhã as 9h\nAI: agendamentos\nHuman: Olá eu gostaria de agendar uma reunião para amanha as 9h\nAI: Amanhã, dia 25 de novembro, às 9h está disponível. Poderia confirmar esse horário?\nHuman: pode confirmar\nAI: agendamentos\n</EXEMPLO>\n</INSTRUCAO>"
+          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que não esteja dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nVocê é uma especialista em classificar mensagens de clientes. \n\nA sua função é identificar a intenção na mensagem deste cliente em apenas 2 categories: \"informacoes\" ou \"agendamentos\".\n\nAnalise sempre o histórico da conversa antes de decidir, principalmente se a frase anterior for sobre \"agendamentos\".\n\nApenas retorne o texto \"informacoes\" ou \"agendamentos\", mais nada.\n\n<EXEMPLO>\nUser: Não precisa mais fazer o reagendamento\nAI: agendamentos\n</EXEMPLO>\n\n<EXEMPLO>\nHuman: Olá eu gostaria de agendar uma reunião para amanhã as 9h\nAI: agendamentos\nHuman: Olá eu gostaria de agendar uma reunião para amanha as 9h\nAI: Amanhã, dia 25 de novembro, às 9h está disponível. Poderia confirmar esse horário?\nHuman: pode confirmar\nHuman: poderia\nHuman: sim\nHuman: pode ser\nHuman: pois não\nHuman: beleza\nHuman: blz\nHuman: com certeza\n\nAI: agendamentos\n</EXEMPLO>\n</INSTRUCAO>"
         }
       },
       "id": "fc195e2d-f122-41fd-9085-d88a0082c7aa",
@@ -1488,7 +1488,7 @@
               "pushName": "Dival S Filho 😎",
               "status": "DELIVERY_ACK",
               "message": {
-                "conversation": "gostaria",
+                "conversation": "poderia",
                 "messageContextInfo": {
                   "deviceListMetadata": {
                     "senderKeyHash": "f2Icf9z+qvuSnA==",
@@ -1519,7 +1519,7 @@
       }
     ]
   },
-  "versionId": "c976aa83-caf9-44c4-a120-a539aa3f4d6b",
+  "versionId": "f5da24dc-8a9c-4607-86bc-374afb6a5283",
   "triggerCount": 0,
   "tags": [
     {
