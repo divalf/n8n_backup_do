@@ -1,62 +1,495 @@
 {
   "createdAt": "2025-01-21T00:24:24.234Z",
-  "updatedAt": "2025-01-21T00:31:14.445Z",
+  "updatedAt": "2025-01-22T02:59:03.878Z",
   "id": "W9WcVdxqiDeqyy5F",
-  "name": "REFRESH - Agendamentos - Do zero a expert. V5",
+  "name": "REFRESH - Agendamentos - zero a expert - RAG - V5",
   "active": false,
   "nodes": [
     {
       "parameters": {
-        "model": "gpt-4o",
-        "options": {}
+        "content": "roda para deletar todas as mensagens",
+        "height": 274.7923843700217,
+        "width": 273.1627906976745,
+        "color": 7
       },
-      "id": "a67c5633-6b72-4c88-80ac-b16aad883ac1",
-      "name": "OpenAI Chat Model",
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "id": "24bef2fb-8867-4439-acf5-5de82d603b84",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        80,
-        1000
+        -520,
+        480
       ]
     },
     {
-      "parameters": {},
-      "id": "e533e516-8836-4864-bba8-4c57510bd342",
-      "name": "Evolution API",
-      "type": "n8n-nodes-evolution-api.httpBin",
-      "typeVersion": 1,
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM documents;",
+        "options": {}
+      },
+      "id": "469db846-9f80-4b44-8774-be6488139812",
+      "name": "Deletar_todas_as_mensagens",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
       "position": [
-        -180,
-        1540
+        -440,
+        560
       ],
-      "credentials": {}
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
     },
     {
-      "parameters": {},
-      "id": "d4fbcd93-8186-45c1-bc31-ddefaba713c8",
-      "name": "Evolution API2",
-      "type": "n8n-nodes-evolution-api.httpBin",
+      "parameters": {
+        "content": "roda para setar o banco de dados vetorial do supabase",
+        "height": 274.7923843700217,
+        "width": 273.1627906976745,
+        "color": 7
+      },
+      "id": "48a712ea-b3a2-4f80-90ea-4807e08da505",
+      "name": "Sticky Note8",
+      "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        940,
-        1020
+        -520,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Enable the pgvector extension to work with embedding vectors\ncreate extension vector;\n\n-- Create a table to store your documents\ncreate table documents (\n  id bigserial primary key,\n  content text, -- corresponds to Document.pageContent\n  metadata jsonb, -- corresponds to Document.metadata\n  embedding vector(1536) -- 1536 works for OpenAI embeddings, change if needed\n);\n\n-- Create a function to search for documents\ncreate function match_documents (\n  query_embedding vector(1536),\n  match_count int default null,\n  filter jsonb DEFAULT '{}'\n) returns table (\n  id bigint,\n  content text,\n  metadata jsonb,\n  similarity float\n)\nlanguage plpgsql\nas $\n#variable_conflict use_column\nbegin\n  return query\n  select\n    id,\n    content,\n    metadata,\n    1 - (documents.embedding <=> query_embedding) as similarity\n  from documents\n  where metadata @> filter\n  order by documents.embedding <=> query_embedding\n  limit match_count;\nend;\n$;\n",
+        "options": {}
+      },
+      "id": "7968658b-d1cf-4db1-a836-1545ab0bbe54",
+      "name": "setar_supabase_tabelas_vectoriais",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -440,
+        240
       ],
-      "retryOnFail": true,
-      "credentials": {}
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.texto }}",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "=file_id",
+                "value": "={{ $('arquivo_id').item.json.file_id }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "13a60155-847c-4880-914c-567712ea6103",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        1720,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-small",
+        "options": {}
+      },
+      "id": "fd570654-adc0-4392-9bc6-c92f6f30afdc",
+      "name": "Embeddings OpenAI1",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        580
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chunkSize": 500,
+        "chunkOverlap": 200,
+        "options": {}
+      },
+      "id": "b78be8dd-5ed7-4c2e-806e-820035c35f47",
+      "name": "Recursive Character Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "10646eae-ae46-4327-a4dc-9987c2d76173",
+              "name": "file_id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "c9e1ed84-5dcc-43c3-999b-cf1d095eba32",
+              "name": "file_mime_type",
+              "value": "={{ $json.mimeType }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4d574b68-2f17-49b4-ade8-032b27765c1b",
+      "name": "arquivo_id",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        120,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "https://drive.google.com/drive/u/0/folders/19yUw69c3mZRKFgsqi1ZHcwQM4Puhv9gB",
+          "mode": "url"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "id": "b162a401-38e5-44a8-a324-e97b991dbfa7",
+      "name": "arquivo_criado",
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        320
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "SSONdBJXG2LU2PuV",
+          "name": "Google Drive - Black"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "https://drive.google.com/drive/u/0/folders/19yUw69c3mZRKFgsqi1ZHcwQM4Puhv9gB",
+          "mode": "url"
+        },
+        "event": "fileUpdated",
+        "options": {}
+      },
+      "id": "339311c2-c30b-44e1-9d8b-68cb1cdb45e3",
+      "name": "arquivo_alterado",
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        540
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "SSONdBJXG2LU2PuV",
+          "name": "Google Drive - Black"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "documents",
+        "filterType": "string",
+        "filterString": "=metadata->>file_id=like.*{{ $json.file_id }}*"
+      },
+      "id": "38d77fd0-ceb0-4b4f-b5b0-88aa32068257",
+      "name": "deletar_arquivos_antigos",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        280,
+        420
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "k0C20xz6iqH7ezTS",
+          "name": "Supabase - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('arquivo_id').item.json.file_id }}",
+          "mode": "id"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "text/plain"
+            }
+          }
+        }
+      },
+      "id": "458481e3-81e4-4c48-8db8-5aea2cc33c91",
+      "name": "download_arquivo",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        460,
+        420
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "SSONdBJXG2LU2PuV",
+          "name": "Google Drive - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "id": "fc0c0513-4134-4b9a-ace9-ddbfe9da7e56",
+      "name": "extrair_pdf",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        980,
+        300
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "aecaf0bd-b800-40b7-b348-c1a8ff636ef1",
+              "name": "texto",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "620bab76-bea3-42b4-85b6-4edf52292952",
+      "name": "exportar_texto",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1320,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "destinationKey": "text",
+        "options": {}
+      },
+      "id": "46c5a0ee-83d9-46d2-8daf-3e3031b85a9b",
+      "name": "extrair_texto",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        980,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## RAG - Supabase",
+        "height": 728,
+        "width": 2184
+      },
+      "id": "cf9d122a-6c42-435a-9cde-e27f34d3a97f",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('arquivo_id').item.json.file_mime_type }}",
+                    "rightValue": "application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d67dd12c-f3be-40aa-bc38-e37b75e7d768",
+                    "leftValue": "={{ $('arquivo_id').item.json.file_mime_type }}",
+                    "rightValue": "application/vnd.google-apps.document",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "GOOGLE-TEXTO"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3f4dc79a-4c86-485d-a665-907e39c06efb",
+      "name": "tipo_arquivo",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        640,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "id": "e1d0064b-f23f-48ca-88d5-801d9785799d",
+      "name": "supabase_vectorstore",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        420
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "k0C20xz6iqH7ezTS",
+          "name": "Supabase - Black"
+        }
+      }
     },
     {
       "parameters": {
         "model": "gpt-4o",
         "options": {}
       },
-      "id": "92e3a68d-b036-4753-ab53-f4182376bb62",
+      "id": "07ec4f96-b3ad-4f37-b4f3-009c46752bb5",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        120,
+        1260
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "0a2a8e82-514c-48a2-80ce-efbe3dffb855",
       "name": "OpenAI Chat Model11",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        0,
-        1680
-      ]
+        40,
+        1940
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
     },
     {
       "parameters": {
@@ -149,14 +582,20 @@
         },
         "options": {}
       },
-      "id": "84cbc41a-4b40-48bc-a851-b61da0393773",
+      "id": "516a0320-4008-41f3-a776-89aa91c7039e",
       "name": "Google Sheets",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        280,
-        1540
-      ]
+        320,
+        1800
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "PWv0Kz34YyKqBI1V",
+          "name": "Google Sheets  - Black"
+        }
+      }
     },
     {
       "parameters": {
@@ -182,13 +621,13 @@
         },
         "options": {}
       },
-      "id": "2f2fca21-e4e6-424f-867d-2123b9b15065",
+      "id": "2e31ba08-f654-4bb5-b285-84d69835e580",
       "name": "encaminhar_um_zap_pro_rep",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        440,
-        1540
+        520,
+        1800
       ]
     },
     {
@@ -246,13 +685,13 @@
         },
         "options": {}
       },
-      "id": "85e1d55c-676d-4379-a00d-8f20cfe086d0",
+      "id": "c026f667-ce9f-40ef-a637-a22c360690bf",
       "name": "intencao",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        560,
-        800
+        600,
+        1060
       ]
     },
     {
@@ -264,13 +703,13 @@
           "mimeType": "={{ $json.body.data.message.audioMessage.mimetype }}"
         }
       },
-      "id": "73b7558b-8ebc-466f-a7b8-fa68fddf54a6",
+      "id": "0ddefdbf-6406-4506-8544-9a0a7c43a3f2",
       "name": "Convert to File",
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -1040,
-        760
+        -960,
+        1060
       ],
       "alwaysOutputData": true
     },
@@ -288,13 +727,13 @@
         },
         "options": {}
       },
-      "id": "4f020296-21ef-4ac8-a630-244b0de9b825",
+      "id": "275ec810-8bb8-4238-9296-66ad8b816f4a",
       "name": "edit1",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -640,
-        760
+        -480,
+        1140
       ],
       "alwaysOutputData": true
     },
@@ -312,13 +751,13 @@
         },
         "options": {}
       },
-      "id": "79ba2601-8a88-4bbb-8c94-b4f6144c0d30",
+      "id": "654f7f0c-2cf3-458a-91ae-f74798d03bd6",
       "name": "edit2",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -640,
-        960
+        -600,
+        1220
       ]
     },
     {
@@ -328,13 +767,13 @@
         "width": 497.35749825591427,
         "color": 2
       },
-      "id": "cd5f1af9-f14c-4ce6-b788-f79cf98e790d",
+      "id": "5372b094-cb35-497a-8a6e-375d517d2057",
       "name": "Sticky Note",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -2060,
-        740
+        -2020,
+        1000
       ]
     },
     {
@@ -343,13 +782,13 @@
         "height": 455.88406985111124,
         "width": 1224.7391699732286
       },
-      "id": "33c0b099-9672-42b7-8c82-34a52f7294d7",
+      "id": "3e73391c-3b70-4288-ac43-1d06a85307d4",
       "name": "Sticky Note1",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -1520,
-        720
+        -1480,
+        980
       ]
     },
     {
@@ -365,7 +804,7 @@
             {
               "id": "17b6fa1c-f4ea-4c75-9c9e-1a43900dbc58",
               "leftValue": "={{ $json.body.apikey }}",
-              "rightValue": "3FE8AFBDF281-4365-973F-F55A813DF487",
+              "rightValue": "20C4F7FB433E-415A-BE5B-DC6A0221DE87",
               "operator": {
                 "type": "string",
                 "operation": "equals",
@@ -387,13 +826,13 @@
         },
         "options": {}
       },
-      "id": "cddf4558-a008-41df-ae41-7105e8c18599",
+      "id": "36f72bdb-0469-4e49-ab2b-396037edd3ab",
       "name": "auth",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1780,
-        860
+        -1740,
+        1120
       ]
     },
     {
@@ -454,30 +893,30 @@
           "fallbackOutput": "extra"
         }
       },
-      "id": "5667542d-6f28-49b6-bef2-96befba6abc9",
+      "id": "758fd241-8eb3-42cd-9d0b-04db172bbd66",
       "name": "mensagem_tipo",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -1440,
-        800
+        -1400,
+        1060
       ],
       "alwaysOutputData": false
     },
     {
       "parameters": {
         "content": "IA",
-        "height": 750.4808437390784,
-        "width": 1857.562633320633,
+        "height": 734,
+        "width": 2209,
         "color": 4
       },
-      "id": "b371e189-8ae3-4d79-931f-bc131c23cd4b",
+      "id": "c666ccd1-a748-4044-b936-b7b5400869ca",
       "name": "Sticky Note2",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -260,
-        720
+        -200,
+        960
       ]
     },
     {
@@ -500,28 +939,28 @@
         },
         "options": {}
       },
-      "id": "5b681a32-6d3a-44ec-aaeb-efe0cdc001fd",
+      "id": "61b03d1b-788b-4cf7-9dad-ac6e229f2d97",
       "name": "Filtra Webhook",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1260,
-        1460
+        -1220,
+        1720
       ]
     },
     {
       "parameters": {
         "amount": 2
       },
-      "id": "5f34fab0-9221-4dcf-b06f-ec1e94d3decc",
+      "id": "98a23a87-9908-42d9-9e46-ef893bedede7",
       "name": "Wait",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        -1020,
-        1240
+        -980,
+        1500
       ],
-      "webhookId": "e061b007-1b91-4de7-b2a8-75e3b321aaa3"
+      "webhookId": "f01fd2f0-8326-430a-b5f1-154395ef218b"
     },
     {
       "parameters": {
@@ -530,14 +969,20 @@
         "key": "={{ $json.telefone }}",
         "options": {}
       },
-      "id": "cd5df376-fd01-4952-8e3f-90d3fd228c14",
+      "id": "670a6d58-d83c-4912-a3ae-554fd453bfff",
       "name": "Puxar as Mensagens",
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        -1020,
-        1440
-      ]
+        -980,
+        1700
+      ],
+      "credentials": {
+        "redis": {
+          "id": "jm7Z6lqHaHegQqJ0",
+          "name": "Redis - Black"
+        }
+      }
     },
     {
       "parameters": {
@@ -564,24 +1009,24 @@
         },
         "options": {}
       },
-      "id": "3d504cad-fc31-466c-be26-567581b7bc1c",
+      "id": "2bfbb6ff-d81f-4fb3-a819-619ae3643b5e",
       "name": "If1",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        -820,
-        1440
+        -780,
+        1700
       ]
     },
     {
       "parameters": {},
-      "id": "cc8d931f-8533-4dfc-8872-305702806595",
+      "id": "81c3b38b-5f48-43f4-a011-8c322636bb8d",
       "name": "No Operation, do nothing",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -500,
-        1460
+        -460,
+        1720
       ]
     },
     {
@@ -589,14 +1034,20 @@
         "operation": "delete",
         "key": "={{ $json.telefone }}"
       },
-      "id": "8c1f5e74-cd32-4a5c-b26e-9f079da225da",
+      "id": "971041e4-b029-4e47-a707-053002e602ed",
       "name": "Redis",
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        -500,
-        1280
-      ]
+        -460,
+        1540
+      ],
+      "credentials": {
+        "redis": {
+          "id": "jm7Z6lqHaHegQqJ0",
+          "name": "Redis - Black"
+        }
+      }
     },
     {
       "parameters": {
@@ -605,14 +1056,20 @@
         "messageData": "={{ $json.Audio || $json.WhatsWeb || $json.WhatsAppApp || $json.Imagem || $json.mensagem}}",
         "tail": true
       },
-      "id": "62692a45-54d5-47d9-83b3-be2968b548c3",
+      "id": "7bbcd196-5945-448d-9f3e-467ad7779af7",
       "name": "Lista Mensagens1",
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        -1220,
-        1240
-      ]
+        -1180,
+        1500
+      ],
+      "credentials": {
+        "redis": {
+          "id": "jm7Z6lqHaHegQqJ0",
+          "name": "Redis - Black"
+        }
+      }
     },
     {
       "parameters": {
@@ -634,44 +1091,44 @@
         },
         "options": {}
       },
-      "id": "d25123c4-f1d9-45b5-8368-9b4973eaba3b",
+      "id": "e42cb9f5-c07e-47a1-8d3b-ea3a5ee7ef0b",
       "name": "Edit Fields2",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -780,
-        1280
+        -740,
+        1540
       ]
     },
     {
       "parameters": {
         "content": "Espera da mensagem (picotada)",
-        "height": 545.8820982430003,
-        "width": 1095.0962743108616,
+        "height": 646,
+        "width": 1095,
         "color": 3
       },
-      "id": "2678c55e-a301-4a3d-9d8f-711bff8a88d1",
+      "id": "023193da-c528-45de-b8ba-2f1ba1706d2a",
       "name": "Sticky Note3",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -1400,
-        1200
+        -1360,
+        1460
       ]
     },
     {
       "parameters": {
         "content": "Classificador de interesse",
-        "height": 316.0503087655747,
-        "width": 1009.2970279264118
+        "height": 356,
+        "width": 1009
       },
-      "id": "d853bd5e-fefa-4e76-8509-270ef1e0a338",
+      "id": "4f49f72e-f63b-4a86-856f-0f9d0ac49ca3",
       "name": "Sticky Note4",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -160,
-        1620
+        -200,
+        1740
       ]
     },
     {
@@ -679,29 +1136,35 @@
         "operation": "delete",
         "calendar": {
           "__rl": true,
-          "value": "imperador@dinastia.uk",
+          "value": "cc90b20ed02776e4faba7b5e9003664891e4c03076067f356bf0001be00d8487@group.calendar.google.com",
           "mode": "list",
-          "cachedResultName": "imperador@dinastia.uk"
+          "cachedResultName": "Nakamura"
         },
         "eventId": "={{ $fromAI(\"Event_ID\",\"Id do evento que deve ser excluído\") }}",
         "options": {}
       },
-      "id": "a1d00566-a165-4d9d-8dba-54bc77feb829",
+      "id": "84c40ed3-5d53-4a5f-a516-e588da2a73f7",
       "name": "Deletar Evento1",
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.1,
       "position": [
-        820,
-        1260
-      ]
+        860,
+        1520
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
     },
     {
       "parameters": {
         "calendar": {
           "__rl": true,
-          "value": "imperador@dinastia.uk",
+          "value": "cc90b20ed02776e4faba7b5e9003664891e4c03076067f356bf0001be00d8487@group.calendar.google.com",
           "mode": "list",
-          "cachedResultName": "imperador@dinastia.uk"
+          "cachedResultName": "Nakamura"
         },
         "start": "={{ $fromAI(\"Start_Time\",\"Horário inicial do evento ex.:2024-10-08 00:00:00\") }}",
         "end": "={{ $fromAI(\"End_Time\",\"Horário final do evento ex.:2024-10-08 00:01:00\") }}",
@@ -709,24 +1172,30 @@
           "summary": "=Reunião agendada com {{ $('Webhook').item.json.body.data.pushName }} , telefone  {{ $('Webhook').item.json.body.data.key.remoteJid.replace('@s.whatsapp.net', '').replace(/^55/, '') }}\n"
         }
       },
-      "id": "25d789af-1f74-4da0-aba3-a49f9e5e1816",
+      "id": "ad44cf23-7f5e-4872-900b-14276b5ed29b",
       "name": "Criar Eventos1",
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.1,
       "position": [
-        1120,
-        1260
-      ]
+        1160,
+        1520
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
     },
     {
       "parameters": {},
-      "id": "12d427af-c7d7-407d-ba8e-42d317b857cb",
+      "id": "0cb176e2-00a1-43b7-ba54-fab536fa3790",
       "name": "Calculator1",
       "type": "@n8n/n8n-nodes-langchain.toolCalculator",
       "typeVersion": 1,
       "position": [
-        700,
-        1260
+        740,
+        1520
       ]
     },
     {
@@ -734,264 +1203,13 @@
         "model": "gpt-4o",
         "options": {}
       },
-      "id": "cf5de7e5-c9bf-4532-a682-c03c1bf14eec",
+      "id": "c5f3fb3b-d972-47aa-82c3-1ba4bee0a552",
       "name": "OpenAI Chat Model5",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        360,
-        1180
-      ]
-    },
-    {
-      "parameters": {
-        "resource": "audio",
-        "operation": "transcribe",
-        "options": {}
-      },
-      "id": "efaac7d4-79d5-4820-bae4-00f4b92a80f6",
-      "name": "OpenAI",
-      "type": "@n8n/n8n-nodes-langchain.openAi",
-      "typeVersion": 1.6,
-      "position": [
-        -840,
-        760
-      ]
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $('mensagem_cliente').item.json.texto }}",
-        "options": {
-          "systemMessage": "=Você é um classificador especializado em análise de interesse comercial. Sua função é analisar o histórico de mensagens e classificar o nível de interesse do cliente.\n\n<context>\nVocê deve analisar as últimas mensagens e determinar o nível de interesse do cliente, classificando APENAS em uma das três categorias:\n- sem_interesse\n- com_interesse\n- muito_interesse\n</context>\n\n<rules>\n1. Mantenha o foco apenas na classificação solicitada\n2. Não forneça explicações ou justificativas\n3. Analise o contexto completo antes de decidir\n4. Considere a progressão do interesse ao longo das mensagens\n5. Em caso de dúvida entre dois níveis, escolha o nível mais baixo\n</rules>\n\n<output_format>\nResponda apenas com uma das três categorias:\nsem_interesse\ncom_interesse\nmuito_interesse\n</output_format>\n\n<classificacao>\nsem_interesse: cliente apenas buscando informações básicas\ncom_interesse: cliente solicitando informações específicas\nmuito_interesse: cliente demonstrando conexão emocional ou desejo pelo imóvel\n</classificacao>\n\n<evaluation>\nAnalise internamente:\n1. O tipo de perguntas feitas\n2. A especificidade das informações solicitadas\n3. O envolvimento emocional nas mensagens\n4. A frequência e progressão das interações\n</evaluation>\n\n<input>\nAnalisasr na sua memória de chats.\n</input>\n\nApenas responda \"sem_interesse\" ou \"com_interesse\" ou \"muito_interesse\" e mais nada."
-        }
-      },
-      "id": "424abe13-0f44-443f-8c85-6f0203a1c5e7",
-      "name": "Assistente_comercial_classificador",
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 1.6,
-      "position": [
-        -20,
-        1540
-      ]
-    },
-    {
-      "parameters": {
-        "content": "roda para deletar todas as mensagens",
-        "height": 274.7923843700217,
-        "width": 273.1627906976745,
-        "color": 7
-      },
-      "id": "24bef2fb-8867-4439-acf5-5de82d603b84",
-      "name": "Sticky Note6",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        -2040,
-        360
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "DELETE FROM dinastia_mensagens;",
-        "options": {}
-      },
-      "id": "469db846-9f80-4b44-8774-be6488139812",
-      "name": "Deletar_todas_as_mensagens",
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.5,
-      "position": [
-        -1960,
-        440
-      ],
-      "credentials": {
-        "postgres": {
-          "id": "mgxUJp91OulKSJZt",
-          "name": "Postgres - BlackSB"
-        }
-      }
-    },
-    {
-      "parameters": {},
-      "id": "6ce1f7b9-3dc6-4730-9524-d1bbc7f4f49e",
-      "name": "mensagem_cliente",
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3,
-      "position": [
-        -180,
-        800
-      ]
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $(\"mensagem_cliente\").item.json.telefone.split(\"@\")[0] }}",
-        "tableName": "dinastia_mensagens",
-        "contextWindowLength": 50
-      },
-      "id": "0be978e1-cfe3-49b9-9163-1e0e87677762",
-      "name": "Postgres Chat Memory1",
-      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
-      "typeVersion": 1.1,
-      "position": [
-        540,
-        1260
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "getAll",
-        "calendar": {
-          "__rl": true,
-          "value": "imperador@dinastia.uk",
-          "mode": "list",
-          "cachedResultName": "imperador@dinastia.uk"
-        },
-        "returnAll": true,
-        "options": {
-          "timeMin": "={{ $fromAI(\"Initital_DateTime\", \"Data e hora inicial da consulta Ex.: 2024-10-17 00:00:00\") }}",
-          "timeMax": "={{ $fromAI(\"Final_DateTime\", \"Data e hora final da consulta Ex.: 2024-10-17 00:00:00\") }}"
-        }
-      },
-      "id": "31ef9915-8f33-4fb5-8c94-441d8918d104",
-      "name": "buscar_eventos",
-      "type": "n8n-nodes-base.googleCalendarTool",
-      "typeVersion": 1.2,
-      "position": [
-        980,
-        1260
-      ]
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.texto }}",
-        "options": {
-          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que esteje dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nVocê é um especialista em classificar mensagens de clientes. \n\nA sua função é identificar a intenção na mensagem deste cliente em apenas 2 categories: \"informacoes\" ou \"agendamentos\".\n\nCaso você não identifique nenhuma opção, retorne sempre \"informacoes\"\n\nApenas retorne o texto \"informacoes\" ou \"agendamentos\" mas nada.\n\n<EXEMPLO>\nUser: Não precisa mais fazer o reagendamento\nAI: agendamentos\n</EXEMPLO>\n\n<EXEMPLO>\nHuman: Olá eu gostaria de agendar uma reuniao para amanha as 9h\nAI: agendamentos\nHuman: Olá eu gostaria de agendar uma reuniao para amanha as 9h\nAI: Amanhã, dia 25 de novembro, às 9h está disponível. Poderia confirmar esse horário?\nHuman: pode confirmar\nAI: agendamentos\n</EXEMPLO>\n</INSTRUCAO>"
-        }
-      },
-      "id": "75c97738-3576-4940-8ad0-fa74a6712023",
-      "name": "recepcionista",
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 1.6,
-      "position": [
-        60,
-        800
-      ],
-      "retryOnFail": true,
-      "maxTries": 3,
-      "onError": "continueRegularOutput"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $('mensagem_cliente').item.json.texto }}",
-        "options": {
-          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO> Você é uma secretária virtual projetada para gerenciar de forma eficiente e amigável os agendamentos e cancelamentos de reuniões e visitas. Seu nome é \"Dama IA\" e você trabalha para a construtora \"Plaenge\".\n\n Focado em oferecer uma experiência prática e personalizada, o assistente exibe horários disponíveis, pergunta se o cliente concorda com a data e hora antes de confirmar o agendamento e fornece todos os detalhes essenciais após a marcação. O assistente também respeita o formato brasileiro de data e hora (DD/MM/AAAA e HH) e opera no fuso horário \"America/Sao_Paulo\".\n\nVerificar disponibilidade no calendário (<AGENDA></AGENDA>) para os próximos 7 dias úteis, dentro do horário de funcionamento:\nSegunda a sexta: das 8h às 21h.\nSábado: das 8h às 12h. nunca agende fora do horario de funcionamento.\nPara sua referencia use como referencia para a data e hora atual: {{ (() => {\n  const date = new Date(); // Obtém a data atual\n  const days = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado']; // Dias da semana em português\n  const pad = n => n.toString().padStart(2, '0'); // Adiciona zero à esquerda\n  const dayName = days[date.getDay()]; // Obtém o nome do dia\n  const year = date.getFullYear();\n  const month = pad(date.getMonth() + 1); // Mês começa em 0\n  const day = pad(date.getDate());\n  const hours = pad(date.getHours());\n  const minutes = pad(date.getMinutes());\n  const seconds = pad(date.getSeconds());\n  return `${dayName}, ${year}-${month}-${day} ${hours}:${minutes}:${seconds}`; // Retorna no formato desejado\n})() }}\n\nCaso o cliente sugira uma data fora deste período ou após {{ $now.plus(7, \"days\").format('dd/MM/yyyy') }}, informe que só é possível agendar para os próximos 7 dias.\nSe não houver data sugerida, proponha a mais próxima disponível.\nfaça agendamentos de 15 minutos de duração.\nse o horario pedido pelo cliente ja tiver alguma reuniao marcada, sugira o mais proximo 15 minutos antes ou 15 minutos depois da reunião  existente, mas esta proibido marcar em um horario que ja exista reuniao\nPergunte se o cliente pode confirmar, mas não confirme diretamente o agendamento.\n\nSempre utilize o timezone \"America/Sao_Paulo\" para todas as operações.\n\n<REAGENDAMENTO>\nDe acordo com o histórico de mensagens, siga o processo de reagendamento nesta ordem:\n1. use a calculadora(apenas some numeros inteiros, sem usar textos) para identificar a data e hora especifica que o cliente gostaria de marcar o <NOVO_AGENDAMENTO>.\n2. Busque todos os eventos apartir do horario do <NOVO_AGENDAMENTO> até para os próximos 2 dias.\n2.1 Caso já houver um agendamento o mesmo horário, sugira uma data mais próxima.\n2.2 Caso não houver nenhum agendamento no mesmo horário, confirme com o usuário o <NOVO_AGENDAMENTO>.\n3. Quando o usário confirmar, delete o agendamento anterior usando o eventId. Crie o <NOVO_AGENDAMENTO>.\n</REAGENDAMENTO>\n\n<CANCELAMENTO>\nBaseado no histórico de mensagens, extraia as informações do evento a ser cancelado (data, hora e eventId).\nCaso não localize o evento, retorne false com uma mensagem de erro.\n</CANCELAMENTO>\n\n<CONFIRMACAO>\nEscreva mensagens breves e cordiais confirmando a reunião com base no evento já agendado, respeitando o timezone America/Sao_Paulo.\n</CONFIRMACAO>\n\n\nExceções:\n\nCaso identifique uma situação específica de exceção, retorne a mensagem correspondente definida na exceção (<EXCESSAO></EXCESSAO>).\n\nRegras Importantes:\n\nSeja cordial e direta.\nResponda sempre no timezone: America/Sao_Paulo.\nNunca confirme agendamentos automaticamente; peça confirmação ao cliente.\nApenas responda sobre agendamentos; ignore qualquer outro contexto.\nRetorne mensagens no formato texto, sem códigos ou informações adicionais.\n\nExemplo de Resposta:\n\nUser: \"Pode marcar uma reunião para terça às 14h?\"\nResposta: \"Terça-feira às 14h está disponível. Poderia confirmar esse horário?\"\n\nUtilize a calculadora para calcular diferença de datas, horarios e dias.\n\n<OUTPUT>\nVoce sempre irá responder usando o formato JSON, sem commas, ou aspas, apenas o JSON.\n\nExemplo com eventId:\n\n{\n  \"mensagem\": \"sua mensagem aqui\",\n  \"eventId\": \"o eventId do agendamento criado aqui\"\n}\n\nExemplo sem eventId:\n\n{\n  \"mensagem\": \"sua mensagem aqui\"\n}\n</OUTPUT>\n\n</INSTRUCAO>\n\n\n"
-        }
-      },
-      "id": "4f5f7647-8f34-4818-b330-1db11f72527e",
-      "name": "Secretaria agendamento",
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 1.6,
-      "position": [
-        420,
-        1020
-      ],
-      "retryOnFail": true,
-      "maxTries": 2
-    },
-    {
-      "parameters": {
-        "httpMethod": "POST",
-        "path": "agendamento-v5",
-        "options": {}
-      },
-      "id": "6a2bbe80-12e4-486f-a17c-609bfd6b9619",
-      "name": "Webhook",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2,
-      "position": [
-        -2000,
-        880
-      ],
-      "webhookId": "c6b6e6ec-a103-4f9d-93cd-1964ad28f4ec",
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "content": "roda para setar o banco de dados vetorial do supabase",
-        "height": 274.7923843700217,
-        "width": 273.1627906976745,
-        "color": 7
-      },
-      "id": "48a712ea-b3a2-4f80-90ea-4807e08da505",
-      "name": "Sticky Note8",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        -1700,
-        360
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "-- Enable the pgvector extension to work with embedding vectors\ncreate extension vector;\n\n-- Create a table to store your documents\ncreate table documents (\n  id bigserial primary key,\n  content text, -- corresponds to Document.pageContent\n  metadata jsonb, -- corresponds to Document.metadata\n  embedding vector(1536) -- 1536 works for OpenAI embeddings, change if needed\n);\n\n-- Create a function to search for documents\ncreate function match_documents (\n  query_embedding vector(1536),\n  match_count int default null,\n  filter jsonb DEFAULT '{}'\n) returns table (\n  id bigint,\n  content text,\n  metadata jsonb,\n  similarity float\n)\nlanguage plpgsql\nas $\n#variable_conflict use_column\nbegin\n  return query\n  select\n    id,\n    content,\n    metadata,\n    1 - (documents.embedding <=> query_embedding) as similarity\n  from documents\n  where metadata @> filter\n  order by documents.embedding <=> query_embedding\n  limit match_count;\nend;\n$;\n",
-        "options": {}
-      },
-      "id": "7968658b-d1cf-4db1-a836-1545ab0bbe54",
-      "name": "setar_supabase_tabelas_vectoriais",
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.5,
-      "position": [
-        -1620,
-        440
-      ],
-      "credentials": {
-        "postgres": {
-          "id": "mgxUJp91OulKSJZt",
-          "name": "Postgres - BlackSB"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsonMode": "expressionData",
-        "jsonData": "={{ $json.texto }}",
-        "options": {
-          "metadata": {
-            "metadataValues": [
-              {
-                "name": "=file_id",
-                "value": "={{ $('arquivo_id').item.json.file_id }}"
-              }
-            ]
-          }
-        }
-      },
-      "id": "13a60155-847c-4880-914c-567712ea6103",
-      "name": "Default Data Loader",
-      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
-      "typeVersion": 1,
-      "position": [
-        1660,
-        340
-      ]
-    },
-    {
-      "parameters": {
-        "model": "text-embedding-3-small",
-        "options": {}
-      },
-      "id": "fd570654-adc0-4392-9bc6-c92f6f30afdc",
-      "name": "Embeddings OpenAI1",
-      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
-      "typeVersion": 1,
-      "position": [
-        1460,
-        320
+        400,
+        1440
       ],
       "credentials": {
         "openAiApi": {
@@ -1002,261 +1220,362 @@
     },
     {
       "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
         "options": {}
       },
-      "id": "b78be8dd-5ed7-4c2e-806e-820035c35f47",
-      "name": "Recursive Character Text Splitter",
-      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
-      "typeVersion": 1,
+      "id": "956cd500-824d-4900-9886-f515ea042290",
+      "name": "OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.6,
       "position": [
-        1620,
-        480
-      ]
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "10646eae-ae46-4327-a4dc-9987c2d76173",
-              "name": "file_id",
-              "value": "={{ $json.id }}",
-              "type": "string"
-            },
-            {
-              "id": "c9e1ed84-5dcc-43c3-999b-cf1d095eba32",
-              "name": "file_mime_type",
-              "value": "={{ $json.mimeType }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "4d574b68-2f17-49b4-ade8-032b27765c1b",
-      "name": "arquivo_id",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        60,
-        160
-      ]
-    },
-    {
-      "parameters": {
-        "pollTimes": {
-          "item": [
-            {
-              "mode": "everyMinute"
-            }
-          ]
-        },
-        "triggerOn": "specificFolder",
-        "folderToWatch": {
-          "__rl": true,
-          "value": "1mWNeDAr6kmPwPsur6FH9Zl_JE9Q5GSNG",
-          "mode": "list",
-          "cachedResultName": "RAG-PASTA",
-          "cachedResultUrl": "https://drive.google.com/drive/folders/1mWNeDAr6kmPwPsur6FH9Zl_JE9Q5GSNG"
-        },
-        "event": "fileCreated",
-        "options": {}
-      },
-      "id": "b162a401-38e5-44a8-a324-e97b991dbfa7",
-      "name": "arquivo_criado",
-      "type": "n8n-nodes-base.googleDriveTrigger",
-      "typeVersion": 1,
-      "position": [
-        -180,
-        60
-      ],
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "pollTimes": {
-          "item": [
-            {
-              "mode": "everyMinute"
-            }
-          ]
-        },
-        "triggerOn": "specificFolder",
-        "folderToWatch": {
-          "__rl": true,
-          "value": "1mWNeDAr6kmPwPsur6FH9Zl_JE9Q5GSNG",
-          "mode": "list",
-          "cachedResultName": "RAG-PASTA",
-          "cachedResultUrl": "https://drive.google.com/drive/folders/1mWNeDAr6kmPwPsur6FH9Zl_JE9Q5GSNG"
-        },
-        "event": "fileUpdated",
-        "options": {}
-      },
-      "id": "339311c2-c30b-44e1-9d8b-68cb1cdb45e3",
-      "name": "arquivo_alterado",
-      "type": "n8n-nodes-base.googleDriveTrigger",
-      "typeVersion": 1,
-      "position": [
-        -180,
-        280
+        -800,
+        1020
       ],
       "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "SSONdBJXG2LU2PuV",
-          "name": "Google Drive - Black"
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
         }
       }
     },
     {
       "parameters": {
-        "operation": "delete",
-        "tableId": "documents",
-        "filterType": "string",
-        "filterString": "=metadata->>file_id=like.*{{ $json.file_id }}*"
-      },
-      "id": "38d77fd0-ceb0-4b4f-b5b0-88aa32068257",
-      "name": "deletar_arquivos_antigos",
-      "type": "n8n-nodes-base.supabase",
-      "typeVersion": 1,
-      "position": [
-        220,
-        160
-      ],
-      "alwaysOutputData": true,
-      "credentials": {
-        "supabaseApi": {
-          "id": "k0C20xz6iqH7ezTS",
-          "name": "Supabase - Black"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "={{ $('arquivo_id').item.json.file_id }}",
-          "mode": "id"
-        },
+        "promptType": "define",
+        "text": "={{ $('mensagem_cliente').item.json.texto }}",
         "options": {
-          "googleFileConversion": {
-            "conversion": {
-              "docsToFormat": "text/plain"
-            }
-          }
+          "systemMessage": "=Você é um classificador especializado em análise de interesse comercial. Sua função é analisar o histórico de mensagens e classificar o nível de interesse do cliente.\n\n<context>\nVocê deve analisar as últimas mensagens e determinar o nível de interesse do cliente, classificando APENAS em uma das três categorias:\n- sem_interesse\n- com_interesse\n- muito_interesse\n</context>\n\n<rules>\n1. Mantenha o foco apenas na classificação solicitada\n2. Não forneça explicações ou justificativas\n3. Analise o contexto completo antes de decidir\n4. Considere a progressão do interesse ao longo das mensagens\n5. Em caso de dúvida entre dois níveis, escolha o nível mais baixo\n</rules>\n\n<output_format>\nResponda apenas com uma das três categorias:\nsem_interesse\ncom_interesse\nmuito_interesse\n</output_format>\n\n<classificacao>\nsem_interesse: cliente apenas buscando informações básicas\ncom_interesse: cliente solicitando informações específicas\nmuito_interesse: cliente demonstrando conexão emocional ou desejo pelo imóvel\n</classificacao>\n\n<evaluation>\nAnalise internamente:\n1. O tipo de perguntas feitas\n2. A especificidade das informações solicitadas\n3. O envolvimento emocional nas mensagens\n4. A frequência e progressão das interações\n</evaluation>\n\n<input>\nAnalisasr na sua memória de chats.\n</input>\n\nApenas responda \"sem_interesse\" ou \"com_interesse\" ou \"muito_interesse\" e mais nada."
         }
       },
-      "id": "458481e3-81e4-4c48-8db8-5aea2cc33c91",
-      "name": "download_arquivo",
-      "type": "n8n-nodes-base.googleDrive",
+      "id": "9692e84b-e31b-4bf4-a6e3-8c16f1d2b59e",
+      "name": "Assistente_comercial_classificador",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        -40,
+        1800
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "agendamentos-3-8",
+        "options": {}
+      },
+      "id": "8f2f6ed9-4e40-485d-9f1e-401776e5705c",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -2000,
+        1120
+      ],
+      "webhookId": "25592133-90db-45a5-9db4-a88cc190699d"
+    },
+    {
+      "parameters": {},
+      "id": "fa95fbfe-247e-47ad-aa49-9c7fbb29637d",
+      "name": "mensagem_cliente",
+      "type": "n8n-nodes-base.merge",
       "typeVersion": 3,
       "position": [
-        400,
-        160
+        -140,
+        1060
+      ]
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $(\"mensagem_cliente\").item.json.telefone.split(\"@\")[0] }}",
+        "tableName": "dinastia_mensagens",
+        "contextWindowLength": 50
+      },
+      "id": "67fd2c24-c1c0-40d8-90d6-b688389569c3",
+      "name": "Postgres Chat Memory1",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.1,
+      "position": [
+        580,
+        1600
       ],
-      "executeOnce": true,
       "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "SSONdBJXG2LU2PuV",
-          "name": "Google Drive - Black"
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
         }
       }
     },
     {
       "parameters": {
-        "operation": "pdf",
-        "options": {}
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "cc90b20ed02776e4faba7b5e9003664891e4c03076067f356bf0001be00d8487@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Nakamura"
+        },
+        "returnAll": true,
+        "options": {
+          "timeMin": "={{ $fromAI(\"Initital_DateTime\", \"Data e hora inicial da consulta Ex.: 2024-10-17 00:00:00\") }}",
+          "timeMax": "={{ $fromAI(\"Final_DateTime\", \"Data e hora final da consulta Ex.: 2024-10-17 00:00:00\") }}"
+        }
       },
-      "id": "fc0c0513-4134-4b9a-ace9-ddbfe9da7e56",
-      "name": "extrair_pdf",
-      "type": "n8n-nodes-base.extractFromFile",
-      "typeVersion": 1,
+      "id": "e915e31a-4e0a-497e-ad16-7bcbf56718d3",
+      "name": "buscar_eventos",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.2,
       "position": [
-        920,
-        40
+        1020,
+        1520
       ],
-      "alwaysOutputData": true
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
+        "promptType": "define",
+        "text": "={{ $json.texto }}",
+        "options": {
+          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que não esteja dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nVocê é uma especialista em classificar mensagens de clientes. \n\nAcesse obrigatoriamente a tool `get_time\" para obter a data atual. \n\nA sua função é identificar a intenção na mensagem deste cliente em apenas 2 categories: \"informacoes\" ou \"agendamentos\".\n\nAnalise sempre o histórico da conversa antes de decidir.\n\nApenas retorne o texto \"informacoes\" ou \"agendamentos\", mais nada.\n\n<EXEMPLO>\nUser: Não precisa mais fazer o reagendamento\nAI: \"agendamentos\"\n\nUser: Que horas são agora?\nAI: \"informacoes\"\n\n</EXEMPLO>\n\n<EXEMPLO>\nHuman: Olá eu gostaria de agendar uma reunião para amanhã as 9h\nAI: agendamentos\nHuman: Olá eu gostaria de agendar uma reunião para amanha as 9h\nAI: Amanhã, dia 25 de novembro, às 9h está disponível. Poderia confirmar esse horário?\nHuman: pode confirmar\nHuman: poderia\nHuman: sim\nHuman: pode ser\nHuman: pois não\nHuman: beleza\nHuman: blz\nHuman: com certeza\n\nHuman: Quais os próximos horários disponíveis você tem?\nAI: agendamentos\n\nHuman: Quais datas sugere?\nAI: agendamentos\n\nAI: agendamentos\n</EXEMPLO>\n</INSTRUCAO>"
+        }
+      },
+      "id": "1b2c327c-6cfc-423f-bca7-6746df3a543a",
+      "name": "recepcionista",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        100,
+        1060
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('mensagem_cliente').item.json.texto }}",
+        "options": {
+          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO> Você é uma secretária virtual projetada para gerenciar de forma eficiente e amigável os agendamentos e cancelamentos de reuniões e visitas. Seu nome é \"Dama IA\" e você trabalha para a construtora \"Plaenge\".\n\n Focada em oferecer uma experiência prática e personalizada, você exibe horários disponíveis, pergunta se o cliente concorda com a data e hora antes de confirmar o agendamento e fornece todos os detalhes essenciais após a marcação. \n\nAcesse obrigatoriamente a tool `get_time2\" para obter a data atual e armazene o resultado em data_atual.\n\nVerificar disponibilidade no calendário (<AGENDA></AGENDA>) para os próximos 7 dias úteis, dentro do horário de funcionamento:\nSegunda a sexta: das 8h às 21h.\nSábado: das 8h às 12h. \nDomingo: Fechado.\n\n<FERIADO>\n25/01/2025\n</FERIADO>\n\nNunca agende fora do horario de funcionamento ou em feriados  (<FERIADO></FERIADO>).\n\nNunca agende no domingo.\n\nNunca agende em data ou horário anterior à  {{ $now.format('dd/MM/yyyy HH:mm') }} data atual.\n\nCaso o cliente sugira uma data fora do horário de funcionamento ou após {{ $now.plus(7, \"days\").format('dd/MM/yyyy') }}, informe que só é possível agendar para os próximos 7 dias.\n\nSe não houver data sugerida, proponha as 3 datas mais próximas em dias diferentes disponíveis. Em cada dia, forneça um único horário. Exemplo: 22/01/2025 (quarta-feira): das 8h às 9h30, 23/01/2025 (quinta-feira): das 14h às 14h30, 24/01/2025 (sexta-feira): das 17h às 17h30.\n\nFaça agendamentos de 30 minutos de duração.\nse o horario pedido pelo cliente já tiver alguma reuniao marcada, sugira o mais proximo 30 minutos antes ou 30 minutos depois da reunião  existente, mas esta proibido marcar em um horario que ja exista reuniao.\nPergunte se o cliente pode confirmar, mas não confirme diretamente o agendamento.\n\nAntes de efetivar o agendamento, solicite o e-mail do usuário.\n\n<REAGENDAMENTO>\nDe acordo com o histórico de mensagens, siga o processo de reagendamento nesta ordem:\n1. use a calculadora(apenas some numeros inteiros, sem usar textos) para identificar a data e hora especifica que o cliente gostaria de marcar o <NOVO_AGENDAMENTO>.\n2. Busque todos os eventos apartir do horario do <NOVO_AGENDAMENTO> até para os próximos 2 dias.\n2.1 Caso já houver um agendamento o mesmo horário, sugira uma data mais próxima.\n2.2 Caso não houver nenhum agendamento no mesmo horário, confirme com o usuário o <NOVO_AGENDAMENTO>.\n3. Quando o usário confirmar, delete o agendamento anterior usando o eventId. Crie o <NOVO_AGENDAMENTO>.\n</REAGENDAMENTO>\n\n<CANCELAMENTO>\nBaseado no histórico de mensagens, extraia as informações do evento a ser cancelado (data, hora e eventId).\nCaso não localize o evento, retorne false com uma mensagem de erro.\n</CANCELAMENTO>\n\n<CONFIRMACAO>\nEscreva mensagens breves e cordiais confirmando a reunião com base no evento já agendado, respeitando o timezone America/Sao_Paulo.\n</CONFIRMACAO>\n\n\nExceções:\n\nCaso identifique uma situação específica de exceção, retorne a mensagem correspondente definida na exceção (<EXCESSAO></EXCESSAO>).\n\nRegras Importantes:\n\nSeja cordial e direta.\nResponda sempre no timezone: America/Sao_Paulo.\nNunca confirme agendamentos automaticamente; peça confirmação ao cliente.\nApenas responda sobre agendamentos; ignore qualquer outro contexto.\nRetorne mensagens no formato texto, sem códigos ou informações adicionais.\n\nExemplo de Resposta:\n\nUser: \"Pode marcar uma reunião para terça às 14h?\"\nResposta: \"Terça-feira às 14h está disponível. Poderia confirmar esse horário?\"\n\nUtilize a calculadora para calcular diferença de datas, horarios e dias.\n\n<OUTPUT>\nVoce sempre irá responder usando o formato JSON, sem commas, ou aspas, apenas o JSON.\n\nExemplo com eventId:\n\n{\n  \"mensagem\": \"sua mensagem aqui\",\n  \"eventId\": \"o eventId do agendamento criado aqui\"\n}\n\nExemplo sem eventId:\n\n{\n  \"mensagem\": \"sua mensagem aqui\"\n}\n</OUTPUT>\n\n</INSTRUCAO>\n\n\n"
+        }
+      },
+      "id": "2059cd67-5d7d-446c-8611-7362f5adfe07",
+      "name": "Secretaria agendamento",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        480,
+        1280
+      ],
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('mensagem_tipo').item.json.body.server_url }}/message/sendText/{{ $('mensagem_tipo').item.json.body.instance }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
             {
-              "id": "aecaf0bd-b800-40b7-b348-c1a8ff636ef1",
-              "name": "texto",
-              "value": "={{ $json.text }}",
-              "type": "string"
+              "name": "apiKey",
+              "value": "={{ $('Webhook').item.json.body.apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Webhook').item.json.body.data.key.remoteJid }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.output }}"
             }
           ]
         },
         "options": {}
       },
-      "id": "620bab76-bea3-42b4-85b6-4edf52292952",
-      "name": "exportar_texto",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "id": "677cd138-5948-405b-8353-e8039519c993",
+      "name": "respondeWhatsapp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
       "position": [
-        1260,
-        160
+        1800,
+        980
       ]
     },
     {
       "parameters": {
-        "operation": "text",
-        "destinationKey": "text",
+        "method": "POST",
+        "url": "={{ $('mensagem_tipo').item.json.body.server_url }}/message/sendText/{{ $('mensagem_tipo').item.json.body.instance }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apiKey",
+              "value": "={{ $('Webhook').item.json.body.apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Webhook').item.json.body.data.key.remoteJid }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.mensagem }}"
+            }
+          ]
+        },
         "options": {}
       },
-      "id": "46c5a0ee-83d9-46d2-8daf-3e3031b85a9b",
-      "name": "extrair_texto",
-      "type": "n8n-nodes-base.extractFromFile",
-      "typeVersion": 1,
+      "id": "3b5edfc6-3be1-4548-8253-177195ef8ab7",
+      "name": "respondeWhatsapp1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
       "position": [
-        920,
-        260
+        1220,
+        1280
       ]
     },
     {
       "parameters": {
-        "content": "## RAG - Supabase",
-        "height": 728,
-        "width": 2184
+        "jsCode": "const outputString = $input.item.json.output;\n\n// Função para verificar se uma string é JSON válida\nconst isJSON = (str) => {\n  try {\n    JSON.parse(str);\n    return true;\n  } catch {\n    return false;\n  }\n};\n\n// Verificar se o outputString é JSON ou texto simples\nlet parsedOutput;\nif (typeof outputString === 'string' && isJSON(outputString)) {\n  // Parsear o JSON válido\n  parsedOutput = JSON.parse(outputString);\n} else if (typeof outputString === 'string') {\n  // Se for texto simples, encapsular como JSON\n  parsedOutput = { mensagem: outputString };\n} else {\n  // Lançar erro se não for uma string ou JSON\n  throw new Error('O conteúdo de outputString não é uma string ou JSON válido.');\n}\n\n// Verificar se a chave 'mensagem' existe\nif (!parsedOutput.mensagem) {\n  throw new Error('A chave \"mensagem\" não foi encontrada no JSON.');\n}\n\n// Retornar apenas a mensagem\nreturn {\n  json: {\n    mensagem: parsedOutput.mensagem,\n  },\n};"
       },
-      "id": "cf9d122a-6c42-435a-9cde-e27f34d3a97f",
-      "name": "Sticky Note5",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
-        -260,
-        -100
+        900,
+        1280
+      ],
+      "id": "db767459-da58-4d61-b473-2ef01338e2cc",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "name": "get_time",
+        "description": "Útil para consultar o horário atual.",
+        "workflowId": {
+          "__rl": true,
+          "value": "HwWpu1zCI4vzHWuK",
+          "mode": "id"
+        },
+        "fields": {
+          "values": [
+            {
+              "name": "=time",
+              "stringValue": "={{ $('Webhook').item.json.body.date_time }}"
+            }
+          ]
+        }
+      },
+      "id": "8638876f-80d8-481f-96bd-df29aefa25c4",
+      "name": "get_time",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        1260
       ]
     },
     {
       "parameters": {
-        "model": "gpt-4o",
+        "name": "get_time",
+        "description": "Útil para consultar o horário atual.",
+        "workflowId": {
+          "__rl": true,
+          "value": "HwWpu1zCI4vzHWuK",
+          "mode": "id"
+        },
+        "fields": {
+          "values": [
+            {
+              "name": "=time",
+              "stringValue": "={{ $('Webhook').item.json.body.date_time }}"
+            }
+          ]
+        }
+      },
+      "id": "532effb4-6cde-4bb3-bf1b-afee355855cb",
+      "name": "get_time1",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1180,
+        1160
+      ]
+    },
+    {
+      "parameters": {
+        "name": "get_time",
+        "description": "Útil para consultar o horário atual.",
+        "workflowId": {
+          "__rl": true,
+          "value": "HwWpu1zCI4vzHWuK",
+          "mode": "id"
+        },
+        "fields": {
+          "values": [
+            {
+              "name": "=time",
+              "stringValue": "={{ $('Webhook').item.json.body.date_time }}"
+            }
+          ]
+        }
+      },
+      "id": "83d6d87d-825b-43b7-a908-5ae3910b8c90",
+      "name": "get_time2",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1300,
+        1520
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM dinastia_mensagens;",
         "options": {}
       },
-      "id": "902a6bef-7e8a-450c-9ab6-e0f00b51ef9a",
-      "name": "OpenAI Chat Model1",
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "typeVersion": 1,
+      "id": "84c297e6-42c5-494a-97b0-ca1f783412d3",
+      "name": "Deletar_todas_as_mensagens1",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
       "position": [
-        800,
-        920
-      ]
+        -1980,
+        800
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
     },
     {
       "parameters": {
         "name": "user_documents",
-        "description": "Contem mais informações sobre a construtora plaenge como poltítica de privacidade e FAQ",
+        "description": "Contem mais informações sobre  a construtora Plaenge como política de privacidade e FAQ",
         "topK": 10
       },
-      "id": "f29c3311-fc03-4266-b531-9f583484777e",
+      "id": "63525940-3bb7-4882-a943-bbd7ede6dd1e",
       "name": "Retrieve Documents",
       "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
       "typeVersion": 1,
       "position": [
-        1280,
-        820
+        1500,
+        1120
       ]
     },
     {
@@ -1264,135 +1583,80 @@
         "model": "text-embedding-3-small",
         "options": {}
       },
-      "id": "d895298b-2338-4f9e-9300-b3db9657792f",
+      "id": "3b93e86f-2fe8-4ca1-90ab-10a5bbc6c4e0",
       "name": "Embeddings OpenAI",
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1,
       "position": [
-        1160,
-        1040
-      ]
+        1560,
+        1520
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
     },
     {
       "parameters": {
         "model": "gpt-4o",
         "options": {}
       },
-      "id": "81baf66c-30ad-415d-8379-7be3ae7cb3e9",
+      "id": "5aceca55-e5a8-41be-9539-d13dc6ab8b6e",
       "name": "OpenAI Chat Model2",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        1380,
-        920
-      ]
+        1760,
+        1340
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
     },
     {
       "parameters": {
-        "tableName": {
-          "__rl": true,
-          "value": "documents",
-          "mode": "list",
-          "cachedResultName": "documents"
-        },
-        "options": {
-          "queryName": "match_documents"
-        }
+        "model": "gpt-4o",
+        "options": {}
       },
-      "id": "4b461420-4ad7-460e-857e-29981367cf8c",
-      "name": "Supabase Vector Store",
-      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "id": "06c8a3fc-4f5e-47c0-b72c-36696b00b083",
+      "name": "OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        1120,
-        940
-      ]
+        920,
+        1160
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
     },
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $json.output }}",
+        "text": "={{ $('mensagem_cliente').item.json.texto }}",
         "options": {
-          "systemMessage": "Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que esteje dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nVocê é um assistente pessoal da empresa Plaenge. A sua função é responder dúvidas obre o empreendimento: Bossanova\n\nUse as informações sobre o <EMPREENDIMENTO></EMPREENDIMENTO> para entender sobre as característica dele e todos os arquivos na sua base de conhecimento.\n\nUse respostas rápidas com 2 parágrafos no maximo.\n\nSe fizer sentido na mensagem, ofereça a oportunidade do cliente agendar uma visita ao decorado do imóvel.\n\n<EMPREENDIMENTO>\nA fusão entre influências internacionais e a diversidade brasileira resulta em um requinte atemporal.\n\nApartamentos de 233 m² | dois por andar\n\nExperimente a essência do bem-viver no Bossanova\n\nBossanova redefine o horizonte da Gleba Palhano. Cada detalhe foi pensado para transmitir leveza e acolhimento: a sofisticação está na naturalidade dos materiais. A arquitetura autoral e essencialmente brasileira do projeto foi traçada por grandes nomes, de expertise internacional. É a celebração do bem-viver, com a suavidade e o refinamento que apenas um projeto com a assinatura Plaenge pode proporcionar.\n\nA arquitetura do Bossanova, leve e fluida, revela uma volumetria elegante, evocando os acordes suaves que inspiram seu nome. A fachada, com amplas varandas e um jogo harmonioso de linhas finas e ângulos marcantes, desenha um traçado que encanta pela cadência. A integração com a paisagem é um dos pontos que tornam este projeto único. Imponente e ao mesmo tempo acolhedor, Bossanova se integra naturalmente no horizonte, pulsando um ritmo requintado e intimista, como nas canções de bossa nova.\n\nA essência de Bossanova é a natureza, suas linhas orgânicas e fluidas. A materialidade foi cuidadosamente pensada para trazer a sofisticação do que é genuinamente natural. O paisagismo tropical, profundamente brasileiro, mescla tons esverdeados, terrosos e texturas. A seleção de espécies e o lago natural enriquecem o dia a dia dos moradores. Todo o conjunto revela um projeto sereno, que proporciona experiências contemplativas e suaves.\n\nBossanova ecoa a poesia encontrada na própria natureza. Trouxemos para os ambientes a fusão entre influências internacionais e a diversidade brasileira, resultando em um requinte atemporal que será notado por décadas. Bossanova encanta pela sutileza dos detalhes, desde a escolha de materiais nobres e naturais, como a madeira e a pedra, até as texturas que aguçam os sentidos. O traçado suave e orgânico conduz a ambientes integrados e iluminados que acolhem os encontros para celebrar a vida.\n\nA iluminação do Bossanova é permeada por nuances que se revelam na alternância entre luz e sombra. A luz indireta destaca a arquitetura e o paisagismo com delicadeza, realçando detalhes que conduzem a lugares inesperados, criando uma atmosfera acolhedora e envolvente. Assim como no ritmo brasileiro, em Bossanova a iluminação toma partido das sutilezas do projeto para despertar novas emoções.\n\n# Diferenciais do empreendimento\nEntrada/Acesso com Porte-Cochère\nAmbientes de lazer climatizados, equipados e decorados\nSalão de Festas e Gourmet integráveis\nAcademia com equipamentos profissionais de alta performance\nLago ornamental\nPiscina aquecida com spa\nPiscina externa climatizada\nPool Bar para as piscinas\nSauna Seca\nGuarita com espaço para delivery\nProjeto luminotécnico para as áreas comuns\nProjeto de comunicação visual para áreas comuns e garagens\nGerador de energia para elevador de emergência\nSistema de irrigação automatizada nas áreas comuns\nDepósito privativo (consultar disponibilidade)\n\n</EMPREENDIMENTO> \n</INSTRUCAO>"
+          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que esteje dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nVocê é um assistente pessoal da empresa Plaenge. A sua função é responder dúvidas obre o empreendimento: Bossanova\n\nUse as informações sobre o <EMPREENDIMENTO></EMPREENDIMENTO> para entender sobre as característica dele e todos os arquivos na sua base de conhecimento.\n\nAcesse obrigatoriamente a tool `Retrieve Documents`, antes de formalizar a resposta.\n\nUse respostas rápidas com 2 parágrafos no maximo.\n\nSe fizer sentido na mensagem, ofereça a oportunidade do cliente agendar uma visita ao decorado do imóvel.\n\n<EMPREENDIMENTO>\nA fusão entre influências internacionais e a diversidade brasileira resulta em um requinte atemporal.\n\nApartamentos de 233 m² | dois por andar\n\nExperimente a essência do bem-viver no Bossanova\n\nBossanova redefine o horizonte da Gleba Palhano. Cada detalhe foi pensado para transmitir leveza e acolhimento: a sofisticação está na naturalidade dos materiais. A arquitetura autoral e essencialmente brasileira do projeto foi traçada por grandes nomes, de expertise internacional. É a celebração do bem-viver, com a suavidade e o refinamento que apenas um projeto com a assinatura Plaenge pode proporcionar.\n\nA arquitetura do Bossanova, leve e fluida, revela uma volumetria elegante, evocando os acordes suaves que inspiram seu nome. A fachada, com amplas varandas e um jogo harmonioso de linhas finas e ângulos marcantes, desenha um traçado que encanta pela cadência. A integração com a paisagem é um dos pontos que tornam este projeto único. Imponente e ao mesmo tempo acolhedor, Bossanova se integra naturalmente no horizonte, pulsando um ritmo requintado e intimista, como nas canções de bossa nova.\n\nA essência de Bossanova é a natureza, suas linhas orgânicas e fluidas. A materialidade foi cuidadosamente pensada para trazer a sofisticação do que é genuinamente natural. O paisagismo tropical, profundamente brasileiro, mescla tons esverdeados, terrosos e texturas. A seleção de espécies e o lago natural enriquecem o dia a dia dos moradores. Todo o conjunto revela um projeto sereno, que proporciona experiências contemplativas e suaves.\n\nBossanova ecoa a poesia encontrada na própria natureza. Trouxemos para os ambientes a fusão entre influências internacionais e a diversidade brasileira, resultando em um requinte atemporal que será notado por décadas. Bossanova encanta pela sutileza dos detalhes, desde a escolha de materiais nobres e naturais, como a madeira e a pedra, até as texturas que aguçam os sentidos. O traçado suave e orgânico conduz a ambientes integrados e iluminados que acolhem os encontros para celebrar a vida.\n\nA iluminação do Bossanova é permeada por nuances que se revelam na alternância entre luz e sombra. A luz indireta destaca a arquitetura e o paisagismo com delicadeza, realçando detalhes que conduzem a lugares inesperados, criando uma atmosfera acolhedora e envolvente. Assim como no ritmo brasileiro, em Bossanova a iluminação toma partido das sutilezas do projeto para despertar novas emoções.\n\n# Diferenciais do empreendimento\nEntrada/Acesso com Porte-Cochère\nAmbientes de lazer climatizados, equipados e decorados\nSalão de Festas e Gourmet integráveis\nAcademia com equipamentos profissionais de alta performance\nLago ornamental\nPiscina aquecida com spa\nPiscina externa climatizada\nPool Bar para as piscinas\nSauna Seca\nGuarita com espaço para delivery\nProjeto luminotécnico para as áreas comuns\nProjeto de comunicação visual para áreas comuns e garagens\nGerador de energia para elevador de emergência\nSistema de irrigação automatizada nas áreas comuns\nDepósito privativo (consultar disponibilidade)\n\n</EMPREENDIMENTO> \n</INSTRUCAO>"
         }
       },
-      "id": "0499275d-6226-4753-a3e7-09934030b2e8",
+      "id": "20349dd9-347e-41fe-b4f1-55f181c2627f",
       "name": "assistente_comercial",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.7,
       "position": [
-        820,
-        780
+        940,
+        980
       ]
     },
     {
       "parameters": {
-        "rules": {
-          "values": [
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $('arquivo_id').item.json.file_mime_type }}",
-                    "rightValue": "application/pdf",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "PDF"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "d67dd12c-f3be-40aa-bc38-e37b75e7d768",
-                    "leftValue": "={{ $('arquivo_id').item.json.file_mime_type }}",
-                    "rightValue": "application/vnd.google-apps.document",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "GOOGLE-TEXTO"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "3f4dc79a-4c86-485d-a665-907e39c06efb",
-      "name": "tipo_arquivo",
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 3.2,
-      "position": [
-        580,
-        160
-      ]
-    },
-    {
-      "parameters": {
-        "mode": "insert",
         "tableName": {
           "__rl": true,
           "value": "documents",
@@ -1403,13 +1667,13 @@
           "queryName": "match_documents"
         }
       },
-      "id": "e1d0064b-f23f-48ca-88d5-801d9785799d",
-      "name": "supabase_vectorstore",
+      "id": "c02520c1-da69-4e8b-a62a-b7422f4a99a1",
+      "name": "Supabase Vector Store",
       "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
       "typeVersion": 1,
       "position": [
-        1500,
-        160
+        1440,
+        1300
       ],
       "credentials": {
         "supabaseApi": {
@@ -1420,6 +1684,145 @@
     }
   ],
   "connections": {
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "supabase_vectorstore",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "supabase_vectorstore",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "arquivo_id": {
+      "main": [
+        [
+          {
+            "node": "deletar_arquivos_antigos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "arquivo_criado": {
+      "main": [
+        [
+          {
+            "node": "arquivo_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "arquivo_alterado": {
+      "main": [
+        [
+          {
+            "node": "arquivo_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "deletar_arquivos_antigos": {
+      "main": [
+        [
+          {
+            "node": "download_arquivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "download_arquivo": {
+      "main": [
+        [
+          {
+            "node": "tipo_arquivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extrair_pdf": {
+      "main": [
+        [
+          {
+            "node": "exportar_texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "exportar_texto": {
+      "main": [
+        [
+          {
+            "node": "supabase_vectorstore",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extrair_texto": {
+      "main": [
+        [
+          {
+            "node": "exportar_texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tipo_arquivo": {
+      "main": [
+        [
+          {
+            "node": "extrair_pdf",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "extrair_texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "OpenAI Chat Model": {
       "ai_languageModel": [
         [
@@ -1690,6 +2093,17 @@
         ]
       ]
     },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "auth",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "mensagem_cliente": {
       "main": [
         [
@@ -1749,155 +2163,56 @@
         ]
       ]
     },
-    "Webhook": {
+    "Secretaria agendamento": {
       "main": [
         [
           {
-            "node": "auth",
+            "node": "Code",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Default Data Loader": {
-      "ai_document": [
-        [
-          {
-            "node": "supabase_vectorstore",
-            "type": "ai_document",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Embeddings OpenAI1": {
-      "ai_embedding": [
-        [
-          {
-            "node": "supabase_vectorstore",
-            "type": "ai_embedding",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Recursive Character Text Splitter": {
-      "ai_textSplitter": [
-        [
-          {
-            "node": "Default Data Loader",
-            "type": "ai_textSplitter",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "arquivo_id": {
+    "Code": {
       "main": [
         [
           {
-            "node": "deletar_arquivos_antigos",
+            "node": "respondeWhatsapp1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "arquivo_criado": {
-      "main": [
+    "get_time": {
+      "ai_tool": [
         [
           {
-            "node": "arquivo_id",
-            "type": "main",
+            "node": "recepcionista",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "arquivo_alterado": {
-      "main": [
-        [
-          {
-            "node": "arquivo_id",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "deletar_arquivos_antigos": {
-      "main": [
-        [
-          {
-            "node": "download_arquivo",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "download_arquivo": {
-      "main": [
-        [
-          {
-            "node": "tipo_arquivo",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "extrair_pdf": {
-      "main": [
-        [
-          {
-            "node": "exportar_texto",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "exportar_texto": {
-      "main": [
-        [
-          {
-            "node": "supabase_vectorstore",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "extrair_texto": {
-      "main": [
-        [
-          {
-            "node": "exportar_texto",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "OpenAI Chat Model1": {
-      "ai_languageModel": [
+    "get_time1": {
+      "ai_tool": [
         [
           {
             "node": "assistente_comercial",
-            "type": "ai_languageModel",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Embeddings OpenAI": {
-      "ai_embedding": [
+    "get_time2": {
+      "ai_tool": [
         [
           {
-            "node": "Supabase Vector Store",
-            "type": "ai_embedding",
+            "node": "Secretaria agendamento",
+            "type": "ai_tool",
             "index": 0
           }
         ]
@@ -1908,6 +2223,17 @@
         [
           {
             "node": "Retrieve Documents",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "assistente_comercial",
             "type": "ai_languageModel",
             "index": 0
           }
@@ -1925,6 +2251,17 @@
         ]
       ]
     },
+    "assistente_comercial": {
+      "main": [
+        [
+          {
+            "node": "respondeWhatsapp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Supabase Vector Store": {
       "ai_vectorStore": [
         [
@@ -1936,19 +2273,12 @@
         ]
       ]
     },
-    "tipo_arquivo": {
-      "main": [
+    "Embeddings OpenAI": {
+      "ai_embedding": [
         [
           {
-            "node": "extrair_pdf",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "extrair_texto",
-            "type": "main",
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
             "index": 0
           }
         ]
@@ -1959,9 +2289,72 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
-  "pinData": {},
-  "versionId": "c9c9231c-c86a-4aa5-9f41-56fa20da7afe",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "dinastia-n8n-editor.lfigsi.easypanel.host",
+            "user-agent": "axios/1.7.7",
+            "content-length": "1026",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "content-type": "application/json",
+            "x-forwarded-for": "172.18.0.1",
+            "x-forwarded-host": "dinastia-n8n-editor.lfigsi.easypanel.host",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "89a0f4e4d949",
+            "x-real-ip": "172.18.0.1"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "event": "messages.upsert",
+            "instance": "black",
+            "data": {
+              "key": {
+                "remoteJid": "5511985401987@s.whatsapp.net",
+                "fromMe": false,
+                "id": "3EB082932AF9D112406A58"
+              },
+              "pushName": "Dival S Filho 😎",
+              "status": "DELIVERY_ACK",
+              "message": {
+                "conversation": "quais as opçoes de lazer?",
+                "messageContextInfo": {
+                  "deviceListMetadata": {
+                    "senderKeyHash": "f2Icf9z+qvuSnA==",
+                    "senderTimestamp": "1736189132",
+                    "senderAccountType": "E2EE",
+                    "receiverAccountType": "E2EE",
+                    "recipientKeyHash": "7TLLEfuASeSJCw==",
+                    "recipientTimestamp": "1737206781"
+                  },
+                  "deviceListMetadataVersion": 2,
+                  "messageSecret": "2uAPu/FfByYFF66BYGkHCp8kTt85kTC5Cj0NZwTu0N8="
+                }
+              },
+              "messageType": "conversation",
+              "messageTimestamp": 1737487245,
+              "instanceId": "e80916b1-4dec-4f49-9fd0-d1ad2d650a29",
+              "source": "web"
+            },
+            "destination": "https://dinastia-n8n-editor.lfigsi.easypanel.host/webhook-test/agendamentos-3-8",
+            "date_time": "2025-01-21T16:20:45.158Z",
+            "sender": "5511932081209@s.whatsapp.net",
+            "server_url": "https://dinastia-evolution.lfigsi.easypanel.host",
+            "apikey": "20C4F7FB433E-415A-BE5B-DC6A0221DE87"
+          },
+          "webhookUrl": "https://dinastia-n8n-webhook.lfigsi.easypanel.host/webhook-test/agendamentos-3-8",
+          "executionMode": "test"
+        }
+      }
+    ]
+  },
+  "versionId": "ecba87ef-610f-4c8e-b206-6ae099e0dccc",
   "triggerCount": 0,
   "tags": [
     {
