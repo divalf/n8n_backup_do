@@ -1,0 +1,66 @@
+{
+  "createdAt": "2025-01-21T16:35:29.485Z",
+  "updatedAt": "2025-01-21T16:35:35.912Z",
+  "id": "HwWpu1zCI4vzHWuK",
+  "name": "get_time",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"response\":{\n    \"horário atual\":\"{{ $json.time }}\"\n  }\n}",
+        "options": {}
+      },
+      "id": "f82d7eee-d5fc-4558-ad4a-a1a081f1a538",
+      "name": "response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "40e449c2-ede6-4b56-8105-7b81bd2fed51",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "81f1b9bf-14ad-456c-be62-a1f9b1ae7ab6",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-01-18T12:45:43.202Z",
+      "updatedAt": "2025-01-18T12:45:43.202Z",
+      "id": "7B7qTAU2yw7dt0xZ",
+      "name": "black"
+    }
+  ]
+}
