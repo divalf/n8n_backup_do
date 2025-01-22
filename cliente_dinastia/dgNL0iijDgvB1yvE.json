@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-01-19T00:30:35.493Z",
-  "updatedAt": "2025-01-21T02:55:11.298Z",
+  "updatedAt": "2025-01-22T01:19:01.528Z",
   "id": "dgNL0iijDgvB1yvE",
   "name": "REFRESH - Agendamentos - Do zero a expert. V4",
   "active": false,
@@ -15,8 +15,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        1900,
-        540
+        760,
+        760
       ],
       "credentials": {
         "openAiApi": {
@@ -35,8 +35,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        1820,
-        1220
+        680,
+        1440
       ],
       "credentials": {
         "openAiApi": {
@@ -141,8 +141,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        2100,
-        1080
+        960,
+        1300
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -180,8 +180,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2300,
-        1080
+        1160,
+        1300
       ]
     },
     {
@@ -244,8 +244,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        2380,
-        340
+        1240,
+        560
       ]
     },
     {
@@ -262,8 +262,8 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        780,
-        300
+        -360,
+        520
       ],
       "alwaysOutputData": true
     },
@@ -286,8 +286,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1180,
-        300
+        40,
+        520
       ],
       "alwaysOutputData": true
     },
@@ -310,8 +310,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1180,
-        500
+        40,
+        720
       ]
     },
     {
@@ -326,8 +326,8 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -240,
-        280
+        -1380,
+        500
       ]
     },
     {
@@ -341,8 +341,8 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        300,
-        260
+        -840,
+        480
       ]
     },
     {
@@ -385,8 +385,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        40,
-        400
+        -1100,
+        620
       ]
     },
     {
@@ -452,8 +452,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        380,
-        340
+        -760,
+        560
       ],
       "alwaysOutputData": false
     },
@@ -469,8 +469,8 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1580,
-        260
+        440,
+        460
       ]
     },
     {
@@ -498,8 +498,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        560,
-        1000
+        -580,
+        1220
       ]
     },
     {
@@ -511,8 +511,8 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        800,
-        780
+        -340,
+        1000
       ],
       "webhookId": "f01fd2f0-8326-430a-b5f1-154395ef218b"
     },
@@ -528,8 +528,8 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        800,
-        980
+        -340,
+        1200
       ],
       "credentials": {
         "redis": {
@@ -568,8 +568,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1000,
-        980
+        -140,
+        1200
       ]
     },
     {
@@ -579,8 +579,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        1320,
-        1000
+        180,
+        1220
       ]
     },
     {
@@ -593,8 +593,8 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        1320,
-        820
+        180,
+        1040
       ],
       "credentials": {
         "redis": {
@@ -615,8 +615,8 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        600,
-        780
+        -540,
+        1000
       ],
       "credentials": {
         "redis": {
@@ -650,8 +650,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1040,
-        820
+        -100,
+        1040
       ]
     },
     {
@@ -666,8 +666,8 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        420,
-        740
+        -720,
+        960
       ]
     },
     {
@@ -681,8 +681,8 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1580,
-        1020
+        440,
+        1240
       ]
     },
     {
@@ -702,8 +702,8 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.1,
       "position": [
-        2640,
-        800
+        1500,
+        1020
       ],
       "credentials": {
         "googleCalendarOAuth2Api": {
@@ -731,8 +731,8 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.1,
       "position": [
-        2940,
-        800
+        1800,
+        1020
       ],
       "credentials": {
         "googleCalendarOAuth2Api": {
@@ -748,8 +748,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolCalculator",
       "typeVersion": 1,
       "position": [
-        2520,
-        800
+        1380,
+        1020
       ]
     },
     {
@@ -762,8 +762,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        2180,
-        720
+        1040,
+        940
       ],
       "credentials": {
         "openAiApi": {
@@ -783,8 +783,8 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.6,
       "position": [
-        980,
-        300
+        -160,
+        520
       ],
       "credentials": {
         "openAiApi": {
@@ -802,7 +802,7 @@
           "value": "asst_lg4YkKKrrTg3XC8nAvhsdqqr"
         },
         "prompt": "define",
-        "text": "={{ $('mensagem_cliente').item.json.texto }}\nPara referencia, o dia e horario atual é:{{ (() => {\n  const date = new Date(); // Obtém a data atual\n  const days = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado']; // Dias da semana em português\n  const pad = n => n.toString().padStart(2, '0'); // Adiciona zero à esquerda\n  const dayName = days[date.getDay()]; // Obtém o nome do dia\n  const day = pad(date.getDate());\n  const month = pad(date.getMonth() + 1); // Mês começa em 0\n  const year = date.getFullYear();\n  const hours = pad(date.getHours());\n  const minutes = pad(date.getMinutes());\n  const seconds = pad(date.getSeconds());\n  return `${dayName}, ${day}/${month}/${year} ${hours}:${minutes}:${seconds}`; // Formato brasileiro de data e hora\n})() }}\n",
+        "text": "={{ $('mensagem_cliente').item.json.texto }}\n",
         "options": {}
       },
       "id": "d3bc8b0b-f49c-466b-834e-35f3657cff9b",
@@ -810,8 +810,8 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.6,
       "position": [
-        2620,
-        320
+        1480,
+        540
       ],
       "credentials": {
         "openAiApi": {
@@ -833,8 +833,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.6,
       "position": [
-        1740,
-        1080
+        600,
+        1300
       ]
     },
     {
@@ -848,26 +848,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        -200,
-        400
+        -1360,
+        620
       ],
       "webhookId": "25592133-90db-45a5-9db4-a88cc190699d"
-    },
-    {
-      "parameters": {
-        "content": "roda para deletar todas as mensagens",
-        "height": 274.7923843700217,
-        "width": 273.1627906976745,
-        "color": 7
-      },
-      "id": "cea5d98d-752b-4d48-9fae-0f05b1f766e5",
-      "name": "Sticky Note6",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        -220,
-        -100
-      ]
     },
     {
       "parameters": {
@@ -880,8 +864,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        -140,
-        0
+        -1340,
+        240
       ],
       "credentials": {
         "postgres": {
@@ -897,8 +881,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3,
       "position": [
-        1640,
-        340
+        500,
+        560
       ]
     },
     {
@@ -913,8 +897,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.1,
       "position": [
-        2360,
-        880
+        1220,
+        1100
       ],
       "credentials": {
         "postgres": {
@@ -943,8 +927,8 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.2,
       "position": [
-        2800,
-        800
+        1660,
+        1020
       ],
       "credentials": {
         "googleCalendarOAuth2Api": {
@@ -958,7 +942,7 @@
         "promptType": "define",
         "text": "={{ $json.texto }}",
         "options": {
-          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que não esteja dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nVocê é uma especialista em classificar mensagens de clientes. \n\nA sua função é identificar a intenção na mensagem deste cliente em apenas 2 categories: \"informacoes\" ou \"agendamentos\".\n\nAnalise sempre o histórico da conversa antes de decidir, principalmente se a frase anterior for sobre \"agendamentos\".\n\nApenas retorne o texto \"informacoes\" ou \"agendamentos\", mais nada.\n\n<EXEMPLO>\nUser: Não precisa mais fazer o reagendamento\nAI: agendamentos\n</EXEMPLO>\n\n<EXEMPLO>\nHuman: Olá eu gostaria de agendar uma reunião para amanhã as 9h\nAI: agendamentos\nHuman: Olá eu gostaria de agendar uma reunião para amanha as 9h\nAI: Amanhã, dia 25 de novembro, às 9h está disponível. Poderia confirmar esse horário?\nHuman: pode confirmar\nHuman: poderia\nHuman: sim\nHuman: pode ser\nHuman: pois não\nHuman: beleza\nHuman: blz\nHuman: com certeza\n\nAI: agendamentos\n</EXEMPLO>\n</INSTRUCAO>"
+          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que não esteja dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nVocê é uma especialista em classificar mensagens de clientes. \n\nAcesse obrigatoriamente a tool `get_time\" para obter a data atual. \n\nA sua função é identificar a intenção na mensagem deste cliente em apenas 2 categories: \"informacoes\" ou \"agendamentos\".\n\nAnalise sempre o histórico da conversa antes de decidir.\n\nApenas retorne o texto \"informacoes\" ou \"agendamentos\", mais nada.\n\n<EXEMPLO>\nUser: Não precisa mais fazer o reagendamento\nAI: \"agendamentos\"\n\nUser: Que horas são agora?\nAI: \"informacoes\"\n\n</EXEMPLO>\n\n<EXEMPLO>\nHuman: Olá eu gostaria de agendar uma reunião para amanhã as 9h\nAI: agendamentos\nHuman: Olá eu gostaria de agendar uma reunião para amanha as 9h\nAI: Amanhã, dia 25 de novembro, às 9h está disponível. Poderia confirmar esse horário?\nHuman: pode confirmar\nHuman: poderia\nHuman: sim\nHuman: pode ser\nHuman: pois não\nHuman: beleza\nHuman: blz\nHuman: com certeza\n\nHuman: Quais os próximos horários disponíveis você tem?\nAI: agendamentos\n\nHuman: Quais datas sugere?\nAI: agendamentos\n\nAI: agendamentos\n</EXEMPLO>\n</INSTRUCAO>"
         }
       },
       "id": "fc195e2d-f122-41fd-9085-d88a0082c7aa",
@@ -966,8 +950,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.6,
       "position": [
-        1880,
-        340
+        740,
+        560
       ],
       "retryOnFail": true,
       "maxTries": 3,
@@ -978,7 +962,7 @@
         "promptType": "define",
         "text": "={{ $('mensagem_cliente').item.json.texto }}",
         "options": {
-          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO> Você é uma secretária virtual projetada para gerenciar de forma eficiente e amigável os agendamentos e cancelamentos de reuniões e visitas. Seu nome é \"Dama IA\" e você trabalha para a construtora \"Plaenge\".\n\n Focada em oferecer uma experiência prática e personalizada, você exibe horários disponíveis, pergunta se o cliente concorda com a data e hora antes de confirmar o agendamento e fornece todos os detalhes essenciais após a marcação. Você também deve respeitar o formato brasileiro de data e hora (DD/MM/AAAA e HH) e opera no fuso horário \"America/Sao_Paulo\".\n\nVerificar disponibilidade no calendário (<AGENDA></AGENDA>) para os próximos 7 dias úteis, dentro do horário de funcionamento:\nSegunda a sexta: das 8h às 21h.\nSábado: das 8h às 12h. \nDomingo: Fechado.\nNunca agende fora do horario de funcionamento.\nUse como referencia para a data e hora atual: {{ (() => {\n  const date = new Date();\n  const options = {\n    timeZone: 'America/Sao_Paulo',\n    weekday: 'long',\n    year: 'numeric',\n    month: '2-digit',\n    day: '2-digit',\n    hour: '2-digit',\n    minute: '2-digit',\n    second: '2-digit',\n    hour12: false,\n  };\n  const formatter = new Intl.DateTimeFormat('pt-BR', options);\n  const parts = formatter.formatToParts(date);\n  const getPart = (type) => parts.find(part => part.type === type).value;\n  const dayName = getPart('weekday').toLowerCase();\n  const year = getPart('year');\n  const month = getPart('month');\n  const day = getPart('day');\n  const hours = getPart('hour');\n  const minutes = getPart('minute');\n  const seconds = getPart('second');\n  return `${dayName}, ${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;\n})() }}\n\n\nCaso o cliente sugira uma data fora deste período ou após {{ $now.plus(7, \"days\").format('dd/MM/yyyy') }}, informe que só é possível agendar para os próximos 7 dias.\nSe não houver data sugerida, proponha a mais próxima disponível.\nfaça agendamentos de 30 minutos de duração.\nse o horario pedido pelo cliente ja tiver alguma reuniao marcada, sugira o mais proximo 30 minutos antes ou 30 minutos depois da reunião  existente, mas esta proibido marcar em um horario que ja exista reuniao\nPergunte se o cliente pode confirmar, mas não confirme diretamente o agendamento.\n\nSempre utilize o timezone \"America/Sao_Paulo\" para todas as operações.\n\n<REAGENDAMENTO>\nDe acordo com o histórico de mensagens, siga o processo de reagendamento nesta ordem:\n1. use a calculadora(apenas some numeros inteiros, sem usar textos) para identificar a data e hora especifica que o cliente gostaria de marcar o <NOVO_AGENDAMENTO>.\n2. Busque todos os eventos apartir do horario do <NOVO_AGENDAMENTO> até para os próximos 2 dias.\n2.1 Caso já houver um agendamento o mesmo horário, sugira uma data mais próxima.\n2.2 Caso não houver nenhum agendamento no mesmo horário, confirme com o usuário o <NOVO_AGENDAMENTO>.\n3. Quando o usário confirmar, delete o agendamento anterior usando o eventId. Crie o <NOVO_AGENDAMENTO>.\n</REAGENDAMENTO>\n\n<CANCELAMENTO>\nBaseado no histórico de mensagens, extraia as informações do evento a ser cancelado (data, hora e eventId).\nCaso não localize o evento, retorne false com uma mensagem de erro.\n</CANCELAMENTO>\n\n<CONFIRMACAO>\nEscreva mensagens breves e cordiais confirmando a reunião com base no evento já agendado, respeitando o timezone America/Sao_Paulo.\n</CONFIRMACAO>\n\n\nExceções:\n\nCaso identifique uma situação específica de exceção, retorne a mensagem correspondente definida na exceção (<EXCESSAO></EXCESSAO>).\n\nRegras Importantes:\n\nSeja cordial e direta.\nResponda sempre no timezone: America/Sao_Paulo.\nNunca confirme agendamentos automaticamente; peça confirmação ao cliente.\nApenas responda sobre agendamentos; ignore qualquer outro contexto.\nRetorne mensagens no formato texto, sem códigos ou informações adicionais.\n\nExemplo de Resposta:\n\nUser: \"Pode marcar uma reunião para terça às 14h?\"\nResposta: \"Terça-feira às 14h está disponível. Poderia confirmar esse horário?\"\n\nUtilize a calculadora para calcular diferença de datas, horarios e dias.\n\n<OUTPUT>\nVoce sempre irá responder usando o formato JSON, sem commas, ou aspas, apenas o JSON.\n\nExemplo com eventId:\n\n{\n  \"mensagem\": \"sua mensagem aqui\",\n  \"eventId\": \"o eventId do agendamento criado aqui\"\n}\n\nExemplo sem eventId:\n\n{\n  \"mensagem\": \"sua mensagem aqui\"\n}\n</OUTPUT>\n\n</INSTRUCAO>\n\n\n"
+          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO> Você é uma secretária virtual projetada para gerenciar de forma eficiente e amigável os agendamentos e cancelamentos de reuniões e visitas. Seu nome é \"Dama IA\" e você trabalha para a construtora \"Plaenge\".\n\n Focada em oferecer uma experiência prática e personalizada, você exibe horários disponíveis, pergunta se o cliente concorda com a data e hora antes de confirmar o agendamento e fornece todos os detalhes essenciais após a marcação. \n\nAcesse obrigatoriamente a tool `get_time2\" para obter a data atual e armazene o resultado em data_atual.\n\nVerificar disponibilidade no calendário (<AGENDA></AGENDA>) para os próximos 7 dias úteis, dentro do horário de funcionamento:\nSegunda a sexta: das 8h às 21h.\nSábado: das 8h às 12h. \nDomingo: Fechado.\n\n<FERIADO>\n25/01/2025\n</FERIADO>\n\nNunca agende fora do horario de funcionamento ou em feriados  (<FERIADO></FERIADO>).\n\nNunca agende no domingo.\n\nNunca agende em data ou horário anterior à  {{ $now.format('dd/MM/yyyy HH:mm') }} data atual.\n\nCaso o cliente sugira uma data fora do horário de funcionamento ou após {{ $now.plus(7, \"days\").format('dd/MM/yyyy') }}, informe que só é possível agendar para os próximos 7 dias.\n\nSe não houver data sugerida, proponha as 3 datas mais próximas em dias diferentes disponíveis. Em cada dia, forneça um único horário. Exemplo: 22/01/2025 (quarta-feira): das 8h às 9h30, 23/01/2025 (quinta-feira): das 14h às 14h30, 24/01/2025 (sexta-feira): das 17h às 17h30.\n\nFaça agendamentos de 30 minutos de duração.\nse o horario pedido pelo cliente já tiver alguma reuniao marcada, sugira o mais proximo 30 minutos antes ou 30 minutos depois da reunião  existente, mas esta proibido marcar em um horario que ja exista reuniao.\nPergunte se o cliente pode confirmar, mas não confirme diretamente o agendamento.\n\nAntes de efetivar o agendamento, solicite o e-mail do usuário.\n\n<REAGENDAMENTO>\nDe acordo com o histórico de mensagens, siga o processo de reagendamento nesta ordem:\n1. use a calculadora(apenas some numeros inteiros, sem usar textos) para identificar a data e hora especifica que o cliente gostaria de marcar o <NOVO_AGENDAMENTO>.\n2. Busque todos os eventos apartir do horario do <NOVO_AGENDAMENTO> até para os próximos 2 dias.\n2.1 Caso já houver um agendamento o mesmo horário, sugira uma data mais próxima.\n2.2 Caso não houver nenhum agendamento no mesmo horário, confirme com o usuário o <NOVO_AGENDAMENTO>.\n3. Quando o usário confirmar, delete o agendamento anterior usando o eventId. Crie o <NOVO_AGENDAMENTO>.\n</REAGENDAMENTO>\n\n<CANCELAMENTO>\nBaseado no histórico de mensagens, extraia as informações do evento a ser cancelado (data, hora e eventId).\nCaso não localize o evento, retorne false com uma mensagem de erro.\n</CANCELAMENTO>\n\n<CONFIRMACAO>\nEscreva mensagens breves e cordiais confirmando a reunião com base no evento já agendado, respeitando o timezone America/Sao_Paulo.\n</CONFIRMACAO>\n\n\nExceções:\n\nCaso identifique uma situação específica de exceção, retorne a mensagem correspondente definida na exceção (<EXCESSAO></EXCESSAO>).\n\nRegras Importantes:\n\nSeja cordial e direta.\nResponda sempre no timezone: America/Sao_Paulo.\nNunca confirme agendamentos automaticamente; peça confirmação ao cliente.\nApenas responda sobre agendamentos; ignore qualquer outro contexto.\nRetorne mensagens no formato texto, sem códigos ou informações adicionais.\n\nExemplo de Resposta:\n\nUser: \"Pode marcar uma reunião para terça às 14h?\"\nResposta: \"Terça-feira às 14h está disponível. Poderia confirmar esse horário?\"\n\nUtilize a calculadora para calcular diferença de datas, horarios e dias.\n\n<OUTPUT>\nVoce sempre irá responder usando o formato JSON, sem commas, ou aspas, apenas o JSON.\n\nExemplo com eventId:\n\n{\n  \"mensagem\": \"sua mensagem aqui\",\n  \"eventId\": \"o eventId do agendamento criado aqui\"\n}\n\nExemplo sem eventId:\n\n{\n  \"mensagem\": \"sua mensagem aqui\"\n}\n</OUTPUT>\n\n</INSTRUCAO>\n\n\n"
         }
       },
       "id": "644b26e0-fa4e-463a-95cc-63a14991d1ca",
@@ -986,8 +970,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.6,
       "position": [
-        2260,
-        560
+        1120,
+        780
       ],
       "retryOnFail": true,
       "maxTries": 2
@@ -1025,8 +1009,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3000,
-        320
+        1860,
+        540
       ]
     },
     {
@@ -1062,22 +1046,103 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3000,
-        560
+        1860,
+        780
       ]
     },
     {
       "parameters": {
-        "jsCode": "const outputString = $input.item.json.output;\n\n// Função para adicionar aspas às chaves do JSON\nconst adicionarAspasChaves = (str) => {\n  return str.replace(/([{,]\\s*)(\\w+)(\\s*:)/g, '$1\"$2\"$3');\n};\n\n// Ajustar a string JSON\nconst jsonAjustado = adicionarAspasChaves(outputString);\n\n// Parsear o JSON ajustado\nlet parsedOutput;\ntry {\n  parsedOutput = JSON.parse(jsonAjustado);\n} catch (error) {\n  throw new Error('Erro ao parsear o JSON ajustado: ' + error.message);\n}\n\n// Verificar se a chave 'mensagem' existe\nif (!parsedOutput.mensagem) {\n  throw new Error('A chave \"mensagem\" não foi encontrada no JSON.');\n}\n\n// Retornar apenas a mensagem\nreturn {\n  json: {\n    mensagem: parsedOutput.mensagem\n  }\n};\n"
+        "jsCode": "const outputString = $input.item.json.output;\n\n// Função para verificar se uma string é JSON válida\nconst isJSON = (str) => {\n  try {\n    JSON.parse(str);\n    return true;\n  } catch {\n    return false;\n  }\n};\n\n// Verificar se o outputString é JSON ou texto simples\nlet parsedOutput;\nif (typeof outputString === 'string' && isJSON(outputString)) {\n  // Parsear o JSON válido\n  parsedOutput = JSON.parse(outputString);\n} else if (typeof outputString === 'string') {\n  // Se for texto simples, encapsular como JSON\n  parsedOutput = { mensagem: outputString };\n} else {\n  // Lançar erro se não for uma string ou JSON\n  throw new Error('O conteúdo de outputString não é uma string ou JSON válido.');\n}\n\n// Verificar se a chave 'mensagem' existe\nif (!parsedOutput.mensagem) {\n  throw new Error('A chave \"mensagem\" não foi encontrada no JSON.');\n}\n\n// Retornar apenas a mensagem\nreturn {\n  json: {\n    mensagem: parsedOutput.mensagem,\n  },\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2680,
-        560
+        1540,
+        780
       ],
       "id": "bbe7c8a8-279b-4c07-8d02-85aea8a1d3e9",
       "name": "Code"
+    },
+    {
+      "parameters": {
+        "name": "get_time",
+        "description": "Útil para consultar o horário atual.",
+        "workflowId": {
+          "__rl": true,
+          "value": "HwWpu1zCI4vzHWuK",
+          "mode": "id"
+        },
+        "fields": {
+          "values": [
+            {
+              "name": "=time",
+              "stringValue": "={{ $('Webhook').item.json.body.date_time }}"
+            }
+          ]
+        }
+      },
+      "id": "5132848e-6dd5-4840-9aaa-902e7755c0e8",
+      "name": "get_time",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        960,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "name": "get_time",
+        "description": "Útil para consultar o horário atual.",
+        "workflowId": {
+          "__rl": true,
+          "value": "HwWpu1zCI4vzHWuK",
+          "mode": "id"
+        },
+        "fields": {
+          "values": [
+            {
+              "name": "=time",
+              "stringValue": "={{ $('Webhook').item.json.body.date_time }}"
+            }
+          ]
+        }
+      },
+      "id": "47eb38ab-cf8d-443c-8ad2-85679d11bf2b",
+      "name": "get_time1",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1740,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "name": "get_time",
+        "description": "Útil para consultar o horário atual.",
+        "workflowId": {
+          "__rl": true,
+          "value": "HwWpu1zCI4vzHWuK",
+          "mode": "id"
+        },
+        "fields": {
+          "values": [
+            {
+              "name": "=time",
+              "stringValue": "={{ $('Webhook').item.json.body.date_time }}"
+            }
+          ]
+        }
+      },
+      "id": "61750483-8678-40a5-9a8e-512709dcc6be",
+      "name": "get_time2",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1940,
+        1020
+      ]
     }
   ],
   "connections": {
@@ -1448,6 +1513,39 @@
           }
         ]
       ]
+    },
+    "get_time": {
+      "ai_tool": [
+        [
+          {
+            "node": "recepcionista",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_time1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Assistente_comercial",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_time2": {
+      "ai_tool": [
+        [
+          {
+            "node": "Secretaria agendamento",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1464,7 +1562,7 @@
           "headers": {
             "host": "dinastia-n8n-editor.lfigsi.easypanel.host",
             "user-agent": "axios/1.7.7",
-            "content-length": "1006",
+            "content-length": "1026",
             "accept-encoding": "gzip, compress, deflate, br",
             "content-type": "application/json",
             "x-forwarded-for": "172.18.0.1",
@@ -1483,12 +1581,12 @@
               "key": {
                 "remoteJid": "5511985401987@s.whatsapp.net",
                 "fromMe": false,
-                "id": "3EB0E8AC3E12B71DA1F030"
+                "id": "3EB082932AF9D112406A58"
               },
               "pushName": "Dival S Filho 😎",
               "status": "DELIVERY_ACK",
               "message": {
-                "conversation": "poderia",
+                "conversation": "Confirmo. O meu e-mail é dsfafil@gmail.com",
                 "messageContextInfo": {
                   "deviceListMetadata": {
                     "senderKeyHash": "f2Icf9z+qvuSnA==",
@@ -1499,16 +1597,16 @@
                     "recipientTimestamp": "1737206781"
                   },
                   "deviceListMetadataVersion": 2,
-                  "messageSecret": "EAzxkZSQM88WqvLedpYplT/+gAy0oKqA0U7Vjqrq4Js="
+                  "messageSecret": "2uAPu/FfByYFF66BYGkHCp8kTt85kTC5Cj0NZwTu0N8="
                 }
               },
               "messageType": "conversation",
-              "messageTimestamp": 1737249445,
+              "messageTimestamp": 1737487245,
               "instanceId": "e80916b1-4dec-4f49-9fd0-d1ad2d650a29",
               "source": "web"
             },
             "destination": "https://dinastia-n8n-editor.lfigsi.easypanel.host/webhook-test/agendamentos-3-8",
-            "date_time": "2025-01-18T22:17:25.187Z",
+            "date_time": "2025-01-21T16:20:45.158Z",
             "sender": "5511932081209@s.whatsapp.net",
             "server_url": "https://dinastia-evolution.lfigsi.easypanel.host",
             "apikey": "20C4F7FB433E-415A-BE5B-DC6A0221DE87"
@@ -1519,7 +1617,7 @@
       }
     ]
   },
-  "versionId": "f5da24dc-8a9c-4607-86bc-374afb6a5283",
+  "versionId": "58abfe96-900a-4f7b-87a5-f55738aedf57",
   "triggerCount": 0,
   "tags": [
     {
