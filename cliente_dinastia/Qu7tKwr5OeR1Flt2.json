@@ -1,8 +1,8 @@
 {
   "createdAt": "2025-01-18T20:45:55.001Z",
-  "updatedAt": "2025-01-18T21:50:51.310Z",
+  "updatedAt": "2025-01-21T16:36:16.341Z",
   "id": "Qu7tKwr5OeR1Flt2",
-  "name": "My workflow",
+  "name": "Eric Producer",
   "active": false,
   "nodes": [
     {
@@ -542,7 +542,7 @@
       }
     ]
   },
-  "versionId": "2f276abf-1054-483f-a7aa-071b9d6b404d",
+  "versionId": "03b33fed-aec3-41c9-973a-26b450b9cc47",
   "triggerCount": 0,
   "tags": [
     {
