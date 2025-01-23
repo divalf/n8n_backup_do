@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-01-21T00:24:24.234Z",
-  "updatedAt": "2025-01-22T02:59:03.878Z",
+  "updatedAt": "2025-01-22T03:11:35.604Z",
   "id": "W9WcVdxqiDeqyy5F",
   "name": "REFRESH - Agendamentos - zero a expert - RAG - V5",
   "active": false,
@@ -1608,8 +1608,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        1760,
-        1340
+        1780,
+        1300
       ],
       "credentials": {
         "openAiApi": {
@@ -2323,7 +2323,7 @@
               "pushName": "Dival S Filho 😎",
               "status": "DELIVERY_ACK",
               "message": {
-                "conversation": "quais as opçoes de lazer?",
+                "conversation": "me fale sobre a segurança do empreendimento",
                 "messageContextInfo": {
                   "deviceListMetadata": {
                     "senderKeyHash": "f2Icf9z+qvuSnA==",
@@ -2354,7 +2354,7 @@
       }
     ]
   },
-  "versionId": "ecba87ef-610f-4c8e-b206-6ae099e0dccc",
+  "versionId": "c4c25620-4f1f-4952-8209-c6ba1790ef70",
   "triggerCount": 0,
   "tags": [
     {
@@ -2362,12 +2362,6 @@
       "updatedAt": "2025-01-18T12:45:43.202Z",
       "id": "7B7qTAU2yw7dt0xZ",
       "name": "black"
-    },
-    {
-      "createdAt": "2025-01-19T00:30:54.075Z",
-      "updatedAt": "2025-01-19T00:30:54.075Z",
-      "id": "PRxU7dwZFKqwHil8",
-      "name": "NEW"
     },
     {
       "createdAt": "2025-01-19T00:30:54.082Z",
