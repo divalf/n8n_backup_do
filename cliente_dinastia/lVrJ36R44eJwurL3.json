@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-01-23T02:56:09.085Z",
-  "updatedAt": "2025-01-23T02:57:16.292Z",
+  "updatedAt": "2025-01-24T02:35:03.780Z",
   "id": "lVrJ36R44eJwurL3",
   "name": "Multi Agente Ofir - V1",
   "active": false,
@@ -8,7 +8,7 @@
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "agente-ofir/v1/mensagem",
+        "path": "mult-agent-ofir",
         "options": {}
       },
       "id": "22655981-2a8d-4788-a4a9-1e9d84244693",
@@ -154,7 +154,13 @@
       ],
       "id": "782c9f15-5203-4e56-b44e-860bdf85d415",
       "name": "Postgres",
-      "alwaysOutputData": true
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
     },
     {
       "parameters": {
@@ -342,7 +348,13 @@
         1500
       ],
       "id": "7f19a946-1321-4881-80ef-cf9a4b3b96c4",
-      "name": "novo_cliente"
+      "name": "novo_cliente",
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
     },
     {
       "parameters": {
@@ -383,11 +395,17 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1100,
+        -1080,
         200
       ],
       "id": "a1e8722a-c6d0-4eb0-9dec-e866a10ccbaa",
-      "name": "puxar_cliente"
+      "name": "puxar_cliente",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YXr7eKy7abzLW8Iu",
+          "name": "Header Auth - AO"
+        }
+      }
     },
     {
       "parameters": {
@@ -806,7 +824,13 @@
         1820
       ],
       "id": "deb11e09-dc55-4a8b-999b-6b69b6b6202d",
-      "name": "puxar_cliente2"
+      "name": "puxar_cliente2",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YXr7eKy7abzLW8Iu",
+          "name": "Header Auth - AO"
+        }
+      }
     },
     {
       "parameters": {
@@ -822,7 +846,13 @@
       ],
       "id": "4034e688-ee96-496d-810a-267c9832da31",
       "name": "query_atualizar_data",
-      "alwaysOutputData": true
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
     },
     {
       "parameters": {
@@ -904,7 +934,13 @@
         500
       ],
       "id": "230438f5-4f45-4a08-812d-06af800178cb",
-      "name": "atualizar_cliente2"
+      "name": "atualizar_cliente2",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YXr7eKy7abzLW8Iu",
+          "name": "Header Auth - AO"
+        }
+      }
     },
     {
       "parameters": {
@@ -941,7 +977,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -920,
+        -900,
         200
       ],
       "id": "795935bd-538a-4b39-9f79-744dea5a296f",
@@ -1006,7 +1042,13 @@
         1500
       ],
       "id": "d2bc5dd1-9191-4953-ac45-566552dc6351",
-      "name": "criar_lead_request"
+      "name": "criar_lead_request",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YXr7eKy7abzLW8Iu",
+          "name": "Header Auth - AO"
+        }
+      }
     },
     {
       "parameters": {
@@ -1155,7 +1197,13 @@
       ],
       "id": "8fa24aea-2ed5-431b-9b44-20acadde621f",
       "name": "adicionar_comentario_request",
-      "alwaysOutputData": true
+      "alwaysOutputData": true,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YXr7eKy7abzLW8Iu",
+          "name": "Header Auth - AO"
+        }
+      }
     },
     {
       "parameters": {},
@@ -1222,7 +1270,13 @@
         1300
       ],
       "id": "0022b754-a0b0-4c8b-af29-a17d3139f4e6",
-      "name": "puxar_cliente4"
+      "name": "puxar_cliente4",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YXr7eKy7abzLW8Iu",
+          "name": "Header Auth - AO"
+        }
+      }
     },
     {
       "parameters": {
@@ -1253,7 +1307,13 @@
         1500
       ],
       "id": "547046c7-b8ce-476d-a592-7837f84ceb13",
-      "name": "OpenAI Chat Model2"
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
     },
     {
       "parameters": {
@@ -1268,7 +1328,13 @@
         1500
       ],
       "id": "eac188b6-06fb-42a8-8b3f-cde367952b75",
-      "name": "Postgres Chat Memory1"
+      "name": "Postgres Chat Memory1",
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
     },
     {
       "parameters": {
@@ -1306,7 +1372,13 @@
         -140
       ],
       "id": "41f13c64-21f5-43ac-858c-a012df191048",
-      "name": "ia_comercial"
+      "name": "ia_comercial",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YXr7eKy7abzLW8Iu",
+          "name": "Header Auth - AO"
+        }
+      }
     },
     {
       "parameters": {
@@ -1452,7 +1524,13 @@
         3340
       ],
       "id": "57142be7-65df-4798-818d-498c48a6c287",
-      "name": "cliente1"
+      "name": "cliente1",
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
     },
     {
       "parameters": {
@@ -1490,7 +1568,13 @@
       ],
       "id": "e3b43db8-da43-4847-b2c9-de987938c5cd",
       "name": "rodar_agente",
-      "webhookId": "d711bc48-5fc8-4f7f-8354-787ef9e828f6"
+      "webhookId": "d711bc48-5fc8-4f7f-8354-787ef9e828f6",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YXr7eKy7abzLW8Iu",
+          "name": "Header Auth - AO"
+        }
+      }
     },
     {
       "parameters": {
@@ -1521,7 +1605,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1280,
+        -1300,
         200
       ],
       "id": "8336a4ee-114c-472a-9211-02b9f0c5c2db",
@@ -1631,7 +1715,13 @@
         2540
       ],
       "id": "8ad363b9-8b2e-4f35-be23-944b2061e97a",
-      "name": "OpenAI Chat Model3"
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
     },
     {
       "parameters": {
@@ -1647,7 +1737,13 @@
         2540
       ],
       "id": "f3a57df2-2e0e-42c5-b8a6-8e9b90102101",
-      "name": "Postgres Chat Memory2"
+      "name": "Postgres Chat Memory2",
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
     },
     {
       "parameters": {
@@ -1684,7 +1780,13 @@
       "position": [
         380,
         2540
-      ]
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
     },
     {
       "parameters": {
@@ -1711,7 +1813,13 @@
       "position": [
         640,
         2540
-      ]
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
     },
     {
       "parameters": {},
@@ -1748,7 +1856,13 @@
       "position": [
         520,
         2540
-      ]
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
     },
     {
       "parameters": {
@@ -1847,7 +1961,13 @@
       "position": [
         -2020,
         900
-      ]
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
     },
     {
       "parameters": {
@@ -1862,7 +1982,13 @@
       "position": [
         -1720,
         900
-      ]
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
     },
     {
       "parameters": {
@@ -1932,7 +2058,13 @@
         2260
       ],
       "id": "4df99de8-f6f1-4a7c-b276-a4fab4ae157c",
-      "name": "puxar_consulta"
+      "name": "puxar_consulta",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
     },
     {
       "parameters": {
@@ -2254,7 +2386,13 @@
         2060
       ],
       "id": "456afe66-88c3-4442-86b1-124b3bb6ec74",
-      "name": "Postgres Chat Memory3"
+      "name": "Postgres Chat Memory3",
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
     },
     {
       "parameters": {
@@ -2268,7 +2406,13 @@
         2060
       ],
       "id": "cf194b90-2c71-4251-a24e-206e67256e02",
-      "name": "OpenAI Chat Model4"
+      "name": "OpenAI Chat Model4",
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
     },
     {
       "parameters": {
@@ -2412,7 +2556,13 @@
         60
       ],
       "id": "3cbd8764-efce-493a-a13e-889690de1ad6",
-      "name": "ia_secretaria"
+      "name": "ia_secretaria",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YXr7eKy7abzLW8Iu",
+          "name": "Header Auth - AO"
+        }
+      }
     },
     {
       "parameters": {
@@ -3346,63 +3496,6 @@
   "staticData": null,
   "meta": null,
   "pinData": {
-    "Webhook": [
-      {
-        "json": {
-          "headers": {
-            "host": "aula-n8n.jnsbgu.easypanel.host",
-            "user-agent": "axios/1.7.7",
-            "content-length": "864",
-            "accept-encoding": "gzip, compress, deflate, br",
-            "content-type": "application/json",
-            "x-forwarded-for": "172.18.0.1",
-            "x-forwarded-host": "aula-n8n.jnsbgu.easypanel.host",
-            "x-forwarded-port": "443",
-            "x-forwarded-proto": "https",
-            "x-forwarded-server": "37ade96d3958",
-            "x-real-ip": "172.18.0.1"
-          },
-          "params": {},
-          "query": {},
-          "body": {
-            "event": "messages.upsert",
-            "instance": "aula",
-            "data": {
-              "key": {
-                "remoteJid": "447928821569@s.whatsapp.net",
-                "fromMe": false,
-                "id": "3ABE2F75FA2EC0768E19"
-              },
-              "pushName": "Guilherme Reis 👑",
-              "message": {
-                "conversation": "oi",
-                "messageContextInfo": {
-                  "deviceListMetadata": {
-                    "senderKeyHash": "jBgAWZ4XGdYi1A==",
-                    "senderTimestamp": "1734471108",
-                    "recipientKeyHash": "83Ny1mlYbMBoCA==",
-                    "recipientTimestamp": "1733607396"
-                  },
-                  "deviceListMetadataVersion": 2,
-                  "messageSecret": "lI24pDAIw/HIe/s5VPvM6NEpC9RV2th2+UvAEX/d738="
-                }
-              },
-              "messageType": "conversation",
-              "messageTimestamp": 1734698815,
-              "instanceId": "16079feb-8a83-493e-866f-e6b146b0d655",
-              "source": "ios"
-            },
-            "destination": "https://aula-n8n.jnsbgu.easypanel.host/webhook/agente-ofir/v1/mensagem",
-            "date_time": "2024-12-20T09:46:55.492Z",
-            "sender": "447821721714@s.whatsapp.net",
-            "server_url": "http://localhost:8080",
-            "apikey": "1BEA861EBC63-4328-A016-843243A247FC"
-          },
-          "webhookUrl": "https://aula-n8n.jnsbgu.easypanel.host/webhook/agente-ofir/v1/mensagem",
-          "executionMode": "production"
-        }
-      }
-    ],
     "criar_ou_atualizar_lead": [
       {
         "json": {
@@ -3557,35 +3650,6 @@
         }
       }
     ],
-    "rodar_agente": [
-      {
-        "json": {
-          "headers": {
-            "host": "aula-n8n.jnsbgu.easypanel.host",
-            "user-agent": "axios/1.7.4",
-            "content-length": "40",
-            "accept": "application/json,text/html,application/xhtml+xml,application/xml,text/*;q=0.9, image/*;q=0.8, */*;q=0.7",
-            "accept-encoding": "gzip, compress, deflate, br",
-            "authorization": "AFEFAEF21321421AFSAFAS123312321",
-            "content-type": "application/json",
-            "x-forwarded-for": "172.18.0.1",
-            "x-forwarded-host": "aula-n8n.jnsbgu.easypanel.host",
-            "x-forwarded-port": "443",
-            "x-forwarded-proto": "https",
-            "x-forwarded-server": "37ade96d3958",
-            "x-real-ip": "172.18.0.1"
-          },
-          "params": {},
-          "query": {},
-          "body": {
-            "numero": "447928821569@s.whatsapp.net",
-            "mensagem": "<mensagemHumano>Nós não realizamos cirurgias em nosso consultório, por favor, ligar para o SAMU imediatamente o procurar um médico mais próximo.</mensagemHumano>"
-          },
-          "webhookUrl": "https://aula-n8n.jnsbgu.easypanel.host/webhook/agente-ofir/v1/cliente",
-          "executionMode": "production"
-        }
-      }
-    ],
     "secretaria_wh": [
       {
         "json": {
@@ -3730,14 +3794,14 @@
       }
     ]
   },
-  "versionId": "1d383ec5-770d-4da3-a6b4-3f9d76ca5091",
+  "versionId": "a0dfcb74-3fec-4bef-a318-c8acaee90c86",
   "triggerCount": 0,
   "tags": [
     {
-      "createdAt": "2025-01-18T12:45:43.202Z",
-      "updatedAt": "2025-01-18T12:45:43.202Z",
-      "id": "7B7qTAU2yw7dt0xZ",
-      "name": "black"
+      "createdAt": "2025-01-24T02:31:54.676Z",
+      "updatedAt": "2025-01-24T02:31:54.676Z",
+      "id": "F82vGSzF9g93J7st",
+      "name": "Ofir"
     }
   ]
 }
