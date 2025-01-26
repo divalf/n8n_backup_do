@@ -1,0 +1,1320 @@
+{
+  "createdAt": "2025-01-25T18:49:48.719Z",
+  "updatedAt": "2025-01-25T23:03:40.063Z",
+  "id": "1WWVqiF27vrft4BU",
+  "name": "Multi Agente Ofir - Asaas - V1.4",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## ASAAS - Verify If a Customer Already Exists",
+        "height": 80,
+        "width": 520,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3b97953b-bec6-40f9-88ba-e5b20e679377",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a731d2c2-6734-4f9a-8e2e-0a3a94dfa840",
+              "name": "main.asaasCustomer.name",
+              "value": "={{ $('cadastrar_cliente').item.json.body.nome }}",
+              "type": "string"
+            },
+            {
+              "id": "6fce2ec6-f05d-46cd-94e7-a6f1de7e1f61",
+              "name": "main.asaasCustomer.email",
+              "value": "={{ $('cadastrar_cliente').item.json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "efbdbc85-a161-462b-8814-063e4d785745",
+              "name": "main.asaasCustomer.cpfCnpj",
+              "value": "={{ $('cadastrar_cliente').item.json.body.cpfCnpj }}",
+              "type": "string"
+            },
+            {
+              "id": "6390a1b5-6ae4-492d-8e53-c044720cde86",
+              "name": "main.asaasCustomer.phone",
+              "value": "={{ $('cadastrar_cliente').item.json.body.phone }}",
+              "type": "string"
+            },
+            {
+              "id": "33696dd8-539b-4ad0-9e92-25af852b8107",
+              "name": "main.asaasCustomer.data",
+              "value": "={{ $json.data }}",
+              "type": "array"
+            },
+            {
+              "id": "0a8a5e1b-b1cc-4f46-b136-be4ef7f75cf8",
+              "name": "customer.asaasManager.billingType",
+              "value": "=PIX",
+              "type": "string"
+            },
+            {
+              "id": "fa64b824-88d6-4784-bb6e-8a5b33b10dce",
+              "name": "customer.asaasManager.value",
+              "value": "=5",
+              "type": "string"
+            },
+            {
+              "id": "475f0b9e-f955-4092-adba-ec8279148358",
+              "name": "customer.asaasManager.dueDate",
+              "value": "={{ $now.plus(1, 'days').format('yyyy-MM-dd') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        700,
+        120
+      ],
+      "id": "d1166f7e-630e-44c7-bf14-91837201d0fc",
+      "name": "Customer"
+    },
+    {
+      "parameters": {
+        "content": "## ASAAS - Create a new Customer",
+        "height": 80,
+        "width": 980
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        320
+      ],
+      "id": "5de5a87f-7b7d-4279-bc57-a12031d43522",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8161c27e-006d-43a7-942d-263e7fab22e0",
+              "leftValue": "={{ $('GET Customer').item.json.totalCount }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        920,
+        120
+      ],
+      "id": "60861969-cb8c-498e-b216-5b2f465d19bc",
+      "name": "If",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"asaasCustomerId\":\"{{ $json.asaasCustomerId }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1740,
+        200
+      ],
+      "id": "c11de695-ae9d-4e01-98ab-5a1ced06abb7",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "625164c2-5242-4c4c-abfc-38f46e3bbeb9",
+              "name": "customer",
+              "value": "={{ $json.body }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        460
+      ],
+      "id": "6b9017d5-4b6f-4473-9bd5-ec4200596ad3",
+      "name": "Customer Data"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://sandbox.asaas.com/api/v3/customers",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "={{ $json.asaasApiKey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ $json.customer.name }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $json.customer.email }}"
+            },
+            {
+              "name": "phone",
+              "value": "={{ $json.customer.phone }}"
+            },
+            {
+              "name": "cpfCnpj",
+              "value": "={{ $json.customer.cpfCnpj }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        460
+      ],
+      "id": "1fe6be24-3b9e-41f2-9ce7-ea044bb29be1",
+      "name": "Create Customer"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n    \"asaasCustomer\": {\n        \"id\": \"{{ $json.id }}\",\n        \"name\": \"{{ $json.name }}\",\n        \"email\": \"{{ $json.email }}\",\n        \"phone\": \"{{ $json.phone }}\",\n        \"cpfCnpj\": \"{{ $json.cpfCnpj }}\",\n        \"createdAt\": \"{{ $json.dateCreated }}\"\n    }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        900,
+        460
+      ],
+      "id": "e5553485-8be9-44b8-9a6e-cc666b842c0a",
+      "name": "Respond to Webhook1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "content": "## ASAAS - Create Pix billing",
+        "height": 80,
+        "width": 1180
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        640
+      ],
+      "id": "cbf27821-b7ef-48b3-9219-779ed3f53d40",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "url": "=https://sandbox.asaas.com/api/v3/payments/{{ $json.id }}/billingInfo",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "={{ $('Global Constants1').item.json.asaasApiKey }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        680,
+        800
+      ],
+      "id": "c492e6bf-c3cf-4c91-8c9a-0ad39a93bd52",
+      "name": "GET Pix Billing"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "082018ff-a28d-44a0-b09f-a271265de075",
+              "name": "pixCode",
+              "value": "={{ $('GET Pix Billing').item.json.pix.payload }}",
+              "type": "string"
+            },
+            {
+              "id": "a06f1c26-5ed2-4a0d-8569-060e4c218b04",
+              "name": "expirationDate",
+              "value": "={{ $('GET Pix Billing').item.json.pix.expirationDate.toDateTime().format('dd-MM-yyyy') }}",
+              "type": "string"
+            },
+            {
+              "id": "577320ed-fcfe-4181-afbd-c166c3438cd3",
+              "name": "paymentLink",
+              "value": "={{ $('Create Pix Billing').item.json.invoiceUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "382e8e94-3a38-48c0-a588-052e07643deb",
+              "name": "encodedQRCode",
+              "value": "={{ $json.pix.encodedImage }}",
+              "type": "string"
+            },
+            {
+              "id": "50c1b1e8-f3a0-4f34-b7d9-24e0970d02ac",
+              "name": "payment.id",
+              "value": "={{ $('Create Pix Billing').item.json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        880,
+        800
+      ],
+      "id": "f76c4cae-3fe2-4985-b14a-b749b8d4d358",
+      "name": "Pix Payment Data"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"paymentId\": \"{{ $json.payment.id }}\",\n  \"pixCode\": \"{{ $json.pixCode }}\",\n  \"expirationDate\": \"{{ $json.expirationDate }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        800
+      ],
+      "id": "89c141c4-1887-434b-922e-08e5d5975d73",
+      "name": "Respond to Webhook3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://sandbox.asaas.com/api/v3/payments",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "={{ $json.asaasApiKey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "customer",
+              "value": "={{ $json.body.asaasCustomerId }}"
+            },
+            {
+              "name": "billingType",
+              "value": "PIX"
+            },
+            {
+              "name": "value",
+              "value": "={{ $json.body.value }}"
+            },
+            {
+              "name": "dueDate",
+              "value": "={{ $now.plus(1, \"days\").format('yyyy-MM-dd') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        460,
+        800
+      ],
+      "id": "39cf02b0-bfae-495a-8b61-56c89738012e",
+      "name": "Create Pix Billing"
+    },
+    {
+      "parameters": {
+        "content": "## ASAAS - Listening Payment Events",
+        "height": 80,
+        "width": 960
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        1420
+      ],
+      "id": "89ae47bd-6b24-421e-909f-8598e6da859d",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "v1/asaas/webhook",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        1580
+      ],
+      "id": "d8ae2408-f1fe-47a6-bd02-a7c0f55c6276",
+      "name": "Webhook5",
+      "webhookId": "3f9241b3-fb44-4394-a2b5-1a4637c76a65"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "v1/asaas/customer",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        460
+      ],
+      "id": "6be51aa6-542b-4759-9d44-e3b9a5cc87f9",
+      "name": "criar_cliente",
+      "webhookId": "829596ea-d20d-4544-a8a2-41ee7c99d4de",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YXr7eKy7abzLW8Iu",
+          "name": "Header Auth - AO"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "v1/asaas/pix",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        800
+      ],
+      "id": "05465e9e-fdeb-46a0-9fc5-f0c49bea45bc",
+      "name": "criar_pix1",
+      "webhookId": "3f9241b3-fb44-4394-a2b5-1a4637c76a65",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YXr7eKy7abzLW8Iu",
+          "name": "Header Auth - AO"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://sandbox.asaas.com/api/v3/customers?cpfCnpj={{ $('cadastrar_cliente').item.json.body.cpfCnpj }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "={{ $json.asaasApiKey }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        460,
+        120
+      ],
+      "id": "14e98354-35af-4771-8f26-70c033af8fa5",
+      "name": "GET Customer"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://n8n.dinastia.uk/webhook/v1/asaas/customer",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ $json.main.asaasCustomer.name }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $('Customer').item.json.main.asaasCustomer.email }}"
+            },
+            {
+              "name": "phone",
+              "value": "={{ $('Customer').item.json.main.asaasCustomer.phone }}"
+            },
+            {
+              "name": "cpfCnpj",
+              "value": "={{ $('Customer').item.json.main.asaasCustomer.cpfCnpj }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1260,
+        0
+      ],
+      "id": "476e3cfb-40b4-4aae-bc8f-23bc52b20744",
+      "name": "criar_cliente1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YXr7eKy7abzLW8Iu",
+          "name": "Header Auth - AO"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## ASAAS - List Payments",
+        "height": 80,
+        "width": 1040
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        1020
+      ],
+      "id": "08dfc940-0db7-4e1e-9edd-4b3043907cad",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "url": "=https://sandbox.asaas.com/api/v3/payments?customer={{ $json.query.asaasCustomerId }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "billingType",
+              "value": "PIX"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "$aact_MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OmZkOTM3NDMxLWY4MTMtNDAzYi05ZWU0LTdlNTZmNGRhMzg5OTo6JGFhY2hfNzE3MTI4YzktYmM1Yi00OTJlLWFiN2EtNzA3M2U5MjExZTMw"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        460,
+        1180
+      ],
+      "id": "81a0378b-2b45-4b16-902b-08c73aac2fa0",
+      "name": "Get_payments"
+    },
+    {
+      "parameters": {
+        "path": "v1/asaas/cliente",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        1180
+      ],
+      "id": "c5df6a2a-6249-48bd-b4fc-9c0717007e83",
+      "name": "consultar_pagamentos",
+      "webhookId": "3f9241b3-fb44-4394-a2b5-1a4637c76a65",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YXr7eKy7abzLW8Iu",
+          "name": "Header Auth - AO"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "v1/asaas/cliente",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        120
+      ],
+      "id": "0854d389-b428-4e83-a545-b0b011616f1d",
+      "name": "cadastrar_cliente",
+      "webhookId": "3f9241b3-fb44-4394-a2b5-1a4637c76a65",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YXr7eKy7abzLW8Iu",
+          "name": "Header Auth - AO"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        920,
+        1180
+      ],
+      "id": "2d82b964-7bd3-4b1e-a75c-5799433e8c1e",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      payments: $input.all().flatMap(item => {\n        const payments = item.json.data || [];\n        return payments\n          .map(payment => ({\n            id: payment.id,\n            value: payment.value,\n            status: payment.status\n          }));\n      })\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        1180
+      ],
+      "id": "a669f597-d41b-4fc1-a992-135328fcc55e",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "putAllInOneKey": false
+      },
+      "type": "n8n-nodes-globals.globalConstants",
+      "typeVersion": 1,
+      "position": [
+        240,
+        120
+      ],
+      "id": "a8ea21d4-3c3d-4e3f-99f4-a184cc2ae087",
+      "name": "Global Constants",
+      "credentials": {
+        "globalConstantsApi": {
+          "id": "R9Mi6ux2enVQNsLH",
+          "name": "Global Constants account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "putAllInOneKey": false
+      },
+      "type": "n8n-nodes-globals.globalConstants",
+      "typeVersion": 1,
+      "position": [
+        240,
+        800
+      ],
+      "id": "7194ff31-eb06-4d20-991d-6c946755328e",
+      "name": "Global Constants1",
+      "credentials": {
+        "globalConstantsApi": {
+          "id": "R9Mi6ux2enVQNsLH",
+          "name": "Global Constants account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "putAllInOneKey": false
+      },
+      "type": "n8n-nodes-globals.globalConstants",
+      "typeVersion": 1,
+      "position": [
+        440,
+        460
+      ],
+      "id": "8ec22158-4445-49f8-8cc1-7967c7cb0c09",
+      "name": "Global Constants2",
+      "credentials": {
+        "globalConstantsApi": {
+          "id": "R9Mi6ux2enVQNsLH",
+          "name": "Global Constants account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-globals.globalConstants",
+      "typeVersion": 1,
+      "position": [
+        240,
+        1180
+      ],
+      "id": "9cb81d55-3641-4909-b5ec-c7517c90ca48",
+      "name": "Global Constants3",
+      "credentials": {
+        "globalConstantsApi": {
+          "id": "R9Mi6ux2enVQNsLH",
+          "name": "Global Constants account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "08f6908c-064f-43ab-8c42-e88da5c3a5c8",
+              "name": "asaasCustomerId",
+              "value": "={{ $json.main.asaasCustomer.data[0].id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1260,
+        200
+      ],
+      "id": "92deaad0-04f4-4e5d-b8c1-98dc70a7a6b9",
+      "name": "tratamento"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "050ebc4c-2729-4c02-909a-511cbb20768e",
+              "name": "asaasCustomerId",
+              "value": "={{ $json.asaasCustomer.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1480,
+        0
+      ],
+      "id": "6e680920-d5d2-4736-ba96-5f4e22f8c5dc",
+      "name": "tratamento1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e6b95429-cd8a-41c5-9c42-29861e406f83",
+              "name": "asaasCustomerId",
+              "value": "={{ $json.body.payment.customer }}",
+              "type": "string"
+            },
+            {
+              "id": "b42b9ed3-3412-44ba-ba2b-1184270008e8",
+              "name": "paymentId",
+              "value": "={{ $json.body.payment.id }}",
+              "type": "string"
+            },
+            {
+              "id": "b705a1fb-a5be-4879-8911-1d1ef4d70122",
+              "name": "paymentStatus",
+              "value": "={{ $json.body.payment.status }}",
+              "type": "string"
+            },
+            {
+              "id": "6b359c4c-2ad5-489e-a96e-1f5349cb73e3",
+              "name": "originalDueDate",
+              "value": "={{ $json.body.payment.originalDueDate }}",
+              "type": "string"
+            },
+            {
+              "id": "9c633bda-5876-4207-99e1-582d8d51b695",
+              "name": "paymentDate",
+              "value": "={{ $json.body.payment.paymentDate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        380,
+        1580
+      ],
+      "id": "b9a6052c-79b7-4821-8652-e31ce77437d1",
+      "name": "tratamento2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c8902729-3356-4ea8-bdc6-c5978f45cd30",
+              "leftValue": "={{ $json.headers['asaas-access-token'] }}",
+              "rightValue": "DINASTIA65465465AWDWADAD654654ADWWAD",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        180,
+        1580
+      ],
+      "id": "86f926f0-ab8e-4253-a060-849551299424",
+      "name": "auth"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://n8n.dinastia.uk/webhook/agente-ofir/v1/agente",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"numero\": \"{{ $('cliente1').item.json.numero }}\",\n  \"mensagem\": \"<paymentStatus>{{ $('tratamento2').item.json.paymentStatus }}</paymentStatus><paymentId>{{ $('tratamento2').item.json.paymentId }}</paymentId>\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        840,
+        1580
+      ],
+      "id": "c176d197-b083-410b-8d63-cd462b2f3897",
+      "name": "rodar_agente_request",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YXr7eKy7abzLW8Iu",
+          "name": "Header Auth - AO"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT *\nFROM ao_clientes\nWHERE DATA ->> 'asaasCustomerId' = '{{ $json.asaasCustomerId }}'\nLIMIT 1;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        600,
+        1580
+      ],
+      "id": "e0206d75-5bb2-4622-9886-4d7a81356f63",
+      "name": "cliente1",
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Customer": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "criar_cliente1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "tratamento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Data": {
+      "main": [
+        [
+          {
+            "node": "Global Constants2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Customer": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET Pix Billing": {
+      "main": [
+        [
+          {
+            "node": "Pix Payment Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pix Payment Data": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Pix Billing": {
+      "main": [
+        [
+          {
+            "node": "GET Pix Billing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "criar_cliente": {
+      "main": [
+        [
+          {
+            "node": "Customer Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "criar_pix1": {
+      "main": [
+        [
+          {
+            "node": "Global Constants1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET Customer": {
+      "main": [
+        [
+          {
+            "node": "Customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "criar_cliente1": {
+      "main": [
+        [
+          {
+            "node": "tratamento1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook5": {
+      "main": [
+        [
+          {
+            "node": "auth",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get_payments": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "consultar_pagamentos": {
+      "main": [
+        [
+          {
+            "node": "Global Constants3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cadastrar_cliente": {
+      "main": [
+        [
+          {
+            "node": "Global Constants",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Global Constants": {
+      "main": [
+        [
+          {
+            "node": "GET Customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Global Constants1": {
+      "main": [
+        [
+          {
+            "node": "Create Pix Billing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Global Constants2": {
+      "main": [
+        [
+          {
+            "node": "Create Customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Global Constants3": {
+      "main": [
+        [
+          {
+            "node": "Get_payments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tratamento": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tratamento1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "auth": {
+      "main": [
+        [
+          {
+            "node": "tratamento2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tratamento2": {
+      "main": [
+        [
+          {
+            "node": "cliente1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cliente1": {
+      "main": [
+        [
+          {
+            "node": "rodar_agente_request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "consultar_pagamentos": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n.dinastia.uk",
+            "user-agent": "PostmanRuntime/7.43.0",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate, br",
+            "authorization": "AEFEFAAEF564654654654AEFFAEAE65465465465AFAEFAEfAE",
+            "cache-control": "no-cache",
+            "postman-token": "24ab4daf-cecb-4128-a4a2-ec2f17303934",
+            "x-forwarded-for": "54.86.50.139",
+            "x-forwarded-host": "n8n.dinastia.uk",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "e4de178bbd57",
+            "x-real-ip": "54.86.50.139"
+          },
+          "params": {},
+          "query": {
+            "asaasCustomerId": "cus_000006452042"
+          },
+          "body": {},
+          "webhookUrl": "https://n8n.dinastia.uk/webhook/v1/asaas/cliente",
+          "executionMode": "production"
+        }
+      }
+    ],
+    "Webhook5": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n.dinastia.uk",
+            "user-agent": "Java/1.8.0_282",
+            "content-length": "1323",
+            "accept": "application/json",
+            "accept-encoding": "gzip",
+            "asaas-access-token": "DINASTIA65465465AWDWADAD654654ADWWAD",
+            "cache-control": "no-cache",
+            "content-type": "application/json",
+            "pragma": "no-cache",
+            "traceparent": "00-67951a80000000003be69fc26f59691d-2d84cba4f1fd11ee-00",
+            "tracestate": "dd=s:0;p:2d84cba4f1fd11ee;t.tid:67951a8000000000",
+            "x-datadog-parent-id": "3279970337927533038",
+            "x-datadog-sampling-priority": "0",
+            "x-datadog-tags": "_dd.p.tid=67951a8000000000",
+            "x-datadog-trace-id": "4316312950321801501",
+            "x-forwarded-for": "54.232.219.32",
+            "x-forwarded-host": "n8n.dinastia.uk",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "9ba83ca7dbb8",
+            "x-real-ip": "54.232.219.32"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "id": "evt_d26e303b238e509335ac9ba210e51b0f&8268660",
+            "event": "PAYMENT_RECEIVED",
+            "dateCreated": "2025-01-25 14:08:16",
+            "payment": {
+              "object": "payment",
+              "id": "pay_m8fl3ufjq5f4x3y3",
+              "dateCreated": "2025-01-24",
+              "customer": "cus_000006468981",
+              "paymentLink": null,
+              "value": 900,
+              "netValue": 899.01,
+              "originalValue": null,
+              "interestValue": null,
+              "description": null,
+              "billingType": "PIX",
+              "confirmedDate": "2025-01-25",
+              "pixTransaction": "a9857dae-a895-4124-a49f-671bc5721c6d",
+              "pixQrCodeId": "ad08031c-11f3-4d68-8a3c-d0efb177542e",
+              "status": "RECEIVED",
+              "dueDate": "2025-01-25",
+              "originalDueDate": "2025-01-25",
+              "paymentDate": "2025-01-25",
+              "clientPaymentDate": "2025-01-25",
+              "installmentNumber": null,
+              "invoiceUrl": "https://sandbox.asaas.com/i/m8fl3ufjq5f4x3y3",
+              "invoiceNumber": "07495128",
+              "externalReference": null,
+              "deleted": false,
+              "anticipated": false,
+              "anticipable": false,
+              "creditDate": "2025-01-25",
+              "estimatedCreditDate": "2025-01-25",
+              "transactionReceiptUrl": "https://sandbox.asaas.com/comprovantes/h/UEFZTUVOVF9SRUNFSVZFRDpwYXlfbThmbDN1ZmpxNWY0eDN5Mw%3D%3D",
+              "nossoNumero": null,
+              "bankSlipUrl": null,
+              "lastInvoiceViewedDate": null,
+              "lastBankSlipViewedDate": null,
+              "discount": {
+                "value": 0,
+                "limitDate": null,
+                "dueDateLimitDays": 0,
+                "type": "FIXED"
+              },
+              "fine": {
+                "value": 0,
+                "type": "FIXED"
+              },
+              "interest": {
+                "value": 0,
+                "type": "PERCENTAGE"
+              },
+              "postalService": false,
+              "custody": null,
+              "refunds": null
+            }
+          },
+          "webhookUrl": "https://n8n.dinastia.uk/webhook/v1/asaas/webhook",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "versionId": "3aaab7c6-6676-4b35-8ea7-30d29ed4921c",
+  "triggerCount": 5,
+  "tags": [
+    {
+      "createdAt": "2025-01-25T18:49:22.184Z",
+      "updatedAt": "2025-01-25T18:49:22.184Z",
+      "id": "iicHbuNZyifHBd20",
+      "name": "Asaas-V1.4"
+    }
+  ]
+}
