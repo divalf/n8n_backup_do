@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-01-24T02:31:29.135Z",
-  "updatedAt": "2025-01-24T02:33:28.347Z",
+  "updatedAt": "2025-01-25T17:59:41.642Z",
   "id": "klzGrMpSjIOjE5Sp",
   "name": "Muti Agente_Ofir-v1-3",
   "active": false,
@@ -1113,8 +1113,7 @@
         1580
       ],
       "id": "862fc2fb-55b4-4fcc-9718-5a1f99548e10",
-      "name": "departamentos",
-      "credentials": {}
+      "name": "departamentos"
     },
     {
       "parameters": {
@@ -1288,18 +1287,6 @@
       ],
       "id": "68ced56d-2b10-4662-ab18-9a1e446c8ab2",
       "name": "notificar_quando_for_humano"
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-globals.globalConstants",
-      "typeVersion": 1,
-      "position": [
-        -920,
-        2300
-      ],
-      "id": "b1294fae-680c-4b5f-b915-cfd216a34358",
-      "name": "Global Constants",
-      "credentials": {}
     },
     {
       "parameters": {
@@ -2308,30 +2295,6 @@
       "name": "tratamento5"
     },
     {
-      "parameters": {},
-      "type": "n8n-nodes-evolution-api.evolutionApi",
-      "typeVersion": 1,
-      "position": [
-        1160,
-        820
-      ],
-      "id": "bd24301a-d0f5-4a68-ba42-099ae52372f7",
-      "name": "Evolution API",
-      "credentials": {}
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-evolution-api.evolutionApi",
-      "typeVersion": 1,
-      "position": [
-        -720,
-        2300
-      ],
-      "id": "4aede318-e068-4991-b344-52622805c3dd",
-      "name": "Evolution API1",
-      "credentials": {}
-    },
-    {
       "parameters": {
         "method": "POST",
         "url": "https://n8n.dinastia.uk/webhook/agente-ofir/v1/secretaria",
@@ -2661,6 +2624,23 @@
       ],
       "id": "450f77d2-69da-48f2-a81f-f978c19d1655",
       "name": "ia_financeiro"
+    },
+    {
+      "parameters": {},
+      "type": "globalConstants",
+      "typeVersion": 1,
+      "position": [
+        -840,
+        2300
+      ],
+      "id": "c2ca2262-31a0-4283-8bca-f13d4ed7c032",
+      "name": "Departamentos",
+      "credentials": {
+        "globalConstantsApi": {
+          "id": "22EGVYLykslaJ8cw",
+          "name": "Global Constants account"
+        }
+      }
     }
   ],
   "connections": {
@@ -3668,6 +3648,17 @@
           }
         ]
       ]
+    },
+    "notificar_quando_for_humano": {
+      "main": [
+        [
+          {
+            "node": "Departamentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -3770,7 +3761,7 @@
       }
     ]
   },
-  "versionId": "01d7527f-9772-451c-9bce-a42f03051927",
+  "versionId": "f3a35d5b-1501-498b-af43-2fa34adf84a3",
   "triggerCount": 0,
   "tags": [
     {
