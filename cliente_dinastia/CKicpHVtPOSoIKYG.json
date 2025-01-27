@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-01-25T22:37:55.491Z",
-  "updatedAt": "2025-01-26T01:46:21.207Z",
+  "updatedAt": "2025-01-26T03:07:32.610Z",
   "id": "CKicpHVtPOSoIKYG",
   "name": "My workflow",
   "active": false,
@@ -814,6 +814,7 @@
     },
     {
       "parameters": {
+        "authentication": "oAuth2",
         "team": "9012646112",
         "space": "90122567961",
         "folderless": true,
@@ -837,7 +838,13 @@
       "position": [
         -420,
         2780
-      ]
+      ],
+      "credentials": {
+        "clickUpOAuth2Api": {
+          "id": "WAtWmoOC1wk7nGoH",
+          "name": "ClickUp - Ofir"
+        }
+      }
     },
     {
       "parameters": {
@@ -3906,7 +3913,7 @@
       }
     ]
   },
-  "versionId": "ccfad133-b437-4f1b-bd90-c3229053dfe1",
+  "versionId": "15de42ab-0864-42b9-82dd-e595783d1170",
   "triggerCount": 0,
   "tags": [
     {
