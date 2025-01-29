@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-01-25T19:42:19.100Z",
-  "updatedAt": "2025-01-26T18:41:26.488Z",
+  "updatedAt": "2025-01-29T00:26:01.456Z",
   "id": "4gVE3gMzU9wLTktU",
   "name": "Multi Agente Ofir - V1.4",
   "active": true,
@@ -3060,43 +3060,6 @@
         },
         "options": {}
       },
-      "id": "80bcd956-33d5-4c0a-8041-8c07e246896c",
-      "name": "respondeWhatsapp",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        1240,
-        880
-      ]
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "={{ $('Webhook').item.json.body.server_url }}/message/sendText/{{ $('Webhook').item.json.body.instance }}\n\n\n",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "apiKey",
-              "value": "={{ $('Webhook').item.json.body.apikey }}"
-            }
-          ]
-        },
-        "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "number",
-              "value": "={{ $('Webhook').item.json.body.data.key.remoteJid }}"
-            },
-            {
-              "name": "text",
-              "value": "={{ $json.output }}"
-            }
-          ]
-        },
-        "options": {}
-      },
       "id": "a2e51a3d-4353-4666-8426-9d43d196ea8e",
       "name": "respondeWhatsapp1",
       "type": "n8n-nodes-base.httpRequest",
@@ -3336,13 +3299,7 @@
             "index": 0
           }
         ],
-        [
-          {
-            "node": "respondeWhatsapp",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "criar_ou_atualizar_lead": {
@@ -4282,8 +4239,8 @@
   },
   "staticData": {
     "node:novo_comentario": {
-      "webhookId": "449510a9-8977-402b-97ac-c307de1fc74a",
-      "secret": "P8A1NVCTZ5LQAC39DCSBHFM3YO3CJ76XRI2KGDKGS67UL3WKPX5X3CVKV1NB4BCF"
+      "webhookId": "3be3e56e-ede6-4c7e-8b1b-cf9bf56b1968",
+      "secret": "B1TO9FZE2FHLW3GPHWL9V7PCSVAWUVUQ38IC06AA7IT3GPYA8XFX67K6IM9NCO5H"
     }
   },
   "meta": {
@@ -4534,7 +4491,7 @@
       }
     ]
   },
-  "versionId": "37213a1a-3975-4f0b-aa1d-c275207d6e56",
+  "versionId": "d499b806-42b6-4f7e-8dc5-2c4828e63536",
   "triggerCount": 9,
   "tags": [
     {
