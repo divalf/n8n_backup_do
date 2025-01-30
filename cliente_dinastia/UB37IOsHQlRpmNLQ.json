@@ -1,0 +1,474 @@
+{
+  "createdAt": "2025-01-30T00:34:02.970Z",
+  "updatedAt": "2025-01-30T01:05:38.037Z",
+  "id": "UB37IOsHQlRpmNLQ",
+  "name": "AdvogaAI - V1",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Manutenção das talelas do database - AdvogAI\n",
+        "height": 380,
+        "width": 680,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "675f02a1-66c8-475a-9b0e-5147c755e5bd",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "rodar para criar tabela \"advogai_clientes\"",
+        "height": 274.7923843700217,
+        "width": 273.1627906976745,
+        "color": 4
+      },
+      "id": "5d25096f-2968-4928-b1db-7df5ee834831",
+      "name": "Sticky Note11",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "content": "rodar para limpar todas as tabelas",
+        "height": 274.7923843700217,
+        "width": 273.1627906976745,
+        "color": 3
+      },
+      "id": "1cc0e60a-eed2-4833-83ac-64b242eed1d2",
+      "name": "Sticky Note12",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        340,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DO $\nBEGIN\n    IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'advogai_clientes') THEN\n        DELETE FROM advogai_clientes;\n    END IF;\nEND $;",
+        "options": {}
+      },
+      "id": "a2ce1cdb-c800-4d1c-ab5d-5af8605a7513",
+      "name": "limpar_todas_as_tabelas",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        420,
+        140
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Drop the table if it exists\nDROP TABLE IF EXISTS advogai_clientes;\n\n-- Create the table\nCREATE TABLE advogai_clientes (\n    cpf VARCHAR PRIMARY KEY,\n    numero_processo VARCHAR,\n    data JSONB DEFAULT '{}',\n    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,\n    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP\n);\n\n-- Create trigger function to automatically update updated_at\nCREATE OR REPLACE FUNCTION update_updated_at_column_advogai_clientes()\nRETURNS TRIGGER AS $\nBEGIN\n    NEW.updated_at = CURRENT_TIMESTAMP;\n    RETURN NEW;\nEND;\n$ language 'plpgsql';\n\n-- Create trigger that calls the function before each update\nCREATE TRIGGER update_updated_at_column_advogai_clientes\n    BEFORE UPDATE ON advogai_clientes\n    FOR EACH ROW\n    EXECUTE FUNCTION update_updated_at_column_advogai_clientes();",
+        "options": {}
+      },
+      "id": "9092aafb-ad23-4616-b1b4-7d2f9fe54d32",
+      "name": "criar_advogai_clientes",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        120,
+        140
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO advogai_clientes (cpf, data, numero_processo)\nVALUES ('{{ $json.CPF }}', '{}'::jsonb, '{{ $json.Numero_do_processo }}')\nON CONFLICT (cpf) \nDO UPDATE SET \n    data = advogai_clientes.data || EXCLUDED.data,\n    numero_processo = '{{ $json.Numero_do_processo }}',\n    updated_at = CURRENT_TIMESTAMP;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        240,
+        460
+      ],
+      "id": "5df6ac1e-87fe-4447-ab5c-bcd401580093",
+      "name": "Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.escavador.com/api/v2/processos/numero_cnj/{{ $('sheets').item.json.Numero_do_processo }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        460,
+        460
+      ],
+      "id": "f02ec266-291a-4b7f-b924-dfe2a991af71",
+      "name": "buscar_numero_cnj",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YXr7eKy7abzLW8Iu",
+          "name": "Header Auth - AO"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO advogai_clientes (cpf, data, numero_processo)\nVALUES ('{{ $('sheets').item.json.CPF }}', '{ \"processo\": {{ JSON.stringify($json) }} }'::jsonb, '{{ $('sheets').item.json.Numero_do_processo }}')\nON CONFLICT (cpf) \nDO UPDATE SET \n    data = advogai_clientes.data || EXCLUDED.data,\n    numero_processo = '{{ $('sheets').item.json.Numero_do_processo }}',\n    updated_at = CURRENT_TIMESTAMP;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        700,
+        460
+      ],
+      "id": "5628c382-d8c9-472c-a93c-4edfcbe84f76",
+      "name": "atualizar_busca_cnj",
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1CYd6GTs700fUw21nZU1o-mrYCiDzpK1QDyEOUuk4nGc",
+          "mode": "list",
+          "cachedResultName": "AdvogaAI",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CYd6GTs700fUw21nZU1o-mrYCiDzpK1QDyEOUuk4nGc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CYd6GTs700fUw21nZU1o-mrYCiDzpK1QDyEOUuk4nGc/edit#gid=0"
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "specifyRange"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        20,
+        460
+      ],
+      "id": "e02aaa77-ab5d-4b42-8bf0-8e8107d8eba8",
+      "name": "sheets",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "sNcvdCd3Ac51fO8e",
+          "name": "Google Sheets Trigger - Ofir"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.escavador.com/api/v2/processos/numero_cnj/{{ $('sheets').item.json.Numero_do_processo }}/movimentacoes",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        940,
+        460
+      ],
+      "id": "a78c657c-0e69-41eb-8e5e-dd9b889f5098",
+      "name": "buscar_movimentacao",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YXr7eKy7abzLW8Iu",
+          "name": "Header Auth - AO"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO advogai_clientes (cpf, data, numero_processo)\nVALUES ('{{ $('sheets').item.json.CPF }}', '{ \"movimentacoes\": {{ JSON.stringify($json.items) }} }'::jsonb, '{{ $('sheets').item.json.Numero_do_processo }}')\nON CONFLICT (cpf) \nDO UPDATE SET \n    data = advogai_clientes.data || EXCLUDED.data,\n    numero_processo = '{{ $('sheets').item.json.Numero_do_processo }}',\n    updated_at = CURRENT_TIMESTAMP;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1200,
+        460
+      ],
+      "id": "ece720cf-d41d-48ba-9432-50548d0a7aac",
+      "name": "atualizar_busca_movimentacoes",
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        20,
+        740
+      ],
+      "id": "685a23cb-0f51-4b7f-8a1e-316dc960e19c",
+      "name": "When chat message received",
+      "webhookId": "ce9443c2-eb48-44da-8692-652a2055dfa6"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "<prompt>\n <role>Assistente jurídica que explica processos de forma clara e objetiva para pessoas sem conhecimento jurídico</role>\n <search_data>Para buscar as informações do processo, pergunte ao cliente qual o cpf dele. Use o cpf na tool \"buscar_processo_juridico\" para buscar todas as informações.</search_data>\n <format>    \n # O que está acontecendo no seu processo? 📜    {Explicar a situação atual e especificar quem ganhou/perdeu, identificando autor e réu}    \n # O que estamos fazendo agora? ⚖    {Explicar as ações atuais, mencionando qual parte está agindo e por quê}    \n # O que vai acontecer depois? 📋    {Explicar próximos passos com expectativas claras}  \n </format>  \n <workflow_types>    \n PROCESSO CIVIL COMUM:    Inicial -> Citação -> Contestação -> Réplica -> Despacho Saneador -> Instrução -> Sentença -> Apelação -> Contrarrazões -> Acórdão -> Recurso Especial/Extraordinário -> Agravo em REsp/RE -> Decisão Final STJ/STF    \n PROCESSO TRABALHISTA:    Inicial -> Notificação -> Audiência Inicial -> Contestação -> Audiência de Instrução -> Sentença -> Recurso Ordinário -> Contrarrazões -> Acórdão TRT -> Recurso de Revista -> Agravo de Instrumento -> Decisão TST    \n EXECUÇÃO FISCAL:    Inicial -> Despacho -> Citação -> Penhora/Garantia -> Embargos à Execução -> Impugnação -> Sentença Embargos -> Leilão/Adjudicação/Pagamento    \n PROCESSO PENAL:    Inquérito -> Denúncia -> Recebimento -> Citação -> Resposta à Acusação -> Audiência de Instrução -> Alegações Finais -> Sentença -> Apelação -> Acórdão -> REsp/RE -> Decisão Final    \n EXECUÇÃO CIVIL:    Inicial Executiva -> Citação -> Penhora -> Impugnação -> Avaliação -> Expropriação -> Pagamento    \n AÇÃO DE ALIMENTOS:    Inicial -> Decisão Liminar -> Citação -> Contestação -> Audiência de Conciliação -> Instrução -> Sentença -> Execução de Alimentos    \n MANDADO DE SEGURANÇA:    Inicial -> Liminar -> Notificação -> Informações -> Parecer MP -> Sentença -> RMS/Apelação -> Acórdão -> REsp/RE    \n JUIZADO ESPECIAL CÍVEL:    Inicial -> Citação -> Audiência de Conciliação -> Contestação -> Instrução e Julgamento -> Sentença -> Recurso Inominado -> Acórdão Turma Recursal    \n PROCESSO PREVIDENCIÁRIO (JUSTIÇA FEDERAL COMUM):    Requerimento Administrativo -> Inicial -> Perícia Médica/Social -> Citação -> Contestação -> Réplica -> Especificação de Provas -> Instrução -> Sentença -> Apelação -> Contrarrazões -> Acórdão TRF -> Recurso Especial/Extraordinário -> Decisão Final STJ/STF    \n PROCESSO PREVIDENCIÁRIO (JUIZADO ESPECIAL FEDERAL):    Requerimento Administrativo -> Inicial -> Perícia Médica/Social -> Citação -> Contestação -> Audiência de Instrução -> Sentença -> Recurso Inominado -> Contrarrazões -> Acórdão Turma Recursal -> Pedido de Uniformização/Recurso Extraordinário -> Decisão Final  \n </workflow_types>  \n <rules>    \n - Usar linguagem extremamente simples, como explicando para alguém leigo    - Criar analogias com situações do dia a dia, mas sem exagero    - Usar tom acolhedor mas profissional    - Evitar completamente linguagem jurídica    - Manter explicações curtas mas completas    - Nunca usar aspas (\"\") para destacar palavras    - Focar apenas em intimações judiciais, ignorando movimentações internas    - Mencionar eventuais suspensões de prazo ou do processo    - Sempre identificar claramente:      * Quem ganhou e quem perdeu em decisões      * Quem está recorrendo      * Quem é autor e quem é réu    - Manter posição de interlocutora neutra, sem usar primeira pessoa  \n </rules>  \n \n <examples>❌ \"Nós entramos com um recurso\" ✅ \"O autor [nome] entrou com um recurso\"❌ \"Estamos esperando o juiz\"✅ \"O processo está aguardando a decisão do juiz\"❌ \"Você perdeu o prazo\"✅ \"O prazo para manifestação expirou\"</examples>  \n <formatting>* Use itálico para ênfase    * Use negrito para ênfase forte     * Use ~tachado~ para informações descontinuadas    * Use blocos de código para informações técnicas    * Use bullets (*) ou (-) para listas não ordenadas    * Use 1. 2. 3. para listas ordenadas    * Use > para citações    * Use quebras duplas de linha (\\n\\n) para legibilidade</formatting>\n </prompt>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        240,
+        740
+      ],
+      "id": "96865b0e-d792-44ea-9259-1571178283d2",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.1,
+      "position": [
+        180,
+        960
+      ],
+      "id": "2d8740a4-6efd-4880-9231-777fc7895d8e",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 50
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        340,
+        960
+      ],
+      "id": "19e19cc9-6f56-4d91-a1b5-d83c208c453a",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use esta ferramenta para buscar todos os dados do processo do cliente. Pergunte qual é o CPF desejado antes de usar esta ferramenta.",
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "advogai_clientes",
+          "mode": "list",
+          "cachedResultName": "advogai_clientes"
+        },
+        "limit": 1,
+        "where": {
+          "values": [
+            {
+              "column": "cpf",
+              "value": "={{ $fromAI(\"cpf\", \"cpf do cliente para buscar os processos\") }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.5,
+      "position": [
+        500,
+        940
+      ],
+      "id": "3daa7873-9e99-4c5b-b648-91600d0dcc8e",
+      "name": "buscar_processo_juridico",
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "buscar_numero_cnj",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "buscar_numero_cnj": {
+      "main": [
+        [
+          {
+            "node": "atualizar_busca_cnj",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "sheets": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "atualizar_busca_cnj": {
+      "main": [
+        [
+          {
+            "node": "buscar_movimentacao",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "buscar_movimentacao": {
+      "main": [
+        [
+          {
+            "node": "atualizar_busca_movimentacoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "buscar_processo_juridico": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "383e1ee6-2393-4234-afcb-b65c503bdf96",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-01-30T00:33:43.622Z",
+      "updatedAt": "2025-01-30T00:33:43.622Z",
+      "id": "CADvKpOydZRXMKXJ",
+      "name": "adv-v1.0"
+    }
+  ]
+}
