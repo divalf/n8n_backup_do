@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-01-25T19:42:19.100Z",
-  "updatedAt": "2025-01-29T00:26:01.456Z",
+  "updatedAt": "2025-01-31T23:54:19.728Z",
   "id": "4gVE3gMzU9wLTktU",
   "name": "Multi Agente Ofir - V1.4",
   "active": true,
@@ -4239,8 +4239,8 @@
   },
   "staticData": {
     "node:novo_comentario": {
-      "webhookId": "3be3e56e-ede6-4c7e-8b1b-cf9bf56b1968",
-      "secret": "B1TO9FZE2FHLW3GPHWL9V7PCSVAWUVUQ38IC06AA7IT3GPYA8XFX67K6IM9NCO5H"
+      "webhookId": "8ec98cdd-d215-4dcc-b3c0-9d66aa4d04e0",
+      "secret": "IZ4QJTG38JN4ETJOO5X929IELCVOKYIOHW4RO9VRNXCB3VZRW0VFRY36LB30BAJU"
     }
   },
   "meta": {
@@ -4491,7 +4491,7 @@
       }
     ]
   },
-  "versionId": "d499b806-42b6-4f7e-8dc5-2c4828e63536",
+  "versionId": "6e91ea1d-ca8d-4257-85cc-bfea4db9de86",
   "triggerCount": 9,
   "tags": [
     {
