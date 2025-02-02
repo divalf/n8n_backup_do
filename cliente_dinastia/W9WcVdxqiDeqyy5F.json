@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-01-21T00:24:24.234Z",
-  "updatedAt": "2025-01-22T03:11:35.604Z",
+  "updatedAt": "2025-02-01T13:46:51.483Z",
   "id": "W9WcVdxqiDeqyy5F",
   "name": "REFRESH - Agendamentos - zero a expert - RAG - V5",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -1200,7 +1200,6 @@
     },
     {
       "parameters": {
-        "model": "gpt-4o",
         "options": {}
       },
       "id": "c5f3fb3b-d972-47aa-82c3-1ba4bee0a552",
@@ -1340,7 +1339,7 @@
         "promptType": "define",
         "text": "={{ $json.texto }}",
         "options": {
-          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que não esteja dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nVocê é uma especialista em classificar mensagens de clientes. \n\nAcesse obrigatoriamente a tool `get_time\" para obter a data atual. \n\nA sua função é identificar a intenção na mensagem deste cliente em apenas 2 categories: \"informacoes\" ou \"agendamentos\".\n\nAnalise sempre o histórico da conversa antes de decidir.\n\nApenas retorne o texto \"informacoes\" ou \"agendamentos\", mais nada.\n\n<EXEMPLO>\nUser: Não precisa mais fazer o reagendamento\nAI: \"agendamentos\"\n\nUser: Que horas são agora?\nAI: \"informacoes\"\n\n</EXEMPLO>\n\n<EXEMPLO>\nHuman: Olá eu gostaria de agendar uma reunião para amanhã as 9h\nAI: agendamentos\nHuman: Olá eu gostaria de agendar uma reunião para amanha as 9h\nAI: Amanhã, dia 25 de novembro, às 9h está disponível. Poderia confirmar esse horário?\nHuman: pode confirmar\nHuman: poderia\nHuman: sim\nHuman: pode ser\nHuman: pois não\nHuman: beleza\nHuman: blz\nHuman: com certeza\n\nHuman: Quais os próximos horários disponíveis você tem?\nAI: agendamentos\n\nHuman: Quais datas sugere?\nAI: agendamentos\n\nAI: agendamentos\n</EXEMPLO>\n</INSTRUCAO>"
+          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>, não de nenhuma  informação que não esteja dentro de <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO>\nVocê é uma especialista em classificar mensagens de clientes. \n\nAcesse obrigatoriamente a tool `get_time\" para obter a data atual. \n\nA sua função é identificar a intenção na mensagem deste cliente em apenas 2 categories: \"informacoes\" ou \"agendamentos\".\n\nAnalise sempre o histórico da conversa antes de decidir.\n\nQualquer informação do usuário envolvendo data, dia da semana ou mês, deve retornar \"agendamentos\".\n\nApenas retorne o texto \"informacoes\" ou \"agendamentos\", mais nada.\n\n<EXEMPLO>\nUser: Não precisa mais fazer o reagendamento\nAI: \"agendamentos\"\n\nUser: Amanhã é domingo. Correto?\nAI: \"agendamentos\"\n\nUser: Que horas são agora?\nAI: \"informacoes\"\n\n</EXEMPLO>\n\n<EXEMPLO>\nHuman: Olá eu gostaria de agendar uma reunião para amanhã as 9h\nAI: agendamentos\nHuman: Olá eu gostaria de agendar uma reunião para amanha as 9h\nAI: Amanhã, dia 25 de novembro, às 9h está disponível. Poderia confirmar esse horário?\nHuman: pode confirmar\nHuman: poderia\nHuman: sim\nHuman: pode ser\nHuman: pois não\nHuman: beleza\nHuman: blz\nHuman: com certeza\n\nHuman: Quais os próximos horários disponíveis você tem?\nAI: agendamentos\n\nHuman: Quais datas sugere?\nAI: agendamentos\n\nAI: agendamentos\n</EXEMPLO>\n</INSTRUCAO>"
         }
       },
       "id": "1b2c327c-6cfc-423f-bca7-6746df3a543a",
@@ -2354,8 +2353,8 @@
       }
     ]
   },
-  "versionId": "c4c25620-4f1f-4952-8209-c6ba1790ef70",
-  "triggerCount": 0,
+  "versionId": "ba165120-90d6-4f71-85d5-1cd1524bdb51",
+  "triggerCount": 1,
   "tags": [
     {
       "createdAt": "2025-01-18T12:45:43.202Z",
