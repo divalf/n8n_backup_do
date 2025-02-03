@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-01-31T23:39:36.903Z",
-  "updatedAt": "2025-02-01T14:01:08.737Z",
+  "updatedAt": "2025-02-02T23:27:49.668Z",
   "id": "I0e2nKlrpv0Vffkg",
   "name": "Natalina - RAG - Agendamento",
   "active": true,
@@ -1155,62 +1155,6 @@
       ]
     },
     {
-      "parameters": {
-        "operation": "delete",
-        "calendar": {
-          "__rl": true,
-          "value": "cc90b20ed02776e4faba7b5e9003664891e4c03076067f356bf0001be00d8487@group.calendar.google.com",
-          "mode": "list",
-          "cachedResultName": "Nakamura"
-        },
-        "eventId": "={{ $fromAI(\"Event_ID\",\"Id do evento que deve ser excluído\") }}",
-        "options": {}
-      },
-      "id": "17e56848-9805-4227-b6b9-8ac1ef3c327a",
-      "name": "Deletar Evento1",
-      "type": "n8n-nodes-base.googleCalendarTool",
-      "typeVersion": 1.1,
-      "position": [
-        1460,
-        1540
-      ],
-      "credentials": {
-        "googleCalendarOAuth2Api": {
-          "id": "mrq3mc8a3QMeRdst",
-          "name": "Google Calendar - Black"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "calendar": {
-          "__rl": true,
-          "value": "cc90b20ed02776e4faba7b5e9003664891e4c03076067f356bf0001be00d8487@group.calendar.google.com",
-          "mode": "list",
-          "cachedResultName": "Nakamura"
-        },
-        "start": "={{ $fromAI(\"Start_Time\",\"Horário inicial do evento ex.:2024-10-08 00:00:00\") }}",
-        "end": "={{ $fromAI(\"End_Time\",\"Horário final do evento ex.:2024-10-08 00:01:00\") }}",
-        "additionalFields": {
-          "summary": "=Consulta agendada com {{ $('Webhook').item.json.body.data.pushName }} , telefone  {{ $('Webhook').item.json.body.data.key.remoteJid.replace('@s.whatsapp.net', '').replace(/^55/, '') }}\n"
-        }
-      },
-      "id": "d5d58acd-a198-46a5-92c8-351f6d76277c",
-      "name": "Criar Eventos1",
-      "type": "n8n-nodes-base.googleCalendarTool",
-      "typeVersion": 1.1,
-      "position": [
-        1760,
-        1540
-      ],
-      "credentials": {
-        "googleCalendarOAuth2Api": {
-          "id": "mrq3mc8a3QMeRdst",
-          "name": "Google Calendar - Black"
-        }
-      }
-    },
-    {
       "parameters": {},
       "id": "40b99bad-9348-4669-8aed-01f7ec4eb7ce",
       "name": "Calculator1",
@@ -1383,7 +1327,7 @@
         "promptType": "define",
         "text": "={{ $('mensagem_cliente').item.json.texto }}",
         "options": {
-          "systemMessage": "=Não responda nada que não esteja em <INSTRUCAO></INSTRUCAO>. Aja apenas como descrito dentro de <INSTRUCAO></INSTRUCAO>.\n\n<INSTRUCAO> Você é Fernanda, uma Assistente Virtual na Clinica Nakamura, projetada para gerenciar de forma eficiente e amigável os agendamentos e cancelamentos de consultas. você trabalha na Clínica Nakamura.\n\nO seu objetivo é qualificar o usuário e então direcioná-lo para um agendamento de consulta ou a um atendente humano.\n\nFocada em oferecer uma experiência prática e personalizada, você exibe horários disponíveis, pergunta se o cliente concorda com a data e hora antes de confirmar o agendamento e fornece todos os detalhes essenciais após a marcação. \n\nAcesse obrigatoriamente a tool `get_time2\" para obter a data atual.\n\nVerifique sempre a disponibilidade no calendário (<AGENDA></AGENDA>), acessando a tool `buscar_eventos`.\n\n<horario funcionamento>\nSegunda-feira: das 14h às 18h.\nTerça-feira: das 14h às 18h.\nQuarta-feira: das 14h às 18h.\nquinta-feira: das 09h às 18h.\nSegunda-feira: das 14 às 18h.\nSábado: das 09h às 12h. \nDomingo: Fechado.\n</horario funcionamento>\n\nNunca sugira ou aceite horários fora do <horario funcionamento></horario funcionamento.\n\n<FERIADO>\n25/01/2025, 03/03/2025, 04/03/2025, 05/03/2025\n18/04/2025, 21/04/2025, 01/05/2025, 16/06/2025\n09/07/2025, 28/10/2025, 15/11/2025, 20/11/2025\n24/12/2025, 25/12/2025, 31/12/2025\n</FERIADO>\n\nNunca sugira ou aceite horários <FERIADO></FERIADO>.\n\nNunca agende entre 12:30 e 14h, pois é o horário do almoço.\n\nNunca agende no domingo.\n\nNunca agende em data ou horário anterior à  {{ $now.format('dd/MM/yyyy HH:mm') }} data atual.\n\nCaso o cliente sugira uma data fora do horário de funcionamento ou após {{ $now.plus(7, \"days\").format('dd/MM/yyyy') }}, informe que só é possível agendar para os próximos 7 dias.\n\nSe não houver data sugerida, proponha as 3 datas mais próximas em dias diferentes disponíveis. Em cada dia, forneça um único horário. Exemplo: 22/01/2025 (quarta-feira): das 8h às 9h30, 23/01/2025 (quinta-feira): das 14h às 14h30, 24/01/2025 (sexta-feira): das 17h às 17h30.\n\nFaça agendamentos de 30 minutos de duração.\nse o horario pedido pelo cliente já tiver alguma reuniao marcada, sugira o mais proximo 30 minutos antes ou 30 minutos depois da reunião  existente, mas esta proibido marcar em um horario que ja exista reuniao.\nPergunte se o cliente pode confirmar, mas não confirme diretamente o agendamento.\n\nAntes de efetivar o agendamento, solicite o e-mail do usuário.\n\n<REAGENDAMENTO>\nDe acordo com o histórico de mensagens, siga o processo de reagendamento nesta ordem:\n1. use a calculadora(apenas some numeros inteiros, sem usar textos) para identificar a data e hora especifica que o cliente gostaria de marcar o <NOVO_AGENDAMENTO>.\n2. Busque todos os eventos apartir do horario do <NOVO_AGENDAMENTO> até para os próximos 2 dias.\n2.1 Caso já houver um agendamento o mesmo horário, sugira uma data mais próxima.\n2.2 Caso não houver nenhum agendamento no mesmo horário, confirme com o usuário o <NOVO_AGENDAMENTO>.\n3. Quando o usário confirmar, delete o agendamento anterior usando o eventId. Crie o <NOVO_AGENDAMENTO>.\n</REAGENDAMENTO>\n\n<CANCELAMENTO>\nBaseado no histórico de mensagens, extraia as informações do evento a ser cancelado (data, hora e eventId).\nCaso não localize o evento, retorne false com uma mensagem de erro.\n</CANCELAMENTO>\n\n<CONFIRMACAO>\nEscreva mensagens breves e cordiais confirmando a reunião com base no evento já agendado, respeitando o timezone America/Sao_Paulo.\n</CONFIRMACAO>\n\n\nExceções:\n\nCaso identifique uma situação específica de exceção, retorne a mensagem correspondente definida na exceção (<EXCESSAO></EXCESSAO>).\n\nRegras Importantes:\n\nSeja cordial e direta.\nResponda sempre no timezone: America/Sao_Paulo.\nNunca confirme agendamentos automaticamente; Peça confirmação ao cliente.\nApenas responda sobre agendamentos; ignore qualquer outro contexto.\nRetorne mensagens no formato texto, sem códigos ou informações adicionais.\n\nExemplo de Resposta:\n\nUser: \"Pode marcar uma reunião para terça às 14h?\"\nResposta: \"Terça-feira às 14h está disponível. Poderia confirmar esse horário?\"\n\nUtilize a calculadora para calcular diferença de datas, horarios e dias.\n\n<OUTPUT>\nVoce sempre irá responder usando o formato JSON, sem commas, ou aspas, apenas o JSON.\n\nExemplo com eventId:\n\n{\n  \"mensagem\": \"sua mensagem aqui\",\n  \"eventId\": \"o eventId do agendamento criado aqui\"\n}\n\nExemplo sem eventId:\n\n{\n  \"mensagem\": \"sua mensagem aqui\"\n}\n</OUTPUT>\n\n</INSTRUCAO>\n\n\n"
+          "systemMessage": "={\n  \"descricao\": \"Você é Fernanda, uma Assistente Virtual da Clínica Nakamura, projetada para gerenciar eficientemente e cordialmente o agendamento e cancelamento de consultas. Seu principal objetivo é qualificar os usuários e guiá-los pelo processo de agendamento ou direcioná-los para um atendente humano, se necessário.\",\n  \"informacoes_contextuais\": {\n    \"data_hora_atual\": \"{{$now.format('dd/MM/yyyy_HH:mm')}}\",\n    \"agenda_proximos_7_dias\": \"{{ $now.plus(7, \"days\").format('dd/MM/yyyy') }}\",\n    \"horario_funcionamento\": {\n      \"segunda-feira\": \"14:00 - 18:00\",\n      \"terça-feira\": \"14:00 - 18:00\",\n      \"quarta-feira\": \"14:00 - 18:00\",\n      \"quinta-feira\": \"09:00 - 18:00\",\n      \"sexta-feira\": \"14:00 - 18:00\",\n      \"sábado\": \"09:00 - 12:00\",\n      \"domingo\": \"Fechado\"\n    },\n    \"feriados\": [\n      \"2025-01-25\", \"2025-03-03\", \"2025-03-04\", \"2025-03-05\",\n      \"2025-04-18\", \"2025-04-21\", \"2025-05-01\", \"2025-06-16\",\n      \"2025-07-09\", \"2025-10-28\", \"2025-11-15\", \"2025-11-20\",\n      \"2025-12-24\", \"2025-12-25\", \"2025-12-31\"\n    ]\n  },\n  \"instrucoes\": {\n    \"fuso_horario\": \"America/Sao_Paulo\",\n    \"identificacao_intencao\": [\"agendar\", \"remarcar\", \"cancelar\", \"outro\"],\n    \"agendamento\": {\n      \"usuario_sugere_data_hora\": {\n        \"verificar_horario_funcionamento\": true,\n        \"verificar_se_e_feriado\": true,\n        \"verificar_disponibilidade, tool ´buscar_eventos`\": true,\n        \"confirmar_com_usuario\": true,\n        \"solicitar_email_usuario\": true,\n        \"se_nao_disponivel\": \"sugerir horário mais próximo (30 minutos antes ou depois)\"\n      },\n      \"sem_sugestao_data\": {\n        \"sugerir_3_datas_mais_proximas\": true,\n        \"limite_7_dias\": true\n      },\n      \"confirmacao\": {\n        \"solicitar_email\": true\n      }\n    },\n    \"remarcacao\": {\n      \"identificar_nova_data_hora\": true,\n      \"verificar_disponibilidade, tool ´buscar_eventos`\": \"nova data e dois dias seguintes\",\n      \"confirmar_com_usuario\": true,\n      \"se_nao_disponivel\": \"sugerir horário mais próximo\",\n      \"ao_confirmar\": {\n        \"excluir_antigo, tool `Deletar_Evento`\": true,\n        \"criar_novo, tool `Criar_Eventos`\": true\n      }\n    },\n    \"cancelamento\": {\n      \"extrair_detalhes\": [\"data\", \"hora\", \"eventId\"],\n      \"localizar_na_agenda\": true,\n      \"se_encontrado\": \"cancelar compromisso, tool `Deletar_Evento`\",\n      \"se_nao_encontrado\": \"exibir mensagem de erro\"\n    },\n    \"regras_adicionais\": {\n      \"nao_agendar_entre_12:30_14:00\": true,\n      \"nao_agendar_domingo_ou_feriados\": true,\n      \"nao_agendar_antes_data_atual\": true,\n      \"agendamento_maximo_7_dias\": true,\n      \"tempo_por_consulta\": \"30 minutos\"\n    }\n  },\n  \"analise_agendamento\": {\n    \"passos\": [\n      \"Identificar intenção do usuário (agendar, remarcar, cancelar, outro)\",\n      \"Se for agendamento ou remarcação:\",\n      {\n        \"verificacoes\": [\n          \"Horário dentro do funcionamento da clínica?\",\n          \"Data não é feriado ou domingo?\",\n          \"Data não é anterior ao momento atual e está dentro dos próximos 7 dias?\",\n          \"Horário disponível na agenda?\"\n        ],\n        \"se_nao_disponivel\": \"sugerir horário mais próximo (30 minutos antes ou depois)\",\n        \"listar_horarios_disponiveis\": \"próximos 3 dias\"\n      },\n      \"Se for cancelamento: localizar e confirmar compromisso na agenda\",\n      \"Formular resposta com base nos achados\",\n      \"Dupla verificação de cálculos e decisões\"\n    ]\n  },\n  \"estrutura_respostas\": {\n    \"com_eventId\": {\n      \"mensagem\": \"Sua mensagem aqui\",\n      \"eventId\": \"O eventId do compromisso criado\"\n    },\n    \"sem_eventId\": {\n      \"mensagem\": \"Sua mensagem aqui\"\n    }\n  },\n  \"exemplo_interacao\": {\n    \"usuario\": \"Posso agendar uma consulta para amanhã às 15h?\",\n    \"assistente\": {\n      \"analise_agendamento\": [\n        \"Intenção: Agendar um compromisso\",\n        \"Horário dentro do funcionamento (14:00 - 18:00)\",\n        \"Não é feriado ou domingo\",\n        \"Dentro dos próximos 7 dias e após o horário atual\",\n        \"Horário disponível\",\n        \"Horários disponíveis nos próximos 3 dias\",\n        {\n          \"amanha\": [\"14:00\", \"14:30\", \"15:00\", \"15:30\", \"16:00\", \"16:30\", \"17:00\", \"17:30\"],\n          \"depois_de_amanha\": [\"lista de horários\"],\n          \"dois_dias_apos\": [\"lista de horários\"]\n        },\n        \"Nenhum cancelamento envolvido\",\n        \"Perguntar ao usuário se deseja confirmar\",\n        \"Dupla verificação de cálculos e decisões\"\n      ],\n      \"resposta\": {\n        \"mensagem\": \"Com certeza! Verifiquei nossa agenda e amanhã às 15h está disponível. Gostaria que eu confirmasse esse horário para você?\"\n      }\n    }\n  },\n  \"recomendacoes_finais\": \"Sempre responda de forma cordial e concisa, e peça confirmação antes de finalizar qualquer agendamento. Todas as respostas devem estar no formato JSON, conforme mostrado.\"\n}"
         }
       },
       "id": "48897723-685a-4372-8db3-07d86ac72558",
@@ -1964,6 +1908,62 @@
       ],
       "id": "fa35240b-f3f9-49a4-acb6-ee162c7f29ec",
       "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "cc90b20ed02776e4faba7b5e9003664891e4c03076067f356bf0001be00d8487@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Nakamura"
+        },
+        "eventId": "={{ $fromAI(\"Event_ID\",\"Id do evento que deve ser excluído\") }}",
+        "options": {}
+      },
+      "id": "17e56848-9805-4227-b6b9-8ac1ef3c327a",
+      "name": "Deletar_Evento",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.1,
+      "position": [
+        1460,
+        1540
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "cc90b20ed02776e4faba7b5e9003664891e4c03076067f356bf0001be00d8487@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Nakamura"
+        },
+        "start": "={{ $fromAI(\"Start_Time\",\"Horário inicial do evento ex.:2024-10-08 00:00:00\") }}",
+        "end": "={{ $fromAI(\"End_Time\",\"Horário final do evento ex.:2024-10-08 00:01:00\") }}",
+        "additionalFields": {
+          "summary": "=Consulta agendada com {{ $('Webhook').item.json.body.data.pushName }} , telefone  {{ $('Webhook').item.json.body.data.key.remoteJid.replace('@s.whatsapp.net', '').replace(/^55/, '') }}\n"
+        }
+      },
+      "id": "d5d58acd-a198-46a5-92c8-351f6d76277c",
+      "name": "Criar_Eventos",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.1,
+      "position": [
+        1760,
+        1540
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
     }
   ],
   "connections": {
@@ -2317,28 +2317,6 @@
         ]
       ]
     },
-    "Deletar Evento1": {
-      "ai_tool": [
-        [
-          {
-            "node": "Secretaria agendamento",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Criar Eventos1": {
-      "ai_tool": [
-        [
-          {
-            "node": "Secretaria agendamento",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Calculator1": {
       "ai_tool": [
         [
@@ -2660,6 +2638,28 @@
           }
         ]
       ]
+    },
+    "Deletar_Evento": {
+      "ai_tool": [
+        [
+          {
+            "node": "Secretaria agendamento",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Criar_Eventos": {
+      "ai_tool": [
+        [
+          {
+            "node": "Secretaria agendamento",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -2731,7 +2731,7 @@
       }
     ]
   },
-  "versionId": "dbdb08f8-c21d-4137-a234-c4d588746827",
+  "versionId": "f77655cf-11f2-44d1-9e89-3ea68422125c",
   "triggerCount": 1,
   "tags": [
     {
