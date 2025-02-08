@@ -1,0 +1,194 @@
+{
+  "createdAt": "2025-02-07T22:40:40.182Z",
+  "updatedAt": "2025-02-07T22:51:51.298Z",
+  "id": "VYBf9nBsuTxUPvO2",
+  "name": "ImobiAI - V1",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        340
+      ],
+      "id": "b1867dd5-9473-4289-8053-2b98df2a5ad4",
+      "name": "When chat message received",
+      "webhookId": "732229e5-2c5c-4f9f-92ec-daebfdf12e0e"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=# Função\nVocê é uma corretora de imóveis chamada ImobiAI, sua função é pesquisar imóveis para o cliente usando a tool \"buscar_imoveis\".\n\n# Como criar as SQL para usar a tool \"buscar_imoveis\".\n<buscar_imoveis>\nDe acordo com a função abaixo:\nCREATE OR REPLACE FUNCTION search_properties(\n    p_realty_type INTEGER DEFAULT NULL,\n    p_realty_transaction INTEGER DEFAULT NULL,\n    p_realty_observation INTEGER DEFAULT NULL,\n    p_min_price DECIMAL DEFAULT NULL,\n    p_max_price DECIMAL DEFAULT NULL,\n    p_min_bedrooms INTEGER DEFAULT NULL,\n    p_max_bedrooms INTEGER DEFAULT NULL,\n    p_min_bathrooms INTEGER DEFAULT NULL,\n    p_max_bathrooms INTEGER DEFAULT NULL,\n    p_min_parkings INTEGER DEFAULT NULL,\n    p_max_parkings INTEGER DEFAULT NULL,\n    p_min_builtarea DECIMAL DEFAULT NULL,\n    p_max_builtarea DECIMAL DEFAULT NULL,\n    p_min_totalarea DECIMAL DEFAULT NULL,\n    p_max_totalarea DECIMAL DEFAULT NULL,\n    p_state VARCHAR DEFAULT NULL,\n    p_city VARCHAR DEFAULT NULL,\n    p_district VARCHAR DEFAULT NULL,\n    p_particulars TEXT[] DEFAULT NULL,\n    p_status INTEGER DEFAULT 1  -- Default to active listings\n)\nRETURNS TABLE (\n    realty_id INTEGER,\n    realty_title VARCHAR,\n    realty_price DECIMAL,\n    realty_type INTEGER,\n    realty_transaction INTEGER,\n    realty_observation INTEGER,\n    realty_bedrooms DECIMAL,\n    realty_bathrooms DECIMAL,\n    realty_parkings DECIMAL,\n    realty_builtarea DECIMAL,\n    realty_totalarea DECIMAL,\n    realty_state VARCHAR,\n    realty_city VARCHAR,\n    realty_district VARCHAR,\n    realty_particulars TEXT,\n    realty_date TIMESTAMP,\n    realty_status INTEGER,\n    total_images BIGINT\n) AS $\nBEGIN\n    RETURN QUERY\n    WITH property_images AS (\n        SELECT \n            pg.realty_id,\n            COUNT(pg.id) as image_count\n        FROM ws_properties_gallery pg\n        GROUP BY pg.realty_id\n    )\n    SELECT \n        p.realty_id,\n        p.realty_title,\n        p.realty_price,\n        p.realty_type,\n        p.realty_transaction,\n        p.realty_observation,\n        p.realty_bedrooms,\n        p.realty_bathrooms,\n        p.realty_parkings,\n        p.realty_builtarea,\n        p.realty_totalarea,\n        p.realty_state,\n        p.realty_city,\n        p.realty_district,\n        p.realty_particulars,\n        p.realty_date,\n        p.realty_status,\n        COALESCE(pi.image_count, 0) as total_images\n    FROM \n        ws_properties p\n    LEFT JOIN property_images pi ON p.realty_id = pi.realty_id\n    WHERE \n        (p_realty_type IS NULL OR p.realty_type = p_realty_type)\n        AND (p_realty_transaction IS NULL OR p.realty_transaction = p_realty_transaction)\n        AND (p_realty_observation IS NULL OR p.realty_observation = p_realty_observation)\n        AND (p_min_price IS NULL OR p.realty_price >= p_min_price)\n        AND (p_max_price IS NULL OR p.realty_price <= p_max_price)\n        AND (p_min_bedrooms IS NULL OR p.realty_bedrooms >= p_min_bedrooms)\n        AND (p_max_bedrooms IS NULL OR p.realty_bedrooms <= p_max_bedrooms)\n        AND (p_min_bathrooms IS NULL OR p.realty_bathrooms >= p_min_bathrooms)\n        AND (p_max_bathrooms IS NULL OR p.realty_bathrooms <= p_max_bathrooms)\n        AND (p_min_parkings IS NULL OR p.realty_parkings >= p_min_parkings)\n        AND (p_max_parkings IS NULL OR p.realty_parkings <= p_max_parkings)\n        AND (p_min_builtarea IS NULL OR p.realty_builtarea >= p_min_builtarea)\n        AND (p_max_builtarea IS NULL OR p.realty_builtarea <= p_max_builtarea)\n        AND (p_min_totalarea IS NULL OR p.realty_totalarea >= p_min_totalarea)\n        AND (p_max_totalarea IS NULL OR p.realty_totalarea <= p_max_totalarea)\n        AND (p_state IS NULL OR p.realty_state ILIKE p_state)\n        AND (p_city IS NULL OR p.realty_city ILIKE p_city)\n        AND (p_district IS NULL OR p.realty_district ILIKE p_district)\n        AND (p_particulars IS NULL OR p.realty_particulars @> ANY(SELECT unnest(p_particulars)::text))\n        AND p.realty_status = p_status\n    ORDER BY p.realty_date DESC;\nEND;\n$ LANGUAGE plpgsql;\n\nUse os exemplos abaixo para chamar a tool \"buscar_imoveis\":\n\nExemplos:\n-- Example 1: Basic property type and transaction search\n-- Search for apartments (type 1) for rent (transaction 1)\nSELECT * FROM search_properties(\n    p_realty_type := 1,\n    p_realty_transaction := 1\n);\n\n-- Example 2: Location-based search with price range\n-- Find properties in Sorocaba between 300k and 800k\nSELECT * FROM search_properties(\n    p_city := 'Sorocaba',\n    p_min_price := 300000,\n    p_max_price := 800000\n);\n\n-- Example 3: Complex search with multiple criteria\n-- Search for houses with specific features and size\nSELECT * FROM search_properties(\n    p_realty_type := 3,  -- Houses\n    p_realty_transaction := 2,  -- For sale\n    p_min_bedrooms := 3,\n    p_min_bathrooms := 2,\n    p_min_builtarea := 150,\n    p_particulars := ARRAY['piscina', 'churrasqueira'],\n    p_state := 'SP'\n);\n\n-- Example 4: Search for properties with specific observation status\n-- Find featured properties (observation = 1) with minimum requirements\nSELECT * FROM search_properties(\n    p_realty_observation := 1,  -- Featured properties\n    p_min_totalarea := 100,\n    p_min_parkings := 2\n);\n\n-- Example 5: Search for temporary rentals\n-- Find vacation properties with specific amenities\nSELECT * FROM search_properties(\n    p_realty_transaction := 3,  -- Temporary rental\n    p_particulars := ARRAY['piscina', 'sala de jogos', 'churrasqueira']\n);\n\n-- Example 6: Commercial properties search\n-- Find commercial spaces for rent\nSELECT * FROM search_properties(\n    p_realty_type := ANY(ARRAY[4, 6, 7]),  -- Warehouse, Building, or Office\n    p_realty_transaction := 1,  -- For rent\n    p_min_builtarea := 200\n);\n\n-- Example 7: New listings search\n-- Find recently added properties in specific districts\nSELECT * FROM search_properties(\n    p_district := ANY(ARRAY['Campolim', 'Centro']),\n    p_realty_observation := 2  -- New launches\n)\nORDER BY realty_date DESC\nLIMIT 10;\n\n-- Example 8: Investment properties search\n-- Find properties with potential for investment\nSELECT * FROM search_properties(\n    p_min_apartments := 2,\n    p_min_totalarea := 500,\n    p_realty_transaction := 2  -- For sale\n);\n\n-- Example 9: Luxury properties search\n-- Find high-end properties with premium amenities\nSELECT * FROM search_properties(\n    p_min_price := 1000000,\n    p_min_bedrooms := 4,\n    p_particulars := ARRAY['piscina', 'área gourmet', 'academia'],\n    p_min_builtarea := 300\n);\n\n-- Example 10: Area-specific search with property count\n-- Find properties in specific cities and count them by type\nWITH search_results AS (\n    SELECT * FROM search_properties(\n        p_city := ANY(ARRAY['Sorocaba', 'Campinas']),\n        p_realty_status := 1\n    )\n)\nSELECT \n    realty_type,\n    COUNT(*) as property_count,\n    AVG(realty_price) as avg_price\nFROM search_results\nGROUP BY realty_type\nORDER BY property_count DESC;\n\n-- Example 11: Properties with images search\n-- Find properties with a minimum number of images\nWITH search_results AS (\n    SELECT * FROM search_properties(\n        p_realty_transaction := 2  -- For sale\n    )\n)\nSELECT *\nFROM search_results\nWHERE total_images >= 5\nORDER BY total_images DESC;\n\n-- Example 12: Combined status and observation search\n-- Find available properties with specific status combinations\nSELECT * FROM search_properties(\n    p_realty_observation := ANY(ARRAY[1, 2]),  -- Featured or New Launch\n    p_realty_status := 1,  -- Active listings\n    p_min_price := 200000,\n    p_max_price := 1000000\n)\nORDER BY realty_price ASC;\n</buscar_imoveis>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        220,
+        340
+      ],
+      "id": "3c66d49b-76e6-4b03-813e-d1fc6be170c4",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.1,
+      "position": [
+        160,
+        520
+      ],
+      "id": "212ca067-8179-4337-a917-6833d0a742a8",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        320,
+        540
+      ],
+      "id": "544e4786-8275-4c67-a033-f414d85cd08c",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {
+        "content": "Criar função search_properties",
+        "height": 260,
+        "width": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "00b83165-41cf-4c8c-978c-2c7d0be7c5bc",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Function to search properties with flexible parameters\nCREATE OR REPLACE FUNCTION search_properties(\n    p_realty_type INTEGER DEFAULT NULL,\n    p_realty_transaction INTEGER DEFAULT NULL,\n    p_realty_observation INTEGER DEFAULT NULL,\n    p_min_price DECIMAL DEFAULT NULL,\n    p_max_price DECIMAL DEFAULT NULL,\n    p_min_bedrooms INTEGER DEFAULT NULL,\n    p_max_bedrooms INTEGER DEFAULT NULL,\n    p_min_bathrooms INTEGER DEFAULT NULL,\n    p_max_bathrooms INTEGER DEFAULT NULL,\n    p_min_parkings INTEGER DEFAULT NULL,\n    p_max_parkings INTEGER DEFAULT NULL,\n    p_min_builtarea DECIMAL DEFAULT NULL,\n    p_max_builtarea DECIMAL DEFAULT NULL,\n    p_min_totalarea DECIMAL DEFAULT NULL,\n    p_max_totalarea DECIMAL DEFAULT NULL,\n    p_state VARCHAR DEFAULT NULL,\n    p_city VARCHAR DEFAULT NULL,\n    p_district VARCHAR DEFAULT NULL,\n    p_particulars TEXT[] DEFAULT NULL,\n    p_status INTEGER DEFAULT 1  -- Default to active listings\n)\nRETURNS TABLE (\n    realty_id INTEGER,\n    realty_title VARCHAR,\n    realty_price DECIMAL,\n    realty_type INTEGER,\n    realty_transaction INTEGER,\n    realty_observation INTEGER,\n    realty_bedrooms DECIMAL,\n    realty_bathrooms DECIMAL,\n    realty_parkings DECIMAL,\n    realty_builtarea DECIMAL,\n    realty_totalarea DECIMAL,\n    realty_state VARCHAR,\n    realty_city VARCHAR,\n    realty_district VARCHAR,\n    realty_particulars TEXT,\n    realty_date TIMESTAMP,\n    realty_status INTEGER,\n    total_images BIGINT\n) AS $\nBEGIN\n    RETURN QUERY\n    WITH property_images AS (\n        SELECT \n            pg.realty_id,\n            COUNT(pg.id) as image_count\n        FROM ws_properties_gallery pg\n        GROUP BY pg.realty_id\n    )\n    SELECT \n        p.realty_id,\n        p.realty_title,\n        p.realty_price,\n        p.realty_type,\n        p.realty_transaction,\n        p.realty_observation,\n        p.realty_bedrooms,\n        p.realty_bathrooms,\n        p.realty_parkings,\n        p.realty_builtarea,\n        p.realty_totalarea,\n        p.realty_state,\n        p.realty_city,\n        p.realty_district,\n        p.realty_particulars,\n        p.realty_date,\n        p.realty_status,\n        COALESCE(pi.image_count, 0) as total_images\n    FROM \n        ws_properties p\n    LEFT JOIN property_images pi ON p.realty_id = pi.realty_id\n    WHERE \n        (p_realty_type IS NULL OR p.realty_type = p_realty_type)\n        AND (p_realty_transaction IS NULL OR p.realty_transaction = p_realty_transaction)\n        AND (p_realty_observation IS NULL OR p.realty_observation = p_realty_observation)\n        AND (p_min_price IS NULL OR p.realty_price >= p_min_price)\n        AND (p_max_price IS NULL OR p.realty_price <= p_max_price)\n        AND (p_min_bedrooms IS NULL OR p.realty_bedrooms >= p_min_bedrooms)\n        AND (p_max_bedrooms IS NULL OR p.realty_bedrooms <= p_max_bedrooms)\n        AND (p_min_bathrooms IS NULL OR p.realty_bathrooms >= p_min_bathrooms)\n        AND (p_max_bathrooms IS NULL OR p.realty_bathrooms <= p_max_bathrooms)\n        AND (p_min_parkings IS NULL OR p.realty_parkings >= p_min_parkings)\n        AND (p_max_parkings IS NULL OR p.realty_parkings <= p_max_parkings)\n        AND (p_min_builtarea IS NULL OR p.realty_builtarea >= p_min_builtarea)\n        AND (p_max_builtarea IS NULL OR p.realty_builtarea <= p_max_builtarea)\n        AND (p_min_totalarea IS NULL OR p.realty_totalarea >= p_min_totalarea)\n        AND (p_max_totalarea IS NULL OR p.realty_totalarea <= p_max_totalarea)\n        AND (p_state IS NULL OR p.realty_state ILIKE p_state)\n        AND (p_city IS NULL OR p.realty_city ILIKE p_city)\n        AND (p_district IS NULL OR p.realty_district ILIKE p_district)\n        AND (p_particulars IS NULL OR (\n            p_particulars IS NOT NULL AND \n            array_length(p_particulars, 1) > 0 AND \n            EXISTS (\n                SELECT 1\n                FROM unnest(p_particulars) AS feature\n                WHERE p.realty_particulars ILIKE '%' || feature || '%'\n            )\n        ))\n        AND p.realty_status = p_status\n    ORDER BY p.realty_date DESC;\nEND;\n$ LANGUAGE plpgsql;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        80,
+        80
+      ],
+      "id": "253a85be-5c2d-48d2-8fab-e95d1227e6fd",
+      "name": "criar_search_properties",
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use essa tool para buscar imoveis de acordo com o pedido do cliente.",
+        "operation": "executeQuery",
+        "query": "{{ $fromAI('sql', 'sql para buscar os imoveis') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.5,
+      "position": [
+        480,
+        520
+      ],
+      "id": "9ccf2ab4-04bf-4b92-aaba-c0f9fe156871",
+      "name": "buscar_imoveis",
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "buscar_imoveis": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "d8c855f8-ab59-4bad-934c-1c52eca4bd39",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-02-07T22:39:33.859Z",
+      "updatedAt": "2025-02-07T22:39:33.859Z",
+      "id": "U3WKvCpOgDNq0uGF",
+      "name": "Imobi-v1.0"
+    }
+  ]
+}
