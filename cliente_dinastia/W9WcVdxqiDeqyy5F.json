@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-01-21T00:24:24.234Z",
-  "updatedAt": "2025-02-02T22:48:42.922Z",
+  "updatedAt": "2025-02-07T22:38:55.386Z",
   "id": "W9WcVdxqiDeqyy5F",
   "name": "REFRESH - Agendamentos - zero a expert - RAG - V5",
   "active": false,
@@ -496,91 +496,14 @@
         "operation": "appendOrUpdate",
         "documentId": {
           "__rl": true,
-          "value": "1T7eMl1DrXuWKioUNt5h5njDb9n4YRQgAUHA_ha5lNvg",
-          "mode": "list",
-          "cachedResultName": "Agente - SDR - Classificador",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T7eMl1DrXuWKioUNt5h5njDb9n4YRQgAUHA_ha5lNvg/edit?usp=drivesdk"
+          "value": "1ZuYBZB6vWdHHuv03RQbU5LUN9Id6Oei59RFKv0fPR0E",
+          "mode": "id"
         },
         "sheetName": {
           "__rl": true,
-          "value": "gid=0",
           "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T7eMl1DrXuWKioUNt5h5njDb9n4YRQgAUHA_ha5lNvg/edit#gid=0"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "nivel_de_interesse": "={{ $json.output }}",
-            "nome": "={{ $('auth').item.json.body.data.pushName }}",
-            "whatsapp": "={{ $('auth').item.json.body.data.key.remoteJid }}",
-            "ultima_mensagem": "={{ $('mensagem_cliente').item.json.texto }}",
-            "data_hora": "={{ $now.format('yyyy-MM-dd hh:mm:ss') }}",
-            "id": "={{ $now.format('yyyy-MM-dd hh:mm:ss') }}"
-          },
-          "matchingColumns": [
-            "id"
-          ],
-          "schema": [
-            {
-              "id": "id",
-              "displayName": "id",
-              "required": false,
-              "defaultMatch": true,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "nome",
-              "displayName": "nome",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "whatsapp",
-              "displayName": "whatsapp",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "nivel_de_interesse",
-              "displayName": "nivel_de_interesse",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "ultima_mensagem",
-              "displayName": "ultima_mensagem",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "data_hora",
-              "displayName": "data_hora",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            }
-          ]
-        },
-        "options": {}
+          "value": ""
+        }
       },
       "id": "516a0320-4008-41f3-a776-89aa91c7039e",
       "name": "Google Sheets",
@@ -592,8 +515,8 @@
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "PWv0Kz34YyKqBI1V",
-          "name": "Google Sheets  - Black"
+          "id": "WcAura9GJDHzQ1k8",
+          "name": "Google Sheets - Natalina"
         }
       }
     },
@@ -2353,7 +2276,7 @@
       }
     ]
   },
-  "versionId": "ba165120-90d6-4f71-85d5-1cd1524bdb51",
+  "versionId": "8c8c273d-44ca-42d8-b233-73691ea36a5a",
   "triggerCount": 1,
   "tags": [
     {
