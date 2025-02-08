@@ -1,0 +1,315 @@
+{
+  "createdAt": "2025-02-07T22:52:20.966Z",
+  "updatedAt": "2025-02-07T23:01:00.686Z",
+  "id": "LmUcPJBDnKS37Wpv",
+  "name": "ImobiAi _V1 - 1",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        220
+      ],
+      "id": "7a3d5116-a3f3-4b4a-bf25-c5720ba1e4a5",
+      "name": "When chat message received",
+      "webhookId": "732229e5-2c5c-4f9f-92ec-daebfdf12e0e"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=# Função\nVocê é uma corretora de imóveis chamada ImobiAI, sua função é pesquisar imóveis para o cliente usando a tool \"buscar_imoveis\".\n\n# Como criar as SQL para usar a tool \"buscar_imoveis\".\n<buscar_imoveis>\nUtilize a funçnao abaixo para criar a SQL a ser usada na ferramenta buscar_imoveis\nCREATE OR REPLACE FUNCTION search_properties(\n    p_tipo VARCHAR DEFAULT NULL,\n    p_transacao VARCHAR DEFAULT NULL,\n    p_min_preco DECIMAL DEFAULT NULL,\n    p_max_preco DECIMAL DEFAULT NULL,\n    p_min_quartos INTEGER DEFAULT NULL,\n    p_max_quartos INTEGER DEFAULT NULL,\n    p_min_banheiros INTEGER DEFAULT NULL,\n    p_max_banheiros INTEGER DEFAULT NULL,\n    p_min_vagas INTEGER DEFAULT NULL,\n    p_max_vagas INTEGER DEFAULT NULL,\n    p_min_area_construida DECIMAL DEFAULT NULL,\n    p_max_area_construida DECIMAL DEFAULT NULL,\n    p_min_area_total DECIMAL DEFAULT NULL,\n    p_max_area_total DECIMAL DEFAULT NULL,\n    p_uf VARCHAR DEFAULT NULL,\n    p_cidade VARCHAR DEFAULT NULL,\n    p_bairro VARCHAR DEFAULT NULL,\n    p_caracteristicas TEXT[] DEFAULT NULL\n)\nRETURNS TABLE (\n    id BIGINT,\n    referencia VARCHAR,\n    titulo VARCHAR,\n    transacao VARCHAR,\n    tipo VARCHAR,\n    preco DOUBLE PRECISION,\n    descricao TEXT,\n    cidade VARCHAR,\n    uf VARCHAR,\n    vagas INTEGER,\n    bairro VARCHAR,\n    quartos INTEGER,\n    banheiros INTEGER,\n    area_total DECIMAL,\n    area_construida DECIMAL,\n    caracteristicas TEXT,\n    created_at TIMESTAMP WITH TIME ZONE\n) AS $\nBEGIN\n    RETURN QUERY\n    SELECT \n        i.id,\n        i.referencia,\n        i.titulo,\n        i.transacao,\n        i.tipo,\n        i.preco,\n        i.descricao,\n        i.cidade,\n        i.uf,\n        (i.data->>'vagas')::INTEGER as vagas,\n        i.data->>'bairro' as bairro,\n        (i.data->>'quartos')::INTEGER as quartos,\n        (i.data->>'banheiros')::INTEGER as banheiros,\n        (i.data->>'area_total')::DECIMAL as area_total,\n        (i.data->>'area_construida')::DECIMAL as area_construida,\n        i.data->>'caracteristicas' as caracteristicas,\n        i.created_at\n    FROM \n        imoveis i\n    WHERE \n        (p_tipo IS NULL OR i.tipo = p_tipo)\n        AND (p_transacao IS NULL OR i.transacao = p_transacao)\n        AND (p_min_preco IS NULL OR i.preco >= p_min_preco)\n        AND (p_max_preco IS NULL OR i.preco <= p_max_preco)\n        AND (p_min_quartos IS NULL OR (i.data->>'quartos')::INTEGER >= p_min_quartos)\n        AND (p_max_quartos IS NULL OR (i.data->>'quartos')::INTEGER <= p_max_quartos)\n        AND (p_min_banheiros IS NULL OR (i.data->>'banheiros')::INTEGER >= p_min_banheiros)\n        AND (p_max_banheiros IS NULL OR (i.data->>'banheiros')::INTEGER <= p_max_banheiros)\n        AND (p_min_vagas IS NULL OR (i.data->>'vagas')::INTEGER >= p_min_vagas)\n        AND (p_max_vagas IS NULL OR (i.data->>'vagas')::INTEGER <= p_max_vagas)\n        AND (p_min_area_construida IS NULL OR (i.data->>'area_construida')::DECIMAL >= p_min_area_construida)\n        AND (p_max_area_construida IS NULL OR (i.data->>'area_construida')::DECIMAL <= p_max_area_construida)\n        AND (p_min_area_total IS NULL OR (i.data->>'area_total')::DECIMAL >= p_min_area_total)\n        AND (p_max_area_total IS NULL OR (i.data->>'area_total')::DECIMAL <= p_max_area_total)\n        AND (p_uf IS NULL OR i.uf ILIKE p_uf)\n        AND (p_cidade IS NULL OR i.cidade ILIKE p_cidade)\n        AND (p_bairro IS NULL OR i.data->>'bairro' ILIKE p_bairro)\n        AND (p_caracteristicas IS NULL OR (\n            p_caracteristicas IS NOT NULL AND \n            array_length(p_caracteristicas, 1) > 0 AND \n            EXISTS (\n                SELECT 1\n                FROM unnest(p_caracteristicas) AS feature\n                WHERE (i.data->>'caracteristicas') ILIKE '%' || feature || '%'\n            )\n        ))\n    ORDER BY i.created_at DESC;\nEND;\n$ LANGUAGE plpgsql;\n\nUtilize estes exemlos e queries abaixo:\n\nBusca básica por tipo de imóvel:\n\nsqlCopy-- Buscar apenas apartamentos\nSELECT * FROM search_properties(p_tipo := 'Apartamento');\n\n-- Buscar apenas casas\nSELECT * FROM search_properties(p_tipo := 'Casa');\n\nBusca por faixa de preço:\n\nsqlCopy-- Imóveis entre R$ 200.000 e R$ 500.000\nSELECT * FROM search_properties(\n    p_min_preco := 200000,\n    p_max_preco := 500000\n);\n\nBusca combinando tipo, transação e localização:\n\nsqlCopy-- Apartamentos para aluguel em São Paulo, SP\nSELECT * FROM search_properties(\n    p_tipo := 'Apartamento',\n    p_transacao := 'Aluguel',\n    p_cidade := 'São Paulo',\n    p_uf := 'SP'\n);\n\nBusca por características específicas:\n\nsqlCopy-- Imóveis com 3 quartos, 2 banheiros e 2 vagas\nSELECT * FROM search_properties(\n    p_min_quartos := 3,\n    p_max_quartos := 3,\n    p_min_banheiros := 2,\n    p_max_banheiros := 2,\n    p_min_vagas := 2,\n    p_max_vagas := 2\n);\n\nBusca por área:\n\nsqlCopy-- Imóveis com área construída entre 100m² e 200m²\nSELECT * FROM search_properties(\n    p_min_area_construida := 100,\n    p_max_area_construida := 200\n);\n\nBusca combinando múltiplos critérios:\n\nsqlCopy-- Casas para venda em Curitiba, com 4+ quartos e preço até 1 milhão\nSELECT * FROM search_properties(\n    p_tipo := 'Casa',\n    p_transacao := 'Venda',\n    p_cidade := 'Curitiba',\n    p_uf := 'PR',\n    p_min_quartos := 4,\n    p_max_preco := 1000000\n);\n\nBusca por características específicas usando array:\n\nsqlCopy-- Imóveis com piscina e churrasqueira\nSELECT * FROM search_properties(\n    p_caracteristicas := ARRAY['piscina', 'churrasqueira']\n);\n\nBusca completa com múltiplos filtros:\n\nsqlCopy-- Apartamentos de alto padrão\nSELECT * FROM search_properties(\n    p_tipo := 'Apartamento',\n    p_transacao := 'Venda',\n    p_min_preco := 800000,\n    p_max_preco := 2000000,\n    p_min_quartos := 3,\n    p_min_banheiros := 2,\n    p_min_vagas := 2,\n    p_min_area_construida := 120,\n    p_cidade := 'São Paulo',\n    p_uf := 'SP',\n    p_caracteristicas := ARRAY['varanda gourmet', 'academia']\n);\n\nBusca por bairro específico:\n\nsqlCopy-- Imóveis no bairro Jardins\nSELECT * FROM search_properties(\n    p_cidade := 'São Paulo',\n    p_bairro := 'Jardins'\n);\n\nBusca por área total:\n\nsqlCopy-- Terrenos ou casas com área total grande\nSELECT * FROM search_properties(\n    p_min_area_total := 1000,\n    p_tipo := 'Terreno'\n);\n\n</buscar_imoveis>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1340,
+        220
+      ],
+      "id": "39ee4ebf-f78c-46c4-a91c-275f511e7030",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.1,
+      "position": [
+        1280,
+        400
+      ],
+      "id": "7d610a7a-fd45-45de-9460-11b4f442d013",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1440,
+        420
+      ],
+      "id": "024be86b-b557-43c0-ad1d-3ae157a6eacc",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {
+        "content": "Criar função search_properties",
+        "height": 260,
+        "width": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        640,
+        220
+      ],
+      "id": "8249d5fb-5683-4c7e-bd58-3b583922b09b",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "CREATE OR REPLACE FUNCTION search_properties(\n    p_tipo VARCHAR DEFAULT NULL,\n    p_transacao VARCHAR DEFAULT NULL,\n    p_min_preco DECIMAL DEFAULT NULL,\n    p_max_preco DECIMAL DEFAULT NULL,\n    p_min_quartos INTEGER DEFAULT NULL,\n    p_max_quartos INTEGER DEFAULT NULL,\n    p_min_banheiros INTEGER DEFAULT NULL,\n    p_max_banheiros INTEGER DEFAULT NULL,\n    p_min_vagas INTEGER DEFAULT NULL,\n    p_max_vagas INTEGER DEFAULT NULL,\n    p_min_area_construida DECIMAL DEFAULT NULL,\n    p_max_area_construida DECIMAL DEFAULT NULL,\n    p_min_area_total DECIMAL DEFAULT NULL,\n    p_max_area_total DECIMAL DEFAULT NULL,\n    p_uf VARCHAR DEFAULT NULL,\n    p_cidade VARCHAR DEFAULT NULL,\n    p_bairro VARCHAR DEFAULT NULL,\n    p_caracteristicas TEXT[] DEFAULT NULL\n)\nRETURNS TABLE (\n    id BIGINT,\n    referencia VARCHAR,\n    titulo VARCHAR,\n    transacao VARCHAR,\n    tipo VARCHAR,\n    preco DOUBLE PRECISION,\n    descricao TEXT,\n    cidade VARCHAR,\n    uf VARCHAR,\n    vagas INTEGER,\n    bairro VARCHAR,\n    quartos INTEGER,\n    banheiros INTEGER,\n    area_total DECIMAL,\n    area_construida DECIMAL,\n    caracteristicas TEXT,  -- Mudado de VARCHAR para TEXT\n    created_at TIMESTAMP WITH TIME ZONE\n) AS $\nBEGIN\n    RETURN QUERY\n    SELECT \n        i.id,\n        i.referencia,\n        i.titulo,\n        i.transacao,\n        i.tipo,\n        i.preco,\n        i.descricao,\n        i.cidade,\n        i.uf,\n        (i.data->>'vagas')::INTEGER as vagas,\n        i.data->>'bairro' as bairro,\n        (i.data->>'quartos')::INTEGER as quartos,\n        (i.data->>'banheiros')::INTEGER as banheiros,\n        (i.data->>'area_total')::DECIMAL as area_total,\n        (i.data->>'area_construida')::DECIMAL as area_construida,\n        i.data->>'caracteristicas' as caracteristicas,\n        i.created_at\n    FROM \n        imoveis i\n    WHERE \n        (p_tipo IS NULL OR i.tipo = p_tipo)\n        AND (p_transacao IS NULL OR i.transacao = p_transacao)\n        AND (p_min_preco IS NULL OR i.preco >= p_min_preco)\n        AND (p_max_preco IS NULL OR i.preco <= p_max_preco)\n        AND (p_min_quartos IS NULL OR (i.data->>'quartos')::INTEGER >= p_min_quartos)\n        AND (p_max_quartos IS NULL OR (i.data->>'quartos')::INTEGER <= p_max_quartos)\n        AND (p_min_banheiros IS NULL OR (i.data->>'banheiros')::INTEGER >= p_min_banheiros)\n        AND (p_max_banheiros IS NULL OR (i.data->>'banheiros')::INTEGER <= p_max_banheiros)\n        AND (p_min_vagas IS NULL OR (i.data->>'vagas')::INTEGER >= p_min_vagas)\n        AND (p_max_vagas IS NULL OR (i.data->>'vagas')::INTEGER <= p_max_vagas)\n        AND (p_min_area_construida IS NULL OR (i.data->>'area_construida')::DECIMAL >= p_min_area_construida)\n        AND (p_max_area_construida IS NULL OR (i.data->>'area_construida')::DECIMAL <= p_max_area_construida)\n        AND (p_min_area_total IS NULL OR (i.data->>'area_total')::DECIMAL >= p_min_area_total)\n        AND (p_max_area_total IS NULL OR (i.data->>'area_total')::DECIMAL <= p_max_area_total)\n        AND (p_uf IS NULL OR i.uf ILIKE p_uf)\n        AND (p_cidade IS NULL OR i.cidade ILIKE p_cidade)\n        AND (p_bairro IS NULL OR i.data->>'bairro' ILIKE p_bairro)\n        AND (p_caracteristicas IS NULL OR (\n            p_caracteristicas IS NOT NULL AND \n            array_length(p_caracteristicas, 1) > 0 AND \n            EXISTS (\n                SELECT 1\n                FROM unnest(p_caracteristicas) AS feature\n                WHERE (i.data->>'caracteristicas') ILIKE '%' || feature || '%'\n            )\n        ))\n    ORDER BY i.created_at DESC;\nEND;\n$ LANGUAGE plpgsql;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        720,
+        300
+      ],
+      "id": "fe945aae-56a2-470a-ade1-056bbf813c68",
+      "name": "criar_search_properties",
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use essa tool para buscar imoveis de acordo com o pedido do cliente.",
+        "operation": "executeQuery",
+        "query": "{{ $fromAI('sql', 'sql para buscar os imoveis') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.5,
+      "position": [
+        1600,
+        400
+      ],
+      "id": "42741eba-f18a-4ceb-9ac0-7b1495e666c5",
+      "name": "buscar_imoveis",
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Conector - Cliente 1",
+        "height": 540,
+        "width": 880
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        640,
+        760
+      ],
+      "id": "27743fca-e8dd-4f76-8024-d6268636104a",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        980,
+        960
+      ],
+      "id": "a8a2142f-c81e-4b5c-a28a-867d7ff59496",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n    realty_ref AS referencia,\n    realty_title AS titulo,\n    CASE \n        WHEN realty_transaction = 1 THEN 'alugar'\n        WHEN realty_transaction = 2 THEN 'comprar'\n        WHEN realty_transaction = 3 THEN 'temporada'\n        ELSE 'Desconhecido' \n    END AS transacao,\n    CASE \n        WHEN realty_type = 1 THEN 'apartamento'\n        WHEN realty_type = 2 THEN 'area'\n        WHEN realty_type = 3 THEN 'casa'\n        WHEN realty_type = 4 THEN 'galpao'\n        WHEN realty_type = 5 THEN 'pousada'\n        WHEN realty_type = 6 THEN 'predio'\n        WHEN realty_type = 7 THEN 'sala'\n        WHEN realty_type = 8 THEN 'terreno'\n        ELSE 'Desconhecido' \n    END AS tipo,\n    realty_price AS preco,\n    realty_desc AS descricao,\n    realty_city AS cidade,\n    realty_state AS uf,\n    jsonb_build_object(\n        'area_construida', realty_builtarea,\n        'area_total', realty_totalarea,\n        'quartos', realty_bedrooms,\n        'banheiros', realty_bathrooms,\n        'vagas', realty_parkings,\n        'caracteristicas', realty_particulars,\n        'bairro', realty_district,\n        'observacao', realty_observation\n    ) AS data\nFROM public.ws_properties;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        760,
+        960
+      ],
+      "id": "7e3349d1-39ac-420e-b223-bd2d368a185a",
+      "name": "listar_imoveis_cliente",
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO public.imoveis (\n    referencia,\n    titulo,\n    transacao,\n    tipo,\n    preco,\n    descricao,\n    cidade,\n    uf,\n    data\n) VALUES (\n    '{{ $json.referencia }}',\n    '{{ $json.titulo }}',\n    '{{ $json.transacao }}',\n    '{{ $json.tipo }}',\n    '{{ $json.preco }}',\n    '{{ $json.descricao }}',\n    '{{ $json.cidade }}',\n    '{{ $json.uf }}',\n    '{{ JSON.stringify($json.data) }}'\n);\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1200,
+        980
+      ],
+      "id": "45adda92-c8f1-4d71-8a5f-061097aae62e",
+      "name": "carregar_imoveis_bd",
+      "credentials": {
+        "postgres": {
+          "id": "mgxUJp91OulKSJZt",
+          "name": "Postgres - BlackSB"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        820
+      ],
+      "id": "563264d8-2bc6-43cb-98c9-c98de5549251",
+      "name": "No Operation, do nothing"
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "buscar_imoveis": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "carregar_imoveis_bd",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "listar_imoveis_cliente": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "carregar_imoveis_bd": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "6da4df09-40bb-4bfc-8fd4-04ceff5531e7",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-02-07T22:52:02.729Z",
+      "updatedAt": "2025-02-07T22:52:02.729Z",
+      "id": "ylejgxD2nyrEk8Vw",
+      "name": "ImobiAI-v1.1"
+    }
+  ]
+}
