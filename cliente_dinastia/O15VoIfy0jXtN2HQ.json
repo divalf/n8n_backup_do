@@ -1,0 +1,868 @@
+{
+  "createdAt": "2025-02-11T23:36:20.843Z",
+  "updatedAt": "2025-02-12T00:53:05.453Z",
+  "id": "O15VoIfy0jXtN2HQ",
+  "name": "Agendar Consulta",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "agenda_deebs",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -960,
+        -20
+      ],
+      "id": "c796bcf5-5804-4af0-b7e7-0dca4d6491e1",
+      "name": "Webhook",
+      "webhookId": "6816220b-ddea-487b-81a0-9926159d8efe"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"tool_call_id\":\"{{ $('Webhook').item.json.body.toll_id }}\",\n\"output\": \"Ja confirmei a reunião para o cliente. Não repita o horario e data, pergunte apenas se ele deseja mais alguma coisa\"\n}\n",
+        "options": {}
+      },
+      "id": "0c989fca-a976-484c-8f38-21f01c5c56f3",
+      "name": "toll Call ID - save_user_data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1920,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "=divalf@gmail.com",
+          "mode": "id"
+        },
+        "start": "={{ $('PayloadAtualizaEmail').item.json.inicio }}",
+        "end": "={{ $('PayloadAtualizaEmail').item.json.termino }}",
+        "additionalFields": {
+          "attendees": [
+            "={{ $('PayloadAtualizaEmail').item.json.email }}"
+          ],
+          "color": "1",
+          "conferenceDataUi": {
+            "conferenceDataValues": {}
+          },
+          "description": "=Titulo da Reunião",
+          "summary": "=Descrição da reunião"
+        }
+      },
+      "id": "3cfcc929-7058-449c-9ebf-34d7a3b86932",
+      "name": "Google Calendar1",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        -40
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('PayloadAtualizaEmail').item.json.email }}",
+        "subject": "Para garantir seu horário confirme a reunião.",
+        "message": "=Olá  {{ $('AtualizaEmail').item.json.name }}, Aqui é o (seu nome), estou feliz que decidiu conversar comigo\n\n{{ $('Google Calendar1').item.json.htmlLink }}\n\n<br /><br />\nEste é o link do Meet:\n<br /><br />\n{{ $('Google Calendar1').item.json.hangoutLink }} nossa reunião ficou agendada para {{ $json.texto_data }}hrs<br /><br /><br /><br /> <img src=link da assinatura>  ",
+        "options": {
+          "senderName": "=Seu nome"
+        }
+      },
+      "id": "fba4f79a-18c2-4923-9377-c97a4572b7c0",
+      "name": "Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        900,
+        -40
+      ],
+      "webhookId": "dc68eeca-bfb8-4410-b46b-4abd1d07acf0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "U4fzmAAJisOnJnJI",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://evolution/message/sendText/{{ $('Webhook').item.json.body.instancia }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "api key"
+            },
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"number\": \"{{ $('Webhook').item.json.body.phone }}\",\n  \"text\": {{ JSON.stringify(`Sua reunião foi agendada com sucesso para dia ${$('FormataDataWhatsApp1').item.json.texto_data}hrs\\n\\nEste é o link do meet:\\n\\n${$('Google Calendar1').item.json.hangoutLink}\\n\\nNão esqueça de verificar se o link chegou corretamente no seu e-mail.`) }},\n  \"delay\": {{ Math.floor(Math.random() * (5000 - 1000 + 1)) + 1000 }},\n  \"linkPreview\": false\n} ",
+        "options": {}
+      },
+      "id": "0a968efc-ceb3-45fb-9d43-e054556bf418",
+      "name": "Envia mensagem Link Meet",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1080,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a227066b-1c96-4c08-a795-008d129cec56",
+              "name": "user_id",
+              "value": "={{ $('Webhook').item.json.body.user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "c563d1ae-64e8-4b96-8685-6d5fea476ee3",
+              "name": "inicio",
+              "value": "={{ $('Separa Arguments').item.json.arguments.inicio }}",
+              "type": "string"
+            },
+            {
+              "id": "3b331b13-dae6-486a-9f57-d6f781d198a6",
+              "name": "termino",
+              "value": "={{ $('Separa Arguments').item.json.arguments.termino }}",
+              "type": "string"
+            },
+            {
+              "id": "7366fca0-9680-417b-bfc2-ad8cdac6656f",
+              "name": "name",
+              "value": "={{ $('Separa Arguments').item.json.arguments.nome }}",
+              "type": "string"
+            },
+            {
+              "id": "55241276-c70b-4028-a18d-0f6b93b10bc8",
+              "name": "data_da_reuniao",
+              "value": "={{ $('FormataDataWhatsApp1').item.json.texto_data }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e9e9dfd0-71f1-4587-8411-90f6d192b2d4",
+      "name": "Edit Fields5",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c6856183-57ce-45c4-8769-a64c32a49128",
+              "name": "_id",
+              "value": "={{ $('Webhook').item.json.body.user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "761c03c8-07f3-4b17-a65b-e093baec3950",
+              "name": "email",
+              "value": "={{ $('Separa Arguments').item.json.arguments.email }}",
+              "type": "string"
+            },
+            {
+              "id": "731fe299-1cb0-4766-975d-65b841857d3f",
+              "name": "inicio",
+              "value": "={{ $('Separa Arguments').item.json.arguments.inicio }}",
+              "type": "string"
+            },
+            {
+              "id": "005b4c00-6dc6-44a6-b6f6-b218d96a15bf",
+              "name": "termino",
+              "value": "={{ $('Separa Arguments').item.json.arguments.termino }}",
+              "type": "string"
+            },
+            {
+              "id": "3f19b8f9-3850-4a6f-ae87-05ecaa606e61",
+              "name": "name",
+              "value": "={{ $('Separa Arguments').item.json.arguments.nome }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "246fc202-c464-4d60-82b0-7cc15e13ff6f",
+      "name": "PayloadAtualizaEmail",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -120,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://evolution/message/sendText/{{ $('Webhook').item.json.body.instancia }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "api key"
+            },
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"number\": \"numero de notificação\",\n  \"text\": \"Uma nova reunião foi agendada para o dia {{ $('FormataDataWhatsApp1').item.json.texto_data }} \\nnome: {{ $('Separa Arguments').item.json.arguments.nome }}\\nnumero: {{ $('Webhook').item.json.body.phone.replace('@s.whatsapp.net','') }} \\nemail: {{ $('PayloadAtualizaEmail').item.json[\"email\"] }}\",\n  \"delay\": 123\n}   ",
+        "options": {}
+      },
+      "id": "e135532c-47e6-48aa-88b7-8190bdf5d44a",
+      "name": "AvisoReuniaoAgendada",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1720,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Recebendo o dado de saída do nó anterior\nconst data = items[0].json.arguments; // Pega o primeiro item da lista\nconst dataInicio = new Date(data.inicio); // Converte a data 'inicio' para um objeto Date\nconst agora = new Date(); // Data e hora atuais\n\n// Verifica se a data 'inicio' é futura\nif (dataInicio > agora) {\n  return [{ json: { isFuture: true } }];\n} else {\n  return [{ json: { isFuture: false } }];\n}\n"
+      },
+      "id": "13c86baf-bd59-4661-8e02-bf09318d5649",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -580,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "baa49b41-0103-4e4a-ae54-3fc57856331b",
+              "leftValue": "={{ $json.isFuture }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d8cb098b-430a-471a-a4fd-7aab8ceef083",
+      "name": "If7",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -380,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "be0a59f3-6135-4178-9195-9d1efdac8c10",
+              "name": "arguments",
+              "value": "={{ $json.body }}",
+              "type": "object"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "66a4cb1a-cab7-4b45-a9b9-4ecc94bbce96",
+      "name": "Separa Arguments",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -760,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst inicio = items[0]?.json?.inicio; // Acessa o campo 'inicio' do primeiro item\n\nif (inicio) {\n  // Divide a string no \"T\" para separar data e hora\n  const [datePart, timePart] = inicio.split('T');\n  \n  // Pega a data (YYYY-MM-DD) e transforma para DD/MM/YYYY\n  const [year, month, day] = datePart.split('-');\n  const formattedDate = `${day}/${month}/${year}`;\n  \n  // Pega o horário (HH:mm:ss-03:00) e remove o fuso horário\n  const formattedTime = timePart.split('-')[0].slice(0, 5); // Apenas HH:mm\n  \n  return {\n    texto_data: `${formattedDate} ${formattedTime}` // Concatena data e hora no formato desejado\n  };\n} else {\n  return {\n    texto_data: null // Retorna null se 'inicio' não existir\n  };\n}\n"
+      },
+      "id": "4079be4b-89c8-49f7-ab4d-2272e59fe99b",
+      "name": "FormataDataWhatsApp1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a227066b-1c96-4c08-a795-008d129cec56",
+              "name": "user_id",
+              "value": "={{ $('Webhook').item.json.body.user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "c563d1ae-64e8-4b96-8685-6d5fea476ee3",
+              "name": "inicio",
+              "value": "={{ $('Separa Arguments').item.json.arguments.inicio }}",
+              "type": "string"
+            },
+            {
+              "id": "3b331b13-dae6-486a-9f57-d6f781d198a6",
+              "name": "termino",
+              "value": "={{ $('Separa Arguments').item.json.arguments.termino }}",
+              "type": "string"
+            },
+            {
+              "id": "7366fca0-9680-417b-bfc2-ad8cdac6656f",
+              "name": "name",
+              "value": "={{ $('Webhook').item.json.body.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b5cd38a4-1ce1-460b-9fde-3cf84a225280",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        520,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "id": "99430faa-4694-45d7-83e2-a687a1037111",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2120,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c1d6c350-a62c-43f9-9c92-1bc469c14100",
+              "name": "output",
+              "value": "={{ $json.data }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ab78dd9b-6bad-47fb-a483-a104dd890e7b",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2300,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.openai.com/v1/threads/{{ $('Webhook').item.json.body.thread_id }}/runs/{{ $('Webhook').item.json.body.run_id }}/submit_tool_outputs",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n\"tool_outputs\":{{ $json.output }}\n}  ",
+        "options": {}
+      },
+      "id": "d567a35f-c5bf-4758-92b5-7449814b7894",
+      "name": "Insere output",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2480,
+        -40
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://dinastia-n8n-editor.lfigsi.easypanel.host/webhook/chatbot",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "_id",
+              "value": "={{ $('Webhook').item.json.body._id }}"
+            },
+            {
+              "name": "nome",
+              "value": "={{ $('Webhook').item.json.body.nome }}"
+            },
+            {
+              "name": "sender",
+              "value": "={{ $('Webhook').item.json.body.sender }}"
+            },
+            {
+              "name": "numero_notificacao",
+              "value": "={{ $('Webhook').item.json.body.numero_notificacao }}"
+            },
+            {
+              "name": "id_assistant",
+              "value": "={{ $('Webhook').item.json.body.id_assistant }}"
+            },
+            {
+              "name": "banco_cliente",
+              "value": "={{ $('Webhook').item.json.body.banco_cliente }}"
+            },
+            {
+              "name": "instancia",
+              "value": "={{ $('Webhook').item.json.body.instancia }}"
+            },
+            {
+              "name": "banco_messages",
+              "value": "={{ $('Webhook').item.json.body.banco_messages }}"
+            },
+            {
+              "name": "messages_send_ai",
+              "value": "={{ $('Webhook').item.json.body.messages_send_ai }}"
+            },
+            {
+              "name": "id_eleven_labs",
+              "value": "={{ $('Webhook').item.json.body.id_eleven_labs }}"
+            },
+            {
+              "name": "fromMe",
+              "value": "={{ $('Webhook').item.json.body.fromMe }}"
+            },
+            {
+              "name": "=phone",
+              "value": "={{ $('Webhook').item.json.body.phone }}"
+            },
+            {
+              "name": "name",
+              "value": "={{ $('Webhook').item.json.body.name }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ $('Webhook').item.json.body.message }}"
+            },
+            {
+              "name": "messageType",
+              "value": "={{ $('Webhook').item.json.body.messageType }}"
+            },
+            {
+              "name": "user_id",
+              "value": "={{ $('Webhook').item.json.body.user_id }}"
+            },
+            {
+              "name": "thread_id",
+              "value": "={{ $('Webhook').item.json.body.thread_id }}"
+            },
+            {
+              "name": "blacklist",
+              "value": "={{ $('Webhook').item.json.body.blacklist }}"
+            },
+            {
+              "name": "run_id",
+              "value": "={{ $('Webhook').item.json.body.run_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2660,
+        -40
+      ],
+      "id": "d930f096-dca0-4392-a75c-6fc96fb0ec97",
+      "name": "Get Run Status1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "agendaDeebs"
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        100,
+        -40
+      ],
+      "id": "e321dd5d-8be7-4028-960a-e075d34db99d",
+      "name": "atualizar email usuario",
+      "credentials": {
+        "supabaseApi": {
+          "id": "MmAkEdV2Wn9geGNT",
+          "name": "Supabase - Deebs"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "agendaDeebs"
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        -40
+      ],
+      "id": "888e0536-c840-43de-9d12-b658ff904dda",
+      "name": "Salvar agendamento banco de dados",
+      "credentials": {
+        "supabaseApi": {
+          "id": "MmAkEdV2Wn9geGNT",
+          "name": "Supabase - Deebs"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Google Calendar1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "Envia mensagem Link Meet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envia mensagem Link Meet": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Salvar agendamento banco de dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PayloadAtualizaEmail": {
+      "main": [
+        [
+          {
+            "node": "atualizar email usuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AvisoReuniaoAgendada": {
+      "main": [
+        [
+          {
+            "node": "toll Call ID - save_user_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Separa Arguments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "If7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If7": {
+      "main": [
+        [
+          {
+            "node": "PayloadAtualizaEmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separa Arguments": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "FormataDataWhatsApp1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FormataDataWhatsApp1": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Insere output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insere output": {
+      "main": [
+        [
+          {
+            "node": "Get Run Status1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "toll Call ID - save_user_data": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "atualizar email usuario": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Salvar agendamento banco de dados": {
+      "main": [
+        [
+          {
+            "node": "AvisoReuniaoAgendada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "dinastia-n8n-editor.lfigsi.easypanel.host",
+            "user-agent": "axios/1.7.9",
+            "content-length": "988",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "content-type": "application/json",
+            "x-forwarded-for": "172.18.0.1",
+            "x-forwarded-host": "dinastia-n8n-editor.lfigsi.easypanel.host",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "89a0f4e4d949",
+            "x-real-ip": "172.18.0.1"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "event": "messages.upsert",
+            "instance": "Deebs",
+            "data": {
+              "key": {
+                "remoteJid": "5511985401987@s.whatsapp.net",
+                "fromMe": false,
+                "id": "3EB0719CACB2B3A734BBD0"
+              },
+              "pushName": "Dival S Filho 😎",
+              "status": "DELIVERY_ACK",
+              "message": {
+                "conversation": "Boa Noite!",
+                "messageContextInfo": {
+                  "deviceListMetadata": {
+                    "senderKeyHash": "YNJYQG3AcrD76Q==",
+                    "senderTimestamp": "1738100867",
+                    "senderAccountType": "E2EE",
+                    "receiverAccountType": "E2EE",
+                    "recipientKeyHash": "aHhcX8dI9KE98w==",
+                    "recipientTimestamp": "1737846458"
+                  },
+                  "deviceListMetadataVersion": 2,
+                  "messageSecret": "nnAuoav76snn58ynDz3O1Ukut6WMRwkEJ/r7MsBH70E="
+                }
+              },
+              "messageType": "conversation",
+              "messageTimestamp": 1739319080,
+              "instanceId": "8e60633a-43c9-4c90-9032-3bd6b9713741",
+              "source": "web"
+            },
+            "destination": "https://dinastia-n8n-editor.lfigsi.easypanel.host/webhook-test/agenda_deebs",
+            "date_time": "2025-02-11T21:11:20.973Z",
+            "sender": "5511932081209@s.whatsapp.net",
+            "server_url": "https://dinastia-evolution.lfigsi.easypanel.host",
+            "apikey": "46A8DD04E743-41B1-9AFD-78D9B9DB137B"
+          },
+          "webhookUrl": "https://dinastia-n8n-webhook.lfigsi.easypanel.host/webhook-test/agenda_deebs",
+          "executionMode": "test"
+        }
+      }
+    ]
+  },
+  "versionId": "94efeb96-da66-4f42-9f84-994ec916b7f7",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-02-11T23:25:26.224Z",
+      "updatedAt": "2025-02-11T23:25:26.224Z",
+      "id": "tvG4WD3l0jUvJQSe",
+      "name": "DEEBS"
+    }
+  ]
+}
