@@ -1,0 +1,476 @@
+{
+  "createdAt": "2025-02-11T23:25:19.260Z",
+  "updatedAt": "2025-02-12T00:46:11.338Z",
+  "id": "KYTNo646mRJG1ULy",
+  "name": "Consulta Disponibilidade",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f6acf76a-69cb-4754-a0aa-e70841ec24d7",
+              "name": "horarios_futuros",
+              "value": "={{ $('ListaHorariosFuturos').item.json.data }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "942e0251-00b9-496e-8879-218d6df5c5c9",
+      "name": "HoráriosFuturos",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const getAvailableSlots = () => {\n    // Configurações\n    const startHour = 9; // Horário inicial (09:00) no horário de São Paulo\n    const endHour = 18; // Horário final (18:00) no horário de São Paulo\n    const interval = 1; // Intervalo de 1 hora\n    const businessDays = 5; // Próximos 5 dias úteis\n    const now = new Date(); // Data e hora atual\n\n    // Função para verificar se um dia é útil (seg. a sex.)\n    const isBusinessDay = (date) => {\n        const day = date.getDay();\n        return day !== 0 && day !== 6; // 0 = domingo, 6 = sábado\n    };\n\n    // Função para criar um horário em UTC a partir do horário de São Paulo\n    const toUTCTime = (date, hour) => {\n        const utcDate = new Date(date);\n        utcDate.setHours(hour + 3, 0, 0, 0); // Adiciona 3 horas para converter UTC-3 para UTC\n        return utcDate;\n    };\n\n    // Incrementa a data até encontrar os próximos 5 dias úteis\n    let date = new Date(now);\n    const slots = [];\n\n    for (let i = 0; i < businessDays; ) {\n        if (isBusinessDay(date)) {\n            // Adiciona os horários disponíveis do dia útil atual no horário de São Paulo\n            for (let hour = startHour; hour < endHour; hour += interval) {\n                const slot = toUTCTime(date, hour); // Converte o horário para UTC\n                if (slot > now) {\n                    slots.push(slot.toISOString());\n                }\n            }\n            i++;\n        }\n        // Incrementa o dia\n        date.setDate(date.getDate() + 1);\n    }\n\n    // Retorna os slots no formato esperado pelo n8n\n    return slots.map((slot) => ({ json: { availableSlot: slot } }));\n};\n\n// Chama a função e retorna os resultados\nreturn getAvailableSlots();\n"
+      },
+      "id": "3f03fc15-50af-4a6d-9487-e6edd5eb04f8",
+      "name": "ProjetaHorarios",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        140,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fc3cefc6-bba8-4548-a45b-5bc600f7b6ea",
+              "name": "horarios_agendados",
+              "value": "={{ $('ListaHorariosAgendados').item.json.data }}",
+              "type": "array"
+            },
+            {
+              "id": "0a7e0d47-4534-4b66-b6c4-efa23bef1e20",
+              "name": "horarios_futuros",
+              "value": "={{ $('ListaHorariosFuturos').item.json.data }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "65c808c8-3d1d-42e8-87fe-b233e839607d",
+      "name": "RelacaoDisponiveisIndisponiveis",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1020,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "id": "c2b5e382-7f00-41b6-bd1b-15ae6c3c2325",
+      "name": "ListaHorariosFuturos",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "=divalf@gmail.com",
+          "mode": "id",
+          "__regex": "(^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)"
+        },
+        "options": {}
+      },
+      "id": "acc8096d-33b3-4cda-9b5e-f9e01ebef277",
+      "name": "HoráriosAgendados",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.1,
+      "position": [
+        640,
+        0
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n   \"output\": {{ JSON.stringify($('TrataOutput').item.json.output) }}\n}\n",
+        "includeOtherFields": "={{ false }}",
+        "options": {}
+      },
+      "id": "5c33a11f-5316-444e-a01f-ae2578c15cef",
+      "name": "toll Call ID - get_available-dates1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1920,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Recebe os dados do n8n\nconst inputData = $input.all()[0].json;\n\n// Debug: Exibir os dados recebidos para verificar estrutura\nconsole.log(\"Dados recebidos:\", JSON.stringify(inputData, null, 2));\n\n// Função para converter horários para UTC (normaliza todos para o mesmo formato)\nconst toUTC = (dateString) => {\n  if (!dateString || typeof dateString !== \"string\" || isNaN(Date.parse(dateString))) {\n    console.error(`Erro: Data inválida recebida: ${dateString}`);\n    return null; // Retorna null em vez de lançar erro para evitar crash\n  }\n  return new Date(dateString).toISOString(); // Normaliza para UTC\n};\n\n// Verifica se os arrays existem antes de processá-los\nif (!Array.isArray(inputData.horarios_agendados)) {\n  console.error(\"Erro: 'horarios_agendados' não é um array ou está ausente.\");\n  return [];\n}\nif (!Array.isArray(inputData.horarios_futuros)) {\n  console.error(\"Erro: 'horarios_futuros' não é um array ou está ausente.\");\n  return [];\n}\n\n// Extrai e normaliza os horários agendados para UTC\nconst scheduledEvents = inputData.horarios_agendados.map(event => {\n  if (!event || !event.start || !event.start.dateTime || !event.end || !event.end.dateTime) {\n    console.error(`Erro: Evento inválido encontrado: ${JSON.stringify(event)}`);\n    return null; // Evita crash caso um evento esteja com dados ausentes\n  }\n\n  const startUTC = toUTC(event.start.dateTime);\n  const endUTC = toUTC(event.end.dateTime);\n\n  if (!startUTC || !endUTC) return null; // Se houver erro, ignora este evento\n\n  return { start: startUTC, end: endUTC };\n}).filter(event => event !== null); // Remove eventos inválidos\n\n// Extrai os horários futuros (já estão em UTC)\nconst futureSlots = inputData.horarios_futuros.map(slot => {\n  if (!slot || !slot.availableSlot || isNaN(Date.parse(slot.availableSlot))) {\n    console.error(`Erro: Horário futuro inválido: ${JSON.stringify(slot)}`);\n    return null;\n  }\n  return { availableSlot: slot.availableSlot, original: slot };\n}).filter(slot => slot !== null); // Remove slots inválidos\n\n// Define a duração dos horários futuros (em milissegundos)\nconst SLOT_DURATION = 60 * 60 * 1000; // 1 hora\n\n// Função para verificar se um horário está livre\nconst isSlotAvailable = (slot) => {\n  const slotStart = new Date(slot.availableSlot);\n  const slotEnd = new Date(slotStart.getTime() + SLOT_DURATION); // Calcula o final do slot\n\n  return !scheduledEvents.some(event => {\n    const eventStart = new Date(event.start);\n    const eventEnd = new Date(event.end);\n\n    // Verifica se há sobreposição entre o slot e o evento\n    return slotStart < eventEnd && slotEnd > eventStart;\n  });\n};\n\n// Filtra os horários disponíveis\nconst filteredSlots = futureSlots\n  .filter(isSlotAvailable)\n  .map(slot => ({\n    json: {\n      ...slot.original,\n      availableSlot: slot.availableSlot\n    }\n  }));\n\n// Debug: Exibir os horários filtrados antes de retornar\nconsole.log(\"Horários disponíveis:\", JSON.stringify(filteredSlots, null, 2));\n\n// Retorna os resultados no formato esperado pelo n8n\nreturn filteredSlots;\n"
+      },
+      "id": "681f6cda-6eb2-4e8d-806b-c8585befc009",
+      "name": "TrataListaHorarios",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "id": "0a4deff3-a78d-4103-b25a-968b6796875b",
+      "name": "ListaFinalHorarios",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "id": "d8351918-c484-4fb4-a6e1-4eb1d6d8a09b",
+      "name": "ListaHorariosAgendados",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        820,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Função para ajustar o horário para o fuso horário de São Paulo (exibição final)\nconst toSaoPauloTime = (isoDate) => {\n  return new Date(isoDate).toLocaleString('sv-SE', { timeZone: 'America/Sao_Paulo' }).replace(' ', 'T');\n};\n\n// Função para criar uma descrição amigável em português\nconst generateFriendlyDescription = (isoDate) => {\n  const date = new Date(isoDate);\n  const options = { \n    timeZone: 'America/Sao_Paulo', \n    weekday: 'long', \n    year: 'numeric', \n    month: 'long', \n    day: 'numeric', \n    hour: '2-digit', \n    minute: '2-digit' \n  };\n  const formattedDate = date.toLocaleString('pt-BR', options);\n  return `${formattedDate}`;\n};\n\n// Add a new field called 'myNewField' to the JSON of the item\nconst utc = { ...$input.item.json }; // Cria uma cópia do JSON para evitar referências circulares\n\n$input.item.json.utc = utc.availableSlot; // Adiciona uma cópia ao campo 'utc'\n$input.item.json.utc_sp = toSaoPauloTime(utc.availableSlot); // Cria uma cópia do item\n$input.item.json.descricao = generateFriendlyDescription(utc.availableSlot);\n\ndelete $input.item.json.availableSlot;\n\nreturn $input.item;\n"
+      },
+      "id": "6ac178e6-8af2-41ad-b29a-c3db6e795c6d",
+      "name": "TratarEnvioOpenAI",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1380,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtemos os dados dos horários disponíveis\nconst horarios = $input.all()[0].json.data;\n\n// Construímos o JSON formatado\nconst formattedHorarios = horarios.map(horario => ({\n  //utc: horario.utc,\n  utc_sp: horario.utc_sp,\n  descricao: horario.descricao\n}));\n\nconst now = new Date(); // Data e hora atual em UTC\nconst utcMinus3 = new Date(now.getTime() - 3 * 60 * 60 * 1000); // Ajusta para UTC-3\n\nconst current_day = utcMinus3.toLocaleDateString('pt-BR', {\n  day: '2-digit',\n  month: '2-digit',\n  year: 'numeric'\n});\n\n// Criamos a saída como string JSON formatada\nconst outputMessage = `\nHoje é dia ${current_day} e esses são os horários disponíveis para agendamento, só ofereça e aceite um agendamento para um desses horários disponíveis. Ofereça somente uma opção por vez. \n${JSON.stringify(formattedHorarios, null, 2)}`; // Adiciona espaçamento para legibilidade\n\n// Retornamos o JSON final\nreturn {\n    output: outputMessage\n  }\n;\n"
+      },
+      "id": "0711306a-60ea-4e53-afae-486263574d50",
+      "name": "TrataOutput",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Agenda_Deebs",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -40,
+        0
+      ],
+      "id": "071b027a-1b93-4aa1-ae67-a6ace3cd4cef",
+      "name": "Webhook",
+      "webhookId": "2198c36d-c518-4dd7-9412-24c9ed4b8ee4"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2120,
+        0
+      ],
+      "id": "ec0ba131-74a0-4855-8cd8-1042698f1d47",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "url": "https://dinastia-n8n-editor.lfigsi.easypanel.host/workflow/O15VoIfy0jXtN2HQ",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "output",
+              "value": "={{ $json }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2320,
+        0
+      ],
+      "id": "7be4936e-8991-4e28-893c-e18db2feab6a",
+      "name": "Output Function"
+    }
+  ],
+  "connections": {
+    "HoráriosFuturos": {
+      "main": [
+        [
+          {
+            "node": "HoráriosAgendados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ProjetaHorarios": {
+      "main": [
+        [
+          {
+            "node": "ListaHorariosFuturos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RelacaoDisponiveisIndisponiveis": {
+      "main": [
+        [
+          {
+            "node": "TrataListaHorarios",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ListaHorariosFuturos": {
+      "main": [
+        [
+          {
+            "node": "HoráriosFuturos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HoráriosAgendados": {
+      "main": [
+        [
+          {
+            "node": "ListaHorariosAgendados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TrataListaHorarios": {
+      "main": [
+        [
+          {
+            "node": "TratarEnvioOpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ListaFinalHorarios": {
+      "main": [
+        [
+          {
+            "node": "TrataOutput",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ListaHorariosAgendados": {
+      "main": [
+        [
+          {
+            "node": "RelacaoDisponiveisIndisponiveis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TratarEnvioOpenAI": {
+      "main": [
+        [
+          {
+            "node": "ListaFinalHorarios",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TrataOutput": {
+      "main": [
+        [
+          {
+            "node": "toll Call ID - get_available-dates1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "ProjetaHorarios",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "toll Call ID - get_available-dates1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Output Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "dinastia-n8n-editor.lfigsi.easypanel.host",
+            "user-agent": "axios/1.7.9",
+            "content-length": "990",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "content-type": "application/json",
+            "x-forwarded-for": "172.18.0.1",
+            "x-forwarded-host": "dinastia-n8n-editor.lfigsi.easypanel.host",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "89a0f4e4d949",
+            "x-real-ip": "172.18.0.1"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "event": "messages.upsert",
+            "instance": "Deebs",
+            "data": {
+              "key": {
+                "remoteJid": "5511985401987@s.whatsapp.net",
+                "fromMe": false,
+                "id": "3EB0DD174CD4E8A1546EA5"
+              },
+              "pushName": "Dival S Filho 😎",
+              "status": "DELIVERY_ACK",
+              "message": {
+                "conversation": "BOA NOITE!!!",
+                "messageContextInfo": {
+                  "deviceListMetadata": {
+                    "senderKeyHash": "YNJYQG3AcrD76Q==",
+                    "senderTimestamp": "1738100867",
+                    "senderAccountType": "E2EE",
+                    "receiverAccountType": "E2EE",
+                    "recipientKeyHash": "aHhcX8dI9KE98w==",
+                    "recipientTimestamp": "1737846458"
+                  },
+                  "deviceListMetadataVersion": 2,
+                  "messageSecret": "MJphNb5kC1hb8CAwBmL5QQBr+cqTl2nSSU63VpAcNG0="
+                }
+              },
+              "messageType": "conversation",
+              "messageTimestamp": 1739319280,
+              "instanceId": "8e60633a-43c9-4c90-9032-3bd6b9713741",
+              "source": "web"
+            },
+            "destination": "https://dinastia-n8n-editor.lfigsi.easypanel.host/webhook-test/Agenda_Deebs",
+            "date_time": "2025-02-11T21:14:40.176Z",
+            "sender": "5511932081209@s.whatsapp.net",
+            "server_url": "https://dinastia-evolution.lfigsi.easypanel.host",
+            "apikey": "46A8DD04E743-41B1-9AFD-78D9B9DB137B"
+          },
+          "webhookUrl": "https://dinastia-n8n-webhook.lfigsi.easypanel.host/webhook-test/Agenda_Deebs",
+          "executionMode": "test"
+        }
+      }
+    ]
+  },
+  "versionId": "0212942a-cefd-4c7d-91e4-f09a948e70be",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-02-11T23:25:26.224Z",
+      "updatedAt": "2025-02-11T23:25:26.224Z",
+      "id": "tvG4WD3l0jUvJQSe",
+      "name": "DEEBS"
+    }
+  ]
+}
