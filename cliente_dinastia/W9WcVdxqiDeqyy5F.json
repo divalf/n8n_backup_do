@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-01-21T00:24:24.234Z",
-  "updatedAt": "2025-02-07T22:38:55.386Z",
+  "updatedAt": "2025-02-12T01:48:52.958Z",
   "id": "W9WcVdxqiDeqyy5F",
   "name": "REFRESH - Agendamentos - zero a expert - RAG - V5",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -497,13 +497,84 @@
         "documentId": {
           "__rl": true,
           "value": "1ZuYBZB6vWdHHuv03RQbU5LUN9Id6Oei59RFKv0fPR0E",
-          "mode": "id"
+          "mode": "list",
+          "cachedResultName": "Agente - SDR - Classificador",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZuYBZB6vWdHHuv03RQbU5LUN9Id6Oei59RFKv0fPR0E/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
+          "value": "gid=0",
           "mode": "list",
-          "value": ""
-        }
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZuYBZB6vWdHHuv03RQbU5LUN9Id6Oei59RFKv0fPR0E/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "nome",
+              "displayName": "nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "whatsapp",
+              "displayName": "whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nivel_de_interesse",
+              "displayName": "nivel_de_interesse",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ultima_mensagem",
+              "displayName": "ultima_mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_hora",
+              "displayName": "data_hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
       },
       "id": "516a0320-4008-41f3-a776-89aa91c7039e",
       "name": "Google Sheets",
@@ -515,8 +586,8 @@
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "WcAura9GJDHzQ1k8",
-          "name": "Google Sheets - Natalina"
+          "id": "iNk2Qb2w5sTYIQaa",
+          "name": "Google Sheets - Natalina2"
         }
       }
     },
@@ -2276,7 +2347,7 @@
       }
     ]
   },
-  "versionId": "8c8c273d-44ca-42d8-b233-73691ea36a5a",
+  "versionId": "d9d37cf2-4354-449b-8cb4-3c14d2890074",
   "triggerCount": 1,
   "tags": [
     {
