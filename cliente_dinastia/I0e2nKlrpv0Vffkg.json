@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-01-31T23:39:36.903Z",
-  "updatedAt": "2025-02-04T03:29:55.097Z",
+  "updatedAt": "2025-02-15T00:21:01.101Z",
   "id": "I0e2nKlrpv0Vffkg",
   "name": "Natalina - RAG - Agendamento",
-  "active": true,
+  "active": false,
   "nodes": [
     {
       "parameters": {
@@ -519,10 +519,10 @@
         "operation": "appendOrUpdate",
         "documentId": {
           "__rl": true,
-          "value": "1T7eMl1DrXuWKioUNt5h5njDb9n4YRQgAUHA_ha5lNvg",
+          "value": "1ZuYBZB6vWdHHuv03RQbU5LUN9Id6Oei59RFKv0fPR0E",
           "mode": "list",
           "cachedResultName": "Agente - SDR - Classificador",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T7eMl1DrXuWKioUNt5h5njDb9n4YRQgAUHA_ha5lNvg/edit?usp=drivesdk"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZuYBZB6vWdHHuv03RQbU5LUN9Id6Oei59RFKv0fPR0E/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
@@ -615,8 +615,8 @@
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "PWv0Kz34YyKqBI1V",
-          "name": "Google Sheets  - Black"
+          "id": "iNk2Qb2w5sTYIQaa",
+          "name": "Google Sheets - Natalina2"
         }
       }
     },
@@ -2731,7 +2731,7 @@
       }
     ]
   },
-  "versionId": "717019bf-d326-4038-afd9-9ae1d24e8fc4",
+  "versionId": "b4516c8f-01ac-49ca-b8d7-e10ee119ba28",
   "triggerCount": 1,
   "tags": [
     {
