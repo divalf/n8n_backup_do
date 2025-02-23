@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-01-21T00:24:24.234Z",
-  "updatedAt": "2025-02-12T01:48:52.958Z",
+  "updatedAt": "2025-02-23T02:10:06.713Z",
   "id": "W9WcVdxqiDeqyy5F",
   "name": "REFRESH - Agendamentos - zero a expert - RAG - V5",
-  "active": true,
+  "active": false,
   "nodes": [
     {
       "parameters": {
