@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-01-31T23:39:36.903Z",
-  "updatedAt": "2025-02-15T00:21:01.101Z",
+  "updatedAt": "2025-03-02T22:50:46.304Z",
   "id": "I0e2nKlrpv0Vffkg",
   "name": "Natalina - RAG - Agendamento",
   "active": false,
@@ -431,7 +431,9 @@
                   }
                 ],
                 "combinator": "and"
-              }
+              },
+              "renameOutput": true,
+              "outputKey": "Googel APPs"
             }
           ]
         },
@@ -755,7 +757,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1860,
+        -1820,
         1120
       ],
       "alwaysOutputData": true
@@ -967,8 +969,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -2600,
-        1700
+        -2860,
+        1740
       ]
     },
     {
@@ -980,8 +982,8 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        -2360,
-        1480
+        -2340,
+        1520
       ],
       "webhookId": "fa089177-b765-47d3-97c8-2eb9eb60a8e6"
     },
@@ -997,8 +999,8 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        -2360,
-        1680
+        -2340,
+        1720
       ],
       "credentials": {
         "redis": {
@@ -1037,8 +1039,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        -2160,
-        1680
+        -2140,
+        1720
       ]
     },
     {
@@ -1048,8 +1050,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -1840,
-        1700
+        -1820,
+        1740
       ]
     },
     {
@@ -1062,8 +1064,8 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        -1840,
-        1520
+        -1820,
+        1560
       ],
       "credentials": {
         "redis": {
@@ -1084,8 +1086,8 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        -2560,
-        1480
+        -2540,
+        1520
       ],
       "credentials": {
         "redis": {
@@ -1119,8 +1121,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -2120,
-        1520
+        -2100,
+        1560
       ]
     },
     {
@@ -2731,7 +2733,7 @@
       }
     ]
   },
-  "versionId": "b4516c8f-01ac-49ca-b8d7-e10ee119ba28",
+  "versionId": "c2051f55-3a63-4d9b-bf23-84d412bb1ae8",
   "triggerCount": 1,
   "tags": [
     {
