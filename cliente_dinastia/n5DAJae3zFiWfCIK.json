@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-01-18T05:23:20.588Z",
-  "updatedAt": "2025-01-18T12:45:47.186Z",
+  "updatedAt": "2025-03-06T23:30:59.325Z",
   "id": "n5DAJae3zFiWfCIK",
   "name": "BACKUP_N8N_GITHUB",
   "active": true,
@@ -465,7 +465,8 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
   },
   "staticData": {
     "node:Schedule Trigger": {
@@ -476,7 +477,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "fd543d1e-475c-4c36-916b-08e85ca16c0d",
+  "versionId": "588ba9b8-0590-4ad4-b279-6016be0e5763",
   "triggerCount": 1,
   "tags": [
     {
