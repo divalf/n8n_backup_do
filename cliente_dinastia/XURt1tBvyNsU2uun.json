@@ -1,0 +1,2280 @@
+{
+  "createdAt": "2025-03-13T03:03:22.129Z",
+  "updatedAt": "2025-03-13T03:39:19.194Z",
+  "id": "XURt1tBvyNsU2uun",
+  "name": "HeyDinastia",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0f3fdb8e-111e-49b3-af88-b5d311d88048",
+              "name": "credencial",
+              "value": "={{ $json.stdout.split('\\n')[1] }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1420,
+        820
+      ],
+      "id": "6bbbd41d-e621-4a86-82a9-72e920264ac9",
+      "name": "credencial"
+    },
+    {
+      "parameters": {
+        "command": "n8n export:credentials --decrypted --id=nhD68JLC27VAbgZt"
+      },
+      "id": "58cb3e35-d09a-47b9-b158-aecaff197156",
+      "name": "exportar_chave",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [
+        1260,
+        820
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        3320,
+        820
+      ],
+      "id": "acb423c2-c59e-433e-82a1-43455824c04f",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.googleapis.com/youtube/v3/captions?videoId={{ $json.id }}&part=snippet",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2640,
+        840
+      ],
+      "id": "8eebf55e-98ef-4c4b-8514-6463aad842f4",
+      "name": "buscar_captions"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.googleapis.com/youtube/v3/captions/{{ $json.items[0].id }}?tfmt=srt",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('credencial').item.json.credencial[0].data.oauthTokenData.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3120,
+        820
+      ],
+      "id": "88ee1fd3-b0d5-41ad-a726-75f23cb1fe9a",
+      "name": "download_subtitle"
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "get",
+        "videoId": "={{ $json.id.videoId }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        2180,
+        840
+      ],
+      "id": "f203ff13-3b8d-4b23-bd4d-75e5ec964280",
+      "name": "buscar_video"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Enable the pgvector extension to work with embedding vectors\ncreate extension vector;\n\n-- Create a table to store your documents\ncreate table documents (\n  id bigserial primary key,\n  content text, -- corresponds to Document.pageContent\n  metadata jsonb, -- corresponds to Document.metadata\n  embedding vector(1536) -- 1536 works for OpenAI embeddings, change if needed\n);\n\n-- Create a function to search for documents\ncreate function match_documents (\n  query_embedding vector(1536),\n  match_count int default null,\n  filter jsonb DEFAULT '{}'\n) returns table (\n  id bigint,\n  content text,\n  metadata jsonb,\n  similarity float\n)\nlanguage plpgsql\nas $\n#variable_conflict use_column\nbegin\n  return query\n  select\n    id,\n    content,\n    metadata,\n    1 - (documents.embedding <=> query_embedding) as similarity\n  from documents\n  where metadata @> filter\n  order by documents.embedding <=> query_embedding\n  limit match_count;\nend;\n$;\n",
+        "options": {}
+      },
+      "id": "eec06f4a-2ec3-460e-9618-818c5cf69cce",
+      "name": "setar_supabase_tabelas_vectoriais",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        900,
+        540
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1980,
+        820
+      ],
+      "id": "a4834b57-0d2c-4810-801e-9949898e7e9b",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2180,
+        640
+      ],
+      "id": "d889e69e-f88a-4b38-bcd9-44684537fb35",
+      "name": "finished"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "videos",
+          "mode": "list",
+          "cachedResultName": "videos"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "yt_id": "={{ $('buscar_video').item.json.id }}",
+            "title": "={{ $('buscar_video').item.json.snippet.title }}",
+            "thumbnail": "={{ $('buscar_video').item.json.snippet.thumbnails.high.url }}",
+            "captions": "={{ $('Extract from File').item.json.data }}",
+            "url": "=https://www.youtube.com/watch?v={{ $('buscar_video').item.json.id }}",
+            "published_at": "={{ $('buscar_video').item.json.snippet.publishedAt }}",
+            "faq_captions": "={ \"faq\": [] }"
+          },
+          "matchingColumns": [
+            "yt_id"
+          ],
+          "schema": [
+            {
+              "id": "yt_id",
+              "displayName": "yt_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "thumbnail",
+              "displayName": "thumbnail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "captions",
+              "displayName": "captions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "faq_captions",
+              "displayName": "faq_captions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "published_at",
+              "displayName": "published_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        3500,
+        820
+      ],
+      "id": "0760e6d0-b7a3-4156-863f-b5081cd7238e",
+      "name": "inserir_video_bd",
+      "credentials": {
+        "postgres": {
+          "id": "nX3GjixLeEl79KU3",
+          "name": "Postgres -SBNaka"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f9b03b4e-b89b-44c1-82ad-9316fe24e187",
+              "leftValue": "={{ $json.status.privacyStatus }}",
+              "rightValue": "public",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2380,
+        840
+      ],
+      "id": "8be479b8-4787-4ce9-be77-11b386cb5df8",
+      "name": "public_only"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Webhook2').item.json.body?.data?.message?.conversation || $('Webhook2').item.json.body?.data?.message?.ephemeralMessage?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.ephemeralMessage?.message?.extendedTextMessage?.text || $('Webhook2').item.json.body?.data?.message?.ephemeralMessage?.message?.extendedTextMessage?.text }}",
+        "options": {
+          "systemMessage": "=# Quem você é:\nVocê é o assistente de IA da DinastIA uma comunidade focada em desenvolvimento de Agentes de IA.\n\n# Sua função:\nSua função é usar a tool RAG para localizar respostas nos vídeos da DinastIA e responder os clientes com a resposta + o link do youtube agregando o &t=<tempo> no final da URL aonde <tempo> é o valor da chave \"tempo\" que vier no json. \n\n# Onde encontrar a URL do vídeo:\nA URL estará na chave \"metadata\" em video_url.\n\n# Chamar a tool \"buscar_srt\" sempre que possível:\nQuando encontrar o vídeo pela TOOL RAG. Sempre utilize tool buscar_srt com o video_id para buscar o SRT do video e responder o usuário com precisao e tambem para indicar a URL e o tempo corretamente.\n\n# Referenciar os videos\nUse a lista abaixo para referencia de todos os videos disponiveis e video_id caso o usuario faça uma pergunta sobre um vídeo específico.\n\n# Formato de link:\nQuando colocar o link de videos, não use nenhum formato em volta do link, apenas coloque o link no texto. Não use [] ou () entre um link.\n\n# Use a tool \"buscar_srt\"\nUse a tool \"buscar_srt\" para buscar o texto inteiro de um vídeo caso ainda haja dúvidas nas informações fornecidas pela tool \"RAG\". APenas utilize uma única vez.\n\n# Guidelines\nColoque até no máximo 2 links que seja sobre o que o user está perguntando.\nResponde de forma simples, objetiva e curtas com no máximo 300 caracteres.\n\n<videos>\n{{ $json.videos.map(video => `\n<video>\n  <title>${video.title}</title>\n  <video_id>${video.yt_id}</video_id>\n</video>\n`) }}\n</videos>\n\nResponda com formatacão para o WhatsApp."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        3820,
+        1860
+      ],
+      "id": "0a03cdcd-c5ca-4f2b-9b77-2304d8d0ef91",
+      "name": "AI Agent",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {
+          "dimensions": 1536
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        4060,
+        2220
+      ],
+      "id": "ec26ed7c-6d66-4e9c-9a08-a2861dd07bb5",
+      "name": "Embeddings OpenAI3"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolName": "documents",
+        "toolDescription": "=Faça uma busca pelo tema que foi lhe perguntado e trará o link correspondente que está no metadada",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "topK": 25,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1,
+      "position": [
+        4060,
+        2080
+      ],
+      "id": "9a854b5c-0ead-4041-9882-edae425eff53",
+      "name": "RAG"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Usar para puxar os dados de SRT completo do video via video_id da tool RAG",
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "videos",
+          "mode": "list",
+          "cachedResultName": "videos"
+        },
+        "limit": 1,
+        "where": {
+          "values": [
+            {
+              "column": "yt_id",
+              "value": "={{ $fromAI('video_id', 'o ID do video que veio do RAG') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.5,
+      "position": [
+        4380,
+        2040
+      ],
+      "id": "2fcd821a-e386-4d83-bee6-d61c5d0789c6",
+      "name": "buscar_srt"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "videos",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        3620,
+        1860
+      ],
+      "id": "efefb585-a704-451a-a8d5-d6138b094cdb",
+      "name": "videos"
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "returnAll": true,
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        820
+      ],
+      "id": "cec3f464-13a5-43b7-95d2-1b825beb16ae",
+      "name": "buscar_todos_os_videos_backup"
+    },
+    {
+      "parameters": {
+        "content": "## Tratamento para o RAG",
+        "height": 1138.819188191882,
+        "width": 2220
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        420,
+        1600
+      ],
+      "id": "9ff3cff7-05d9-4236-b34f-f3bd715321b2",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "jsCode": "function parseSRT(srtText) {\n    const regex = /(\\d+)\\s+(\\d{2}):(\\d{2}):(\\d{2}),(\\d{3}) --> (\\d{2}):(\\d{2}):(\\d{2}),(\\d{3})\\s+([\\s\\S]*?)(?=\\s+\\d+\\s+\\d{2}:\\d{2}:\\d{2},\\d{3}|\\s*$)/g;\n    let groupedByMinute = {};\n\n    let match;\n    while ((match = regex.exec(srtText)) !== null) {\n        let index = match[1]; // Subtitle index\n        let startHour = parseInt(match[2], 10);\n        let startMinute = parseInt(match[3], 10);\n        let startSecond = parseInt(match[4], 10);\n        let startMs = parseInt(match[5], 10);\n        let endTime = `${match[6]}:${match[7]}:${match[8]},${match[9]}`;\n        let text = match[10].replace(/\\s+/g, ' ').trim(); // Normalize text spacing\n\n        let totalMinutes = startHour * 60 + startMinute; // Convert HH:MM to integer minute\n\n        if (!groupedByMinute[totalMinutes]) {\n            groupedByMinute[totalMinutes] = [];\n        }\n\n        groupedByMinute[totalMinutes].push({\n            time: `${match[2]}:${match[3]}:${match[4]},${match[5]} --> ${endTime}`,\n            text: text\n        });\n    }\n\n    return groupedByMinute;\n}\n\nconst srtContent = $('video').all()[0].json.captions;\nconst parsedSrt = parseSRT(srtContent);\n\nreturn { parsedSrt };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        1800
+      ],
+      "id": "9683c581-fb48-462e-aad1-fac2960e3bb6",
+      "name": "parsedSrt"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "videos",
+          "mode": "list",
+          "cachedResultName": "videos"
+        },
+        "limit": 1,
+        "where": {
+          "values": [
+            {
+              "column": "yt_id",
+              "value": "={{ $('video').item.json.yt_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        2060,
+        1880
+      ],
+      "id": "a2e43c9b-ad69-41fc-90a9-5d4f4b2bbc89",
+      "name": "get_video",
+      "credentials": {
+        "postgres": {
+          "id": "nX3GjixLeEl79KU3",
+          "name": "Postgres -SBNaka"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "parsedSrt",
+        "include": "allOtherFields",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        1800
+      ],
+      "id": "766822dc-c6d8-4a4a-b7ff-95603f044f9b",
+      "name": "minutos"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1540,
+        1800
+      ],
+      "id": "0871cbb4-6435-4596-8a47-49621dfe3ea3",
+      "name": "minuto",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1660,
+        2220
+      ],
+      "id": "0ab5d6d1-4ff7-4aa6-87d3-05a93f6a974f",
+      "name": "OpenAI Chat Model3",
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "jsCode": "const faq = $('get_video').first().json.faq_captions.faq;\n\nconst perguntas = JSON.parse($('perguntas').first().json.text);\n\nconst perguntasComTitulo = perguntas.map(item => ({ ...item, pergunta: `No vídeo ${$input.first().json.title}. ${item.pergunta}` }))\n\nreturn [{ faq: [...faq, ...perguntasComTitulo] }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2220,
+        1880
+      ],
+      "id": "5c2a0393-9749-4a3f-81fb-a56c7b855c06",
+      "name": "merge_perguntas"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "videos",
+          "mode": "list",
+          "cachedResultName": "videos"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "yt_id": "={{ $('get_video').item.json.yt_id }}",
+            "faq_captions": "={{ $('merge_perguntas').item.json }}"
+          },
+          "matchingColumns": [
+            "yt_id"
+          ],
+          "schema": [
+            {
+              "id": "yt_id",
+              "displayName": "yt_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "thumbnail",
+              "displayName": "thumbnail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "captions",
+              "displayName": "captions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "faq_captions",
+              "displayName": "faq_captions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "published_at",
+              "displayName": "published_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        2380,
+        1880
+      ],
+      "id": "24248bed-05e3-46b6-9381-43da456dd36d",
+      "name": "update_faq",
+      "credentials": {
+        "postgres": {
+          "id": "nX3GjixLeEl79KU3",
+          "name": "Postgres -SBNaka"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "videos",
+          "mode": "list",
+          "cachedResultName": "videos"
+        },
+        "limit": 1,
+        "where": {
+          "values": [
+            {
+              "column": "yt_id",
+              "value": "={{ $json.body.yt_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        700,
+        1800
+      ],
+      "id": "38a069f6-5b5b-4003-93a0-8fc0943a291e",
+      "name": "video",
+      "credentials": {
+        "postgres": {
+          "id": "nX3GjixLeEl79KU3",
+          "name": "Postgres -SBNaka"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.faq_captions.faq.map(faq => `${faq.pergunta} tempo: ${faq.tempo}`) }}",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "metadata",
+                "value": "={ \"video_url\": \"{{ $json.url }}\", \"video_id\": \"{{ $json.yt_id }}\" }"
+              }
+            ]
+          }
+        }
+      },
+      "id": "4f49264a-46e4-4ece-9bdc-17da16e90b72",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        980,
+        3380
+      ]
+    },
+    {
+      "parameters": {
+        "chunkSize": 1500,
+        "chunkOverlap": 100,
+        "options": {}
+      },
+      "id": "4205f2be-be51-4458-a375-244471f16bfe",
+      "name": "Recursive Character Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        3520
+      ]
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {
+          "dimensions": 1536
+        }
+      },
+      "id": "5939cb92-0ba6-456b-8b39-821656c49faa",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1,
+      "position": [
+        820,
+        3420
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "id": "268979dd-6b19-4601-a520-457032dd2e51",
+      "name": "Vector Storage1",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1,
+      "position": [
+        900,
+        3220
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "videos",
+          "mode": "list",
+          "cachedResultName": "videos"
+        },
+        "limit": 1,
+        "where": {
+          "values": [
+            {
+              "column": "yt_id",
+              "value": "={{ $json.body.yt_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        700,
+        3220
+      ],
+      "id": "4efdf83e-1b64-4d03-8286-c1730b10c560",
+      "name": "video1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "bf857838-207e-4f4b-8f4c-d3a329fe6b18",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        520,
+        3220
+      ],
+      "id": "2fed7b42-6e51-4f7c-b2bb-242d9cbaa919",
+      "name": "Webhook",
+      "webhookId": "bf857838-207e-4f4b-8f4c-d3a329fe6b18"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1260,
+        3220
+      ],
+      "id": "80326746-08c5-40b4-90cd-5a16aff943b7",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://n8n.dinastia.uk/webhook/bf857838-207e-4f4b-8f4c-d3a329fe6b18",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "yt_id",
+              "value": "={{ $json.yt_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        2940
+      ],
+      "id": "077f20a7-5e5a-46ef-9a55-626fc8cda60a",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        960,
+        2920
+      ],
+      "id": "60210250-d020-4f82-93c5-8b06e032b356",
+      "name": "video2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        2800
+      ],
+      "id": "f3ec5416-b013-49ba-ae77-f67933f0bd3e",
+      "name": "finished2"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- SELECT v.yt_id\n-- FROM videos v\n-- LEFT JOIN documents d \n-- ON d.metadata->>'metadata' LIKE '%' || v.yt_id || '%'\n-- WHERE d.metadata IS NULL;\n\nSELECT v.yt_id\nFROM videos v",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        740,
+        2920
+      ],
+      "id": "ffeb00a2-cbad-4ade-bfa4-1fc00c46f0bf",
+      "name": "Postgres"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT yt_id FROM videos;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        860,
+        820
+      ],
+      "id": "6715e415-5849-43a1-9ce5-1f0c82bf6fb1",
+      "name": "videos1",
+      "credentials": {
+        "postgres": {
+          "id": "nX3GjixLeEl79KU3",
+          "name": "Postgres -SBNaka"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9c4c6a77-80cd-46c1-94c0-4225c3ae499e",
+              "leftValue": "={{ $('videos2').item.json.videos.map(item => item.yt_id) }}",
+              "rightValue": "={{ $json.id.videoId }}",
+              "operator": {
+                "type": "array",
+                "operation": "notContains",
+                "rightType": "any"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        820
+      ],
+      "id": "b57f6fde-5e8f-48bf-a26f-59bdf0d443c9",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "videos",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        820
+      ],
+      "id": "3517d763-6805-405b-a61c-eb43afc8dc24",
+      "name": "videos2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2d0d8178-48d6-4adc-b492-2d5ce87830ab",
+              "leftValue": "={{ $json.items }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2860,
+        840
+      ],
+      "id": "5c1d97b3-1ebf-41ac-be05-0ea07884f47b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1920,
+        1680
+      ],
+      "id": "82255330-48ce-4312-9a9e-3d482ce86622",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://n8n.dinastia.uk/webhook/65454564aawdaw-awdawaw64565",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "yt_id",
+              "value": "={{ $json.yt_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        2400
+      ],
+      "id": "1ba9ca2b-6707-47a6-adb3-b258687fe961",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        960,
+        2380
+      ],
+      "id": "4a509218-9b1c-4d35-8e05-2289585aabd0",
+      "name": "video3"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        2260
+      ],
+      "id": "65af51b1-62ea-4156-9041-f098b1072da7",
+      "name": "finished3"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT yt_id FROM videos WHERE faq_captions = '{\"faq\": []}'::jsonb;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        740,
+        2380
+      ],
+      "id": "d534ff1f-e392-406e-be03-d6817259fac9",
+      "name": "Postgres1",
+      "credentials": {
+        "postgres": {
+          "id": "nX3GjixLeEl79KU3",
+          "name": "Postgres -SBNaka"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        780,
+        2160
+      ],
+      "id": "fe242a71-b0c1-4bb3-b578-017ce2dd7534",
+      "name": "OpenAI Chat Model",
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1740,
+        1680
+      ],
+      "id": "f3c8ecd6-1c04-4c3c-b8c0-7b16e2381aee",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "hey-dinastia",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        2980,
+        1880
+      ],
+      "id": "ad77f5aa-811e-4f0f-8946-80333eaa64bd",
+      "name": "Webhook2",
+      "webhookId": "be7bc18a-9254-4960-b01b-fa4025fbffd3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ac22aae8-4980-404e-9da1-01b92a842ced",
+              "leftValue": "={{ [\"556299597044@s.whatsapp.net\",\"447928821569@s.whatsapp.net\", \"555197490815@s.whatsapp.net\", \"5521979361766@s.whatsapp.net\", \"5511947927078@s.whatsapp.net\", \"5521976667714@s.whatsapp.net\",\n\"120363395781099946@g.us\",\n\"120363387789538925@g.us\", \"120363375520943587@g.us\", \"120363381248656352@g.us\"].includes($json.body.data.key.remoteJid) }}",
+              "rightValue": "={{ $json.body.data.key.remoteJid }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "112239ad-7e99-4028-bce4-4b41ab52a803",
+              "leftValue": "={{ $json.body?.data?.message?.conversation || $json.body?.data?.message?.ephemeralMessage?.message?.extendedTextMessage?.text }}",
+              "rightValue": "#heydinastia",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3140,
+        1880
+      ],
+      "id": "d39ddd94-c571-438d-8c3b-1b9068e4c8db",
+      "name": "auth"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "Select yt_id, title FROM videos;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        3400,
+        1860
+      ],
+      "id": "70f415c1-74ce-4991-9537-190a5afa89cb",
+      "name": "listar_videos"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=heydinastia_{{ $('auth').item.json.body.data.key.remoteJid }}",
+        "sessionTTL": 300
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
+      "typeVersion": 1.4,
+      "position": [
+        3920,
+        2080
+      ],
+      "id": "e3f27815-fc6d-4167-8cf9-6dc68fa894df",
+      "name": "Redis Chat Memory"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "HeyDinastIA",
+        "remoteJid": "={{ $('auth').item.json.body.data.key.remoteJid }}",
+        "messageText": "={{ $json.output }}",
+        "options_message": {
+          "quoted": {
+            "messageQuoted": {
+              "messageId": "={{ $('auth').item.json.body.data.key.id }}"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        4180,
+        1860
+      ],
+      "id": "8750d2e7-f1ee-4940-b4eb-501a952378c1",
+      "name": "Evolution API",
+      "credentials": {}
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        880,
+        460
+      ],
+      "id": "451aa81e-4021-4e04-a090-d6090f79534e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Rodando no WhatsApp",
+        "height": 700,
+        "width": 1780
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2880,
+        1740
+      ],
+      "id": "da3d72ea-00b3-44c9-9f65-a7f80b272ec1",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        3740,
+        2060
+      ],
+      "id": "10e75e80-f0f9-4aed-b1d7-33b0447650ee",
+      "name": "Google Gemini Chat Model"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=<SRT>\n{{ $json.parsedSrt.map((text, index) => `\n${index+1}\n\n${text.time}\n${text.text}\n`) }}\n</SRT>",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=<RESUMO_VIDEO>\n{{ $('resumo').item.json.text }}\n</RESUMO_VIDEO>\n\n<TITULO_VIDEO>\n{{ $('video').item.json.title }}\n</TITULO_VIDEO>\n\n# DisnatIA\nA DinastIA é a maior comunidade de desenvolvimento de Agentes de IA do Brasil. Focada em verticais de agentes, como SDR, Atendimento, Agendamento, Marketing digital como trafego pago, analista de campanhas pagas. \n\n# O aluno\nO aluno da DinastIA são empreendedores que desejam aprender como criar agentes de IA e revendar ao mercado. São pessoas técnicas na maioria das vezes\ne possuem conhecimento sobre a plataforma do n8n.\n\n# Sua função\nVocê é um analista de texto experiente. Sua função é analisar o texto em <SRT>. Tendo em consideração também o <RESUMO_VIDEO> e <TITULO_VIDEO>, crie várias perguntas baseado em como que O aluno iria perguntar. Juntamente com a pergunta, indique em qual minuto e segundo do vídeo estará a resposta, utilizando o formato &t do YouTube. Exemplo t=15m10s e includa esta informação na chave \"tempo\".\n\n# Objetivo\nSeu objetivo é analisar com precisão o texto e contexto e criar perguntas cuja a resposta está indicada neste tempo. Apenas crie perguntas que sejam relevantes para este tempo. Tenha também como referencia o <RESUMO_VIDEO> e <TITULO_VIDEO> para analisar perguntas que tenham relação a eles também.\n\n# Variações\nCrie variações de perguntas baseado no <TITULO_VIDEO> e <RESUMO_VIDEO> caso faça sentido. Caso não fizer sentido, não crie as variações.\n\n# Evite\nNão crie perguntas cuja a resposta não esteja presente em <SRT>.\nNão começe a resposta com \"```json\". Responda apenas usando o formato em JSON.\n\n# Formato\nResponda apenas utilizando o formato JSON, sem aspas, sem \"```json\" no começo e sem \"```\" no final. Utilize a Schema abaixo:\n[\n    {\n        \"pergunta\": string,\n        \"tempo\": string\n    }\n]"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        1740,
+        1880
+      ],
+      "id": "bbe3aa84-ca81-4baf-b6c5-e3450a68e7b9",
+      "name": "perguntas"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "options": {}
+      },
+      "id": "4e223a92-1eff-4425-8c6b-80c3c47e0830",
+      "name": "Question and Answer Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.4,
+      "position": [
+        1960,
+        2160
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "2ed0baf5-075c-4c8a-8503-277f7a358a13",
+      "name": "OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.1,
+      "position": [
+        1880,
+        2300
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "topK": 10
+      },
+      "id": "e4ebd410-dd96-4765-8f3c-9fdee8e3e22f",
+      "name": "Vector Store Retriever",
+      "type": "@n8n/n8n-nodes-langchain.retrieverVectorStore",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        2300
+      ]
+    },
+    {
+      "parameters": {
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "documentsNaka",
+          "mode": "list",
+          "cachedResultName": "documentsNaka"
+        },
+        "options": {}
+      },
+      "id": "8fda4277-3e73-40f8-b9bc-df1d5564e9b8",
+      "name": "Qdrant Vector Store",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1,
+      "position": [
+        2320,
+        2480
+      ],
+      "credentials": {
+        "qdrantApi": {
+          "id": "JeMSH1trgpLFmci4",
+          "name": "QdrantApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "50e73d7e-84e5-4fbb-be88-2b933c507f23",
+      "name": "Embeddings OpenAI1",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2200,
+        2560
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "65454564aawdaw-awdawaw64565",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        520,
+        1800
+      ],
+      "id": "22ea63bb-fc64-425f-8b96-ea0d81f6afc4",
+      "name": "Webhook1",
+      "webhookId": "bf857838-207e-4f4b-8f4c-d3a329fe6b18"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=<SRT>\n{{ $json.captions }}\n</SRT>\n\n",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Voce é um analista de texto experiente e sua função é criar um resumo do vídeo que está em <SRT>. Crie um resumo destacando os pincipáis tópicos abordados, as principais ferramentas, utilidade, passo a passo. O resumo deve ser direcionado a pessoas que estão iniciando seus desenvolvimentos em automação e agentes de IA. Escreva no formato Markdown. Seja objetivo, a mensagem do resumo tem que ser concisa e apenas identificar de forma fidedigna o conteudo em si. Do not start with \"```markdown\""
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        880,
+        1800
+      ],
+      "id": "81bd3986-77bb-426c-b625-3ad70094fbd0",
+      "name": "resumo"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "a0d9d80a-e2a4-4ae6-9028-08e9b3558354",
+      "name": "OpenAI Chat Model2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.1,
+      "position": [
+        840,
+        1960
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "b92f6988-3ee8-4100-9b97-30f09c41928a",
+      "name": "OpenAI Chat Model4",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.1,
+      "position": [
+        1660,
+        2000
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "credencial": {
+      "main": [
+        [
+          {
+            "node": "buscar_todos_os_videos_backup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "exportar_chave": {
+      "main": [
+        [
+          {
+            "node": "credencial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "inserir_video_bd",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "buscar_captions": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "download_subtitle": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "buscar_video": {
+      "main": [
+        [
+          {
+            "node": "public_only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "finished",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "buscar_video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "inserir_video_bd": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "public_only": {
+      "main": [
+        [
+          {
+            "node": "buscar_captions",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI3": {
+      "ai_embedding": [
+        [
+          {
+            "node": "RAG",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RAG": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "buscar_srt": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "videos": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "parsedSrt": {
+      "main": [
+        [
+          {
+            "node": "minutos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_video": {
+      "main": [
+        [
+          {
+            "node": "merge_perguntas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "minutos": {
+      "main": [
+        [
+          {
+            "node": "minuto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "minuto": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "perguntas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "merge_perguntas": {
+      "main": [
+        [
+          {
+            "node": "update_faq",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update_faq": {
+      "main": [
+        [
+          {
+            "node": "minuto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "video": {
+      "main": [
+        [
+          {
+            "node": "resumo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Vector Storage1",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Vector Storage1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Storage1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "video1": {
+      "main": [
+        [
+          {
+            "node": "Vector Storage1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "video1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "video2": {
+      "main": [
+        [
+          {
+            "node": "finished2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "video2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "video2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "buscar_todos_os_videos_backup": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "videos1": {
+      "main": [
+        [
+          {
+            "node": "videos2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "videos2": {
+      "main": [
+        [
+          {
+            "node": "exportar_chave",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "download_subtitle",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "video3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "video3": {
+      "main": [
+        [
+          {
+            "node": "finished3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres1": {
+      "main": [
+        [
+          {
+            "node": "video3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook2": {
+      "main": [
+        [
+          {
+            "node": "auth",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "listar_videos": {
+      "main": [
+        [
+          {
+            "node": "videos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "auth": {
+      "main": [
+        [
+          {
+            "node": "listar_videos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Evolution API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "perguntas": {
+      "main": [
+        [
+          {
+            "node": "get_video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Retriever": {
+      "ai_retriever": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_retriever",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Vector Store": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Retriever",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "resumo": {
+      "main": [
+        [
+          {
+            "node": "parsedSrt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "resumo",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "perguntas",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n.dinastia.uk",
+            "user-agent": "axios/1.7.4",
+            "content-length": "17",
+            "accept": "application/json,text/html,application/xhtml+xml,application/xml,text/*;q=0.9, image/*;q=0.8, */*;q=0.7",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "content-type": "application/json",
+            "x-forwarded-for": "172.18.0.1",
+            "x-forwarded-host": "n8n.dinastia.uk",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "9ba83ca7dbb8",
+            "x-real-ip": "172.18.0.1"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "yt_id": "ztza1fLiTRc"
+          },
+          "webhookUrl": "https://n8n.dinastia.uk/webhook/bf857838-207e-4f4b-8f4c-d3a329fe6b18",
+          "executionMode": "production"
+        }
+      }
+    ],
+    "Webhook2": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n.dinastia.uk",
+            "user-agent": "axios/1.7.9",
+            "content-length": "1413",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "content-type": "application/json",
+            "x-forwarded-for": "172.18.0.1",
+            "x-forwarded-host": "n8n.dinastia.uk",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "89b4b7b2ff1f",
+            "x-real-ip": "172.18.0.1"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "event": "messages.upsert",
+            "instance": "HeyDinastIA",
+            "data": {
+              "key": {
+                "remoteJid": "120363387789538925@g.us",
+                "fromMe": false,
+                "id": "3EB00014938B750E5F0DD4",
+                "participant": "447928821569@s.whatsapp.net"
+              },
+              "pushName": "Guilherme Reis 👑",
+              "status": "DELIVERY_ACK",
+              "message": {
+                "messageContextInfo": {
+                  "messageSecret": "xseanI5MS6gEGpu9/ASRifegLUhxFNI/d26UrJYGeYI="
+                },
+                "conversation": "#heydinastia qual video explica o node de memoria usando o Redis e Postgress?"
+              },
+              "contextInfo": {
+                "stanzaId": "3EB018707201D206D25FC3",
+                "participant": "556992795233@s.whatsapp.net",
+                "quotedMessage": {
+                  "conversation": "Opa, boa tarde tudo bem? te, algum tutorial sobre base de dados? utilizar o nó do (postgres ou reddis) que seja próprio para ia trabalhar o contexto de uma interação?  Atualmente fico preso nas threads da opeanai, queria aprender a ter maior controle sobre esses contextos, indicam algum tutorial?",
+                  "messageContextInfo": {
+                    "messageSecret": "rp2BLcTbOAmpm8tBK+OLEHu4y7DOxLyHoA99ZhLU4zA="
+                  }
+                },
+                "expiration": 7776000,
+                "disappearingMode": {
+                  "initiator": "CHANGED_IN_CHAT"
+                }
+              },
+              "messageType": "conversation",
+              "messageTimestamp": 1739644624,
+              "instanceId": "db2b0468-e1a4-4f1e-b5aa-ed8de92f1ba2",
+              "source": "web"
+            },
+            "destination": "https://n8n.dinastia.uk/webhook/hey-dinastia",
+            "date_time": "2025-02-15T15:37:05.028Z",
+            "sender": "447821721714@s.whatsapp.net",
+            "server_url": "https://dinastia-evolution.jnsbgu.easypanel.host",
+            "apikey": "2CA7EED03BE9-41F6-BE6F-8497EEA5B1E1"
+          },
+          "webhookUrl": "https://n8n.dinastia.uk/webhook/hey-dinastia",
+          "executionMode": "production"
+        }
+      }
+    ],
+    "Webhook1": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n.dinastia.uk",
+            "user-agent": "axios/1.7.4",
+            "content-length": "17",
+            "accept": "application/json,text/html,application/xhtml+xml,application/xml,text/*;q=0.9, image/*;q=0.8, */*;q=0.7",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "content-type": "application/json",
+            "x-forwarded-for": "172.18.0.1",
+            "x-forwarded-host": "n8n.dinastia.uk",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "9ba83ca7dbb8",
+            "x-real-ip": "172.18.0.1"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "yt_id": "ztza1fLiTRc"
+          },
+          "webhookUrl": "https://n8n.dinastia.uk/webhook/bf857838-207e-4f4b-8f4c-d3a329fe6b18",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "versionId": "e7478afc-c300-40ee-888e-faed5d6f77b3",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-01-18T12:45:43.202Z",
+      "updatedAt": "2025-01-18T12:45:43.202Z",
+      "id": "7B7qTAU2yw7dt0xZ",
+      "name": "black"
+    }
+  ]
+}
