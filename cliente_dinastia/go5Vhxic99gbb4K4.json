@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-03-23T22:52:18.175Z",
-  "updatedAt": "2025-03-23T22:59:59.158Z",
+  "updatedAt": "2025-03-25T01:59:01.788Z",
   "id": "go5Vhxic99gbb4K4",
   "name": "Atendimento + Agendamento + RAG PetShop  Paradise",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -60,7 +60,13 @@
       "position": [
         1940,
         1720
-      ]
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
     },
     {
       "parameters": {
@@ -118,7 +124,13 @@
         840,
         1440
       ],
-      "executeOnce": true
+      "executeOnce": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "SSONdBJXG2LU2PuV",
+          "name": "Google Drive - Black"
+        }
+      }
     },
     {
       "parameters": {
@@ -149,7 +161,13 @@
       "position": [
         320,
         1400
-      ]
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "SSONdBJXG2LU2PuV",
+          "name": "Google Drive - Black"
+        }
+      }
     },
     {
       "parameters": {
@@ -178,7 +196,13 @@
       "position": [
         320,
         1580
-      ]
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "SSONdBJXG2LU2PuV",
+          "name": "Google Drive - Black"
+        }
+      }
     },
     {
       "parameters": {
@@ -230,7 +254,13 @@
         680,
         1440
       ],
-      "alwaysOutputData": true
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "k0C20xz6iqH7ezTS",
+          "name": "Supabase - Black"
+        }
+      }
     },
     {
       "parameters": {
@@ -457,7 +487,13 @@
       "position": [
         1820,
         1460
-      ]
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "k0C20xz6iqH7ezTS",
+          "name": "Supabase - Black"
+        }
+      }
     },
     {
       "parameters": {
@@ -729,9 +765,9 @@
         "operation": "delete",
         "calendar": {
           "__rl": true,
-          "value": "n8nlabz@gmail.com",
+          "value": "o72bth54ddm831p74q6fc007fig4eri9@import.calendar.google.com",
           "mode": "list",
-          "cachedResultName": "n8nlabz@gmail.com"
+          "cachedResultName": "GTD"
         },
         "eventId": "={{ $fromAI('id') }}",
         "options": {}
@@ -757,9 +793,9 @@
         "toolDescription": "Use essa ferramenta para criar o agendamento do cliente, apenas um agendamento por horário, faça com que exista a consulta de horário na tool busca_eventos para não agendar dois clientes no mesmo horario.\nApenas uma e-mail de usuário por horário de atendimento\nEstá proibido agendar mais de uma vez.",
         "calendar": {
           "__rl": true,
-          "value": "n8nlabz@gmail.com",
+          "value": "o72bth54ddm831p74q6fc007fig4eri9@import.calendar.google.com",
           "mode": "list",
-          "cachedResultName": "n8nlabz@gmail.com"
+          "cachedResultName": "GTD"
         },
         "start": "= {{ $fromAI('start_time') }}",
         "end": "= {{ $fromAI('end_time') }}",
@@ -799,9 +835,9 @@
         "operation": "getAll",
         "calendar": {
           "__rl": true,
-          "value": "n8nlabz@gmail.com",
+          "value": "o72bth54ddm831p74q6fc007fig4eri9@import.calendar.google.com",
           "mode": "list",
-          "cachedResultName": "n8nlabz@gmail.com"
+          "cachedResultName": "GTD"
         },
         "returnAll": true,
         "options": {
@@ -832,9 +868,9 @@
         "operation": "getAll",
         "calendar": {
           "__rl": true,
-          "value": "n8nlabz@gmail.com",
+          "value": "o72bth54ddm831p74q6fc007fig4eri9@import.calendar.google.com",
           "mode": "list",
-          "cachedResultName": "n8nlabz@gmail.com"
+          "cachedResultName": "GTD"
         },
         "limit": 10,
         "options": {
@@ -875,7 +911,7 @@
         "options": {
           "appendAttribution": false,
           "senderName": "Enviado pela ",
-          "replyTo": "n8nlabz@gmail.com"
+          "replyTo": "divalf@gmail.com"
         }
       },
       "id": "681e60e4-f550-4832-8f69-e6407facb1db",
@@ -926,14 +962,14 @@
       ],
       "credentials": {
         "redis": {
-          "id": "jm7Z6lqHaHegQqJ0",
-          "name": "Redis - Black"
+          "id": "PgTYy7QEIKMvg1pV",
+          "name": "Redis - paradise"
         }
       }
     },
     {
       "parameters": {
-        "amount": 10
+        "amount": 2
       },
       "id": "a938c1b7-da33-4d9c-9a61-0132ad92fc85",
       "name": "Wait",
@@ -961,8 +997,8 @@
       ],
       "credentials": {
         "redis": {
-          "id": "jm7Z6lqHaHegQqJ0",
-          "name": "Redis - Black"
+          "id": "PgTYy7QEIKMvg1pV",
+          "name": "Redis - paradise"
         }
       }
     },
@@ -1049,8 +1085,8 @@
       ],
       "credentials": {
         "redis": {
-          "id": "jm7Z6lqHaHegQqJ0",
-          "name": "Redis - Black"
+          "id": "PgTYy7QEIKMvg1pV",
+          "name": "Redis - paradise"
         }
       }
     },
@@ -1187,8 +1223,8 @@
       ],
       "credentials": {
         "redis": {
-          "id": "jm7Z6lqHaHegQqJ0",
-          "name": "Redis - Black"
+          "id": "PgTYy7QEIKMvg1pV",
+          "name": "Redis - paradise"
         }
       }
     },
@@ -1209,8 +1245,8 @@
       ],
       "credentials": {
         "redis": {
-          "id": "jm7Z6lqHaHegQqJ0",
-          "name": "Redis - Black"
+          "id": "PgTYy7QEIKMvg1pV",
+          "name": "Redis - paradise"
         }
       }
     },
@@ -1231,8 +1267,8 @@
       ],
       "credentials": {
         "redis": {
-          "id": "jm7Z6lqHaHegQqJ0",
-          "name": "Redis - Black"
+          "id": "PgTYy7QEIKMvg1pV",
+          "name": "Redis - paradise"
         }
       }
     },
@@ -1312,7 +1348,7 @@
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "SEU WEBHOOK AQUI",
+        "path": "paradise",
         "options": {}
       },
       "id": "a60864ae-fa02-4392-8fdc-e76847697ca4",
@@ -1328,7 +1364,7 @@
     {
       "parameters": {
         "operation": "get",
-        "tableId": "dados_cliente",
+        "tableId": "userspet",
         "filters": {
           "conditions": [
             {
@@ -1403,7 +1439,7 @@
     },
     {
       "parameters": {
-        "tableId": "dados_cliente",
+        "tableId": "userspet",
         "fieldsUi": {
           "fieldValues": [
             {
@@ -1584,7 +1620,7 @@
     },
     {
       "parameters": {
-        "amount": 1.2
+        "amount": 3
       },
       "id": "90eda3ff-5946-4f6f-8beb-e414c66126c8",
       "name": "1,2s1",
@@ -1666,18 +1702,6 @@
         2820,
         320
       ]
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-evolution-api.evolutionApi",
-      "typeVersion": 1,
-      "position": [
-        3640,
-        340
-      ],
-      "id": "933828c5-aac5-4ae7-b5a8-d5cb3cd057bf",
-      "name": "Evolution API",
-      "credentials": {}
     },
     {
       "parameters": {
@@ -1936,8 +1960,8 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        3220,
-        900
+        3200,
+        2060
       ]
     },
     {
@@ -1966,22 +1990,10 @@
       "name": "ElevenLabsGenerateVoice",
       "type": "n8n-nodes-base.httpRequest",
       "position": [
-        3020,
+        3800,
         900
       ],
       "typeVersion": 4.2
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-evolution-api.evolutionApi",
-      "typeVersion": 1,
-      "position": [
-        3380,
-        900
-      ],
-      "id": "500a7093-0a87-48cf-800f-46f00c2cdb03",
-      "name": "Evolution API1",
-      "credentials": {}
     },
     {
       "parameters": {
@@ -2126,6 +2138,169 @@
           "name": "OpenAi - black"
         }
       }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/audio/speech",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "tts-1"
+            },
+            {
+              "name": "input",
+              "value": "={{ $json.textoSemQuebrasNemEmojis }}"
+            },
+            {
+              "name": "voice",
+              "value": "echo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c882b3ce-629c-4786-8700-e3932dff3ca4",
+      "name": "Gera Áudio",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2940,
+        2060
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ \"https://vrxlfvjgozmrkrquflgr.supabase.co/storage/v1/object/audio/speech\"+Date.now()+\".mpga\" }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZyeGxmdmpnb3ptcmtycXVmbGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzMyNzgwOTEsImV4cCI6MjA0ODg1NDA5MX0.fmruj9P0y9Tc0gOWWfG_P51tWzf_Aq4SsIdK12YdJfs"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "id": "bd8bcae2-9313-4296-871a-907f3be3dc9c",
+      "name": "Upload Supabase",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3420,
+        2400
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "874847db-f371-42fa-bd1a-1e3227dde614",
+              "name": "url_file",
+              "value": "={{ \"https://vrxlfvjgozmrkrquflgr.supabase.co/storage/v1/object/public/\"+$json.Key }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d181633b-4c25-4b4a-b12b-ab96a118dbf0",
+      "name": "Cria File URL",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3660,
+        2400
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://server01.uazapi.dev/message/sendWhatsAppAudio/iwsuhawk",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "RQAE-IAXG-N0FS-P1U8"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"number\": \"5511985401987@s.whatsapp.net\",\n  \"audioMessage\": {\n    \"audio\": \"{{ $json.url_file }}\"\n  },\n  \"options\": {\n    \"delay\": 200,\n    \"presence\": \"recording\"\n  }\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "id": "546d5251-852a-4704-a714-adb8d2929df3",
+      "name": "Envia Áudio",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3860,
+        2400
+      ]
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "={{ \"https://vrxlfvjgozmrkrquflgr.supabase.co/storage/v1/object/\"+$('Upload Supabase').item.json.Key }}\n",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZyeGxmdmpnb3ptcmtycXVmbGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzMyNzgwOTEsImV4cCI6MjA0ODg1NDA5MX0.fmruj9P0y9Tc0gOWWfG_P51tWzf_Aq4SsIdK12YdJfs"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6055d2f9-16c9-4bd6-bf5b-7dcb014c4f9d",
+      "name": "Delete File",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4280,
+        2400
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        4080,
+        2400
+      ],
+      "id": "a946e3f7-0802-43cd-b29f-8ec05ff775fa",
+      "name": "Wait2",
+      "webhookId": "c18b5308-a27a-4e1c-8e23-63b98ced35f8"
     }
   ],
   "connections": {
@@ -2829,20 +3004,14 @@
     },
     "ElevenLabsGenerateVoice": {
       "main": [
-        [
-          {
-            "node": "Audio-Base64-Extract from File",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Code": {
       "main": [
         [
           {
-            "node": "ElevenLabsGenerateVoice",
+            "node": "Gera Áudio",
             "type": "main",
             "index": 0
           }
@@ -2859,16 +3028,165 @@
           }
         ]
       ]
+    },
+    "Gera Áudio": {
+      "main": [
+        [
+          {
+            "node": "Audio-Base64-Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Supabase": {
+      "main": [
+        [
+          {
+            "node": "Cria File URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cria File URL": {
+      "main": [
+        [
+          {
+            "node": "Envia Áudio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envia Áudio": {
+      "main": [
+        [
+          {
+            "node": "Wait2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait2": {
+      "main": [
+        [
+          {
+            "node": "Delete File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
-  "meta": null,
-  "pinData": {},
-  "versionId": "78306290-4619-400b-87cf-43ab27301554",
-  "triggerCount": 0,
+  "staticData": {
+    "node:File Created": {
+      "lastTimeChecked": "2025-03-25T01:59:01Z"
+    },
+    "node:File Updated": {
+      "lastTimeChecked": "2025-03-25T01:59:02Z"
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "dinastia-n8n-editor.lfigsi.easypanel.host",
+            "user-agent": "axios/1.7.9",
+            "content-length": "9427",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "content-type": "application/json",
+            "x-forwarded-for": "172.18.0.1",
+            "x-forwarded-host": "dinastia-n8n-editor.lfigsi.easypanel.host",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "89a0f4e4d949",
+            "x-real-ip": "172.18.0.1"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "event": "messages.upsert",
+            "instance": "Deebs",
+            "data": {
+              "key": {
+                "remoteJid": "5511985401987@s.whatsapp.net",
+                "fromMe": false,
+                "id": "3EB064E820BD154F67EB0A"
+              },
+              "pushName": "Dival S Filho 😎",
+              "status": "DELIVERY_ACK",
+              "message": {
+                "audioMessage": {
+                  "url": "https://mmg.whatsapp.net/v/t62.7117-24/19006043_2159769321206502_8731246256272557149_n.enc?ccb=11-4&oh=01_Q5AaIUt64iw3Ggy6K3nar7CyoRw8DkN6e4xi79WTQOG5IMRV&oe=68098E01&_nc_sid=5e03e0&mms3=true",
+                  "mimetype": "audio/ogg; codecs=opus",
+                  "fileSha256": "Rr5aOoigmVyd4JP29rFGXhtApWc02ZJOduQbwqrp2AU=",
+                  "fileLength": "5646",
+                  "seconds": 2,
+                  "ptt": true,
+                  "mediaKey": "mJYRquOle2A5e60NI9rhhywLB4X1JHkIn3iAXGq7Hd8=",
+                  "fileEncSha256": "9WuZ0wzeld7Xki2DdA/2mnknI7TxqaM68IUPxEKyGy0=",
+                  "directPath": "/v/t62.7117-24/19006043_2159769321206502_8731246256272557149_n.enc?ccb=11-4&oh=01_Q5AaIUt64iw3Ggy6K3nar7CyoRw8DkN6e4xi79WTQOG5IMRV&oe=68098E01&_nc_sid=5e03e0",
+                  "mediaKeyTimestamp": "1742867019",
+                  "contextInfo": {
+                    "disappearingMode": {
+                      "initiator": "CHANGED_IN_CHAT"
+                    }
+                  },
+                  "waveform": "AwQFBwgKDA0ODw0LCQkICAsOESY6T0hAOTs9P0BAQEFBQj88OC8lGys7SzwtHRUMAwUHCQoLDA8RExIREQsFAA==",
+                  "viewOnce": false
+                },
+                "messageContextInfo": {
+                  "deviceListMetadata": {
+                    "senderKeyHash": "OG65I6BDI4V+0g==",
+                    "senderTimestamp": "1742595366",
+                    "senderAccountType": "E2EE",
+                    "receiverAccountType": "E2EE",
+                    "recipientKeyHash": "ey9k2dHOiS12Wg==",
+                    "recipientTimestamp": "1742443804"
+                  },
+                  "deviceListMetadataVersion": 2,
+                  "messageSecret": "h3VNuEdGvmyYd3QMiI7BhISh9bBEqOjzrba5TR9SSjg="
+                },
+                "base64": "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"
+              },
+              "contextInfo": {
+                "disappearingMode": {
+                  "initiator": "CHANGED_IN_CHAT"
+                }
+              },
+              "messageType": "audioMessage",
+              "messageTimestamp": 1742867020,
+              "instanceId": "8e60633a-43c9-4c90-9032-3bd6b9713741",
+              "source": "web"
+            },
+            "destination": "https://dinastia-n8n-editor.lfigsi.easypanel.host/webhook/paradise",
+            "date_time": "2025-03-24T22:43:41.615Z",
+            "sender": "5511932081209@s.whatsapp.net",
+            "server_url": "https://dinastia-evolution.lfigsi.easypanel.host",
+            "apikey": "46A8DD04E743-41B1-9AFD-78D9B9DB137B"
+          },
+          "webhookUrl": "https://dinastia-n8n-webhook.lfigsi.easypanel.host/webhook/paradise",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "versionId": "10dd2ef4-44b2-490d-bd1b-7bbb07b3ed25",
+  "triggerCount": 3,
   "tags": [
     {
       "createdAt": "2025-03-23T22:52:33.937Z",
