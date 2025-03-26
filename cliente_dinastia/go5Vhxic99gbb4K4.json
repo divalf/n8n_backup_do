@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-03-23T22:52:18.175Z",
-  "updatedAt": "2025-03-25T01:59:01.788Z",
+  "updatedAt": "2025-03-26T02:56:29.394Z",
   "id": "go5Vhxic99gbb4K4",
   "name": "Atendimento + Agendamento + RAG PetShop  Paradise",
   "active": true,
@@ -295,7 +295,7 @@
       "parameters": {
         "content": "# Atendente Isis",
         "height": 80,
-        "width": 276,
+        "width": 296,
         "color": 5
       },
       "id": "108bebe6-a8e6-4ef6-a18c-c9c19472f777",
@@ -303,7 +303,7 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        2280,
+        2340,
         560
       ]
     },
@@ -932,21 +932,6 @@
     },
     {
       "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $('Supabase').item.json.sessionID }}",
-        "contextWindowLength": 10
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        2300,
-        860
-      ],
-      "id": "9f06f456-b4d4-470c-bc6e-387aadd8c648",
-      "name": "Window Buffer Memory"
-    },
-    {
-      "parameters": {
         "operation": "push",
         "list": "={{ $('Variáveis').item.json.telefone }}",
         "messageData": "={{ $('Variáveis').item.json.mensagem }}",
@@ -1470,121 +1455,6 @@
     },
     {
       "parameters": {
-        "rules": {
-          "values": [
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 1
-                },
-                "conditions": [
-                  {
-                    "id": "52aaf749-fe4f-44e4-880e-15b2bfc027f1",
-                    "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
-                    "rightValue": "extendedTextMessage",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "text"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 1
-                },
-                "conditions": [
-                  {
-                    "id": "e514e613-fd6a-48bd-b0ae-bae2448c810e",
-                    "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
-                    "rightValue": "conversation",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "text"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 1
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
-                    "rightValue": "audioMessage",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "audio"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 1
-                },
-                "conditions": [
-                  {
-                    "id": "c0e434dd-1268-421d-b81b-3a5e90ed9550",
-                    "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
-                    "rightValue": "imageMessage",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "image"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "f910ae36-380d-415e-b71e-90078ca223e6",
-      "name": "Switch1",
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 3,
-      "position": [
-        60,
-        720
-      ]
-    },
-    {
-      "parameters": {
         "options": {}
       },
       "id": "306295a8-173c-406f-99c8-aebcb03bf930",
@@ -1862,145 +1732,10 @@
     },
     {
       "parameters": {
-        "rules": {
-          "values": [
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 1
-                },
-                "conditions": [
-                  {
-                    "id": "52aaf749-fe4f-44e4-880e-15b2bfc027f1",
-                    "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
-                    "rightValue": "extendedTextMessage",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "text"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 1
-                },
-                "conditions": [
-                  {
-                    "id": "e514e613-fd6a-48bd-b0ae-bae2448c810e",
-                    "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
-                    "rightValue": "conversation",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "text"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 1
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
-                    "rightValue": "audioMessage",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "audio"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "c3b46acc-853e-40e9-bd7f-850f1ee53a38",
-      "name": "Switch3",
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 3,
-      "position": [
-        2620,
-        680
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "binaryToPropery",
-        "options": {}
-      },
-      "id": "e97465a0-c242-4cd4-97fd-6f61509c6ddf",
-      "name": "Audio-Base64-Extract from File",
-      "type": "n8n-nodes-base.extractFromFile",
-      "typeVersion": 1,
-      "position": [
-        3200,
-        2060
-      ]
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "=https://api.elevenlabs.io/v1/text-to-speech/9BWtsMINqrJLrRacOk9x",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "xi-api-key",
-              "value": "=SUA API KEY ELEVENLABS AQUI"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n   \"text\":\"'{{ $json.textoSemQuebrasNemEmojis }}'\",\n   \"model_id\":\"eleven_multilingual_v2\",\n   \"voice_settings\":{\n      \"stability\":0.5,\n      \"similarity_boost\":0.8,\n      \"style\":0.0,\n      \"use_speaker_boost\":true\n   }\n} ",
-        "options": {}
-      },
-      "id": "616faf2e-3061-4447-8dbf-8dc5b2cf3c92",
-      "name": "ElevenLabsGenerateVoice",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        3800,
-        900
-      ],
-      "typeVersion": 4.2
-    },
-    {
-      "parameters": {
         "content": "",
         "height": 340,
-        "width": 820,
-        "color": 3
+        "width": 1300,
+        "color": 4
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
@@ -2114,7 +1849,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2860,
+        3040,
         900
       ],
       "id": "6aaea3dd-01a0-49f3-94d7-3c9d79a17646",
@@ -2122,6 +1857,7 @@
     },
     {
       "parameters": {
+        "model": "gpt-4o",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
@@ -2169,8 +1905,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2940,
-        2060
+        3260,
+        900
       ],
       "credentials": {
         "openAiApi": {
@@ -2181,126 +1917,314 @@
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "={{ \"https://vrxlfvjgozmrkrquflgr.supabase.co/storage/v1/object/audio/speech\"+Date.now()+\".mpga\" }}",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZyeGxmdmpnb3ptcmtycXVmbGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzMyNzgwOTEsImV4cCI6MjA0ODg1NDA5MX0.fmruj9P0y9Tc0gOWWfG_P51tWzf_Aq4SsIdK12YdJfs"
-            }
-          ]
-        },
-        "sendBody": true,
-        "contentType": "binaryData",
-        "inputDataFieldName": "data",
+        "operation": "binaryToPropery",
+        "destinationKey": "base64",
         "options": {}
       },
-      "id": "bd8bcae2-9313-4296-871a-907f3be3dc9c",
-      "name": "Upload Supabase",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "1fda5196-9861-4b00-a286-99eb69ff9ec4",
+      "name": "Audio-Base64-Extract from File",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
       "position": [
-        3420,
-        2400
+        3480,
+        900
       ]
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "874847db-f371-42fa-bd1a-1e3227dde614",
-              "name": "url_file",
-              "value": "={{ \"https://vrxlfvjgozmrkrquflgr.supabase.co/storage/v1/object/public/\"+$json.Key }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "d181633b-4c25-4b4a-b12b-ab96a118dbf0",
-      "name": "Cria File URL",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        3660,
-        2400
-      ]
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://server01.uazapi.dev/message/sendWhatsAppAudio/iwsuhawk",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "apikey",
-              "value": "RQAE-IAXG-N0FS-P1U8"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"number\": \"5511985401987@s.whatsapp.net\",\n  \"audioMessage\": {\n    \"audio\": \"{{ $json.url_file }}\"\n  },\n  \"options\": {\n    \"delay\": 200,\n    \"presence\": \"recording\"\n  }\n}",
-        "options": {
-          "redirect": {
-            "redirect": {}
-          }
+        "resource": "messages-api",
+        "operation": "send-audio",
+        "instanceName": "Deebs",
+        "remoteJid": "={{ $('Webhook').item.json.body.data.key.remoteJid }}",
+        "media": "={{ $json.base64 }}",
+        "options_message": {
+          "delay": 200
         }
       },
-      "id": "546d5251-852a-4704-a714-adb8d2929df3",
-      "name": "Envia Áudio",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
       "position": [
-        3860,
-        2400
-      ]
+        3700,
+        900
+      ],
+      "id": "607007dd-f93d-4e81-a1da-b3fe8343ba14",
+      "name": "ENVIAR_AUDIO",
+      "credentials": {
+        "evolutionApi": {
+          "id": "H4xiXkzcZmkapfB3",
+          "name": "Evolution - Paradise"
+        }
+      }
     },
     {
       "parameters": {
-        "method": "DELETE",
-        "url": "={{ \"https://vrxlfvjgozmrkrquflgr.supabase.co/storage/v1/object/\"+$('Upload Supabase').item.json.Key }}\n",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
+        "resource": "messages-api",
+        "instanceName": "Deebs",
+        "remoteJid": "={{ $('Webhook').item.json.body.data.key.remoteJid }}",
+        "messageText": "={{ $json.output }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        3640,
+        340
+      ],
+      "id": "7e81d7cd-a4be-49de-b929-1bab72c3dcdf",
+      "name": "ENVIAR_TEXTO",
+      "credentials": {
+        "evolutionApi": {
+          "id": "H4xiXkzcZmkapfB3",
+          "name": "Evolution - Paradise"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
             {
-              "name": "accept",
-              "value": "application/json"
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "52aaf749-fe4f-44e4-880e-15b2bfc027f1",
+                    "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
+                    "rightValue": "extendedTextMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
             },
             {
-              "name": "authorization",
-              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZyeGxmdmpnb3ptcmtycXVmbGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzMyNzgwOTEsImV4cCI6MjA0ODg1NDA5MX0.fmruj9P0y9Tc0gOWWfG_P51tWzf_Aq4SsIdK12YdJfs"
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "e514e613-fd6a-48bd-b0ae-bae2448c810e",
+                    "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
+                    "rightValue": "conversation",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
+                    "rightValue": "audioMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "c0e434dd-1268-421d-b81b-3a5e90ed9550",
+                    "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
+                    "rightValue": "imageMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "image"
             }
           ]
         },
         "options": {}
       },
-      "id": "6055d2f9-16c9-4bd6-bf5b-7dcb014c4f9d",
-      "name": "Delete File",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "f910ae36-380d-415e-b71e-90078ca223e6",
+      "name": "TIPO_MENSAGEM",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
       "position": [
-        4280,
-        2400
+        60,
+        720
       ]
     },
     {
       "parameters": {
-        "amount": 2
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Variáveis').item.json.telefone }}",
+        "contextWindowLength": 10
       },
-      "type": "n8n-nodes-base.wait",
-      "typeVersion": 1.1,
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
       "position": [
-        4080,
-        2400
+        2320,
+        860
       ],
-      "id": "a946e3f7-0802-43cd-b29f-8ec05ff775fa",
-      "name": "Wait2",
-      "webhookId": "c18b5308-a27a-4e1c-8e23-63b98ced35f8"
+      "id": "d608fde0-bbd3-4c22-a0e8-212cb51c9699",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "uoqPtvjJ9DxcwCS2",
+          "name": "Postgres - Paradise"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM n8n_chat_histories;",
+        "options": {}
+      },
+      "id": "497baf68-1965-4a9d-9763-f33c554d61af",
+      "name": "DELTAR_MEMÓRIA",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        2120,
+        560
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "uoqPtvjJ9DxcwCS2",
+          "name": "Postgres - Paradise"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "52aaf749-fe4f-44e4-880e-15b2bfc027f1",
+                    "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
+                    "rightValue": "extendedTextMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "e514e613-fd6a-48bd-b0ae-bae2448c810e",
+                    "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
+                    "rightValue": "conversation",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Webhook').item.json[\"body\"][\"data\"][\"messageType\"] }}",
+                    "rightValue": "audioMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "audio"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c3b46acc-853e-40e9-bd7f-850f1ee53a38",
+      "name": "TIPO_SAÍDA",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        2620,
+        680
+      ]
     }
   ],
   "connections": {
@@ -2509,7 +2433,7 @@
       "main": [
         [
           {
-            "node": "Switch3",
+            "node": "TIPO_SAÍDA",
             "type": "main",
             "index": 0
           }
@@ -2577,17 +2501,6 @@
           {
             "node": "RAG AI Agent",
             "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Window Buffer Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "RAG AI Agent",
-            "type": "ai_memory",
             "index": 0
           }
         ]
@@ -2809,7 +2722,7 @@
       "main": [
         [
           {
-            "node": "Switch1",
+            "node": "TIPO_MENSAGEM",
             "type": "main",
             "index": 0
           }
@@ -2838,39 +2751,7 @@
       "main": [
         [
           {
-            "node": "Switch1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Switch1": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields4",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Edit Fields4",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Edit Fields",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Edit Fields3",
+            "node": "TIPO_MENSAGEM",
             "type": "main",
             "index": 0
           }
@@ -2977,36 +2858,6 @@
         ]
       ]
     },
-    "Switch3": {
-      "main": [
-        [
-          {
-            "node": "Parser  Chain",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Parser  Chain",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Code",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "ElevenLabsGenerateVoice": {
-      "main": [
-        []
-      ]
-    },
     "Code": {
       "main": [
         [
@@ -3040,44 +2891,101 @@
         ]
       ]
     },
-    "Upload Supabase": {
+    "Audio-Base64-Extract from File": {
       "main": [
         [
           {
-            "node": "Cria File URL",
+            "node": "ENVIAR_AUDIO",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Cria File URL": {
+    "Replace Me": {
       "main": [
         [
           {
-            "node": "Envia Áudio",
+            "node": "ENVIAR_TEXTO",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Envia Áudio": {
+    "ENVIAR_TEXTO": {
       "main": [
         [
           {
-            "node": "Wait2",
+            "node": "1,2s1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Wait2": {
+    "TIPO_MENSAGEM": {
       "main": [
         [
           {
-            "node": "Delete File",
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "RAG AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TIPO_SAÍDA": {
+      "main": [
+        [
+          {
+            "node": "Parser  Chain",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Parser  Chain",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code",
             "type": "main",
             "index": 0
           }
@@ -3090,10 +2998,10 @@
   },
   "staticData": {
     "node:File Created": {
-      "lastTimeChecked": "2025-03-25T01:59:01Z"
+      "lastTimeChecked": "2025-03-26T02:56:29Z"
     },
     "node:File Updated": {
-      "lastTimeChecked": "2025-03-25T01:59:02Z"
+      "lastTimeChecked": "2025-03-26T02:56:29Z"
     }
   },
   "meta": {
@@ -3106,14 +3014,14 @@
           "headers": {
             "host": "dinastia-n8n-editor.lfigsi.easypanel.host",
             "user-agent": "axios/1.7.9",
-            "content-length": "9427",
+            "content-length": "986",
             "accept-encoding": "gzip, compress, deflate, br",
             "content-type": "application/json",
             "x-forwarded-for": "172.18.0.1",
             "x-forwarded-host": "dinastia-n8n-editor.lfigsi.easypanel.host",
             "x-forwarded-port": "443",
             "x-forwarded-proto": "https",
-            "x-forwarded-server": "89a0f4e4d949",
+            "x-forwarded-server": "60db43949995",
             "x-real-ip": "172.18.0.1"
           },
           "params": {},
@@ -3125,30 +3033,12 @@
               "key": {
                 "remoteJid": "5511985401987@s.whatsapp.net",
                 "fromMe": false,
-                "id": "3EB064E820BD154F67EB0A"
+                "id": "3EB0E87081D18D6FAF49DB"
               },
               "pushName": "Dival S Filho 😎",
               "status": "DELIVERY_ACK",
               "message": {
-                "audioMessage": {
-                  "url": "https://mmg.whatsapp.net/v/t62.7117-24/19006043_2159769321206502_8731246256272557149_n.enc?ccb=11-4&oh=01_Q5AaIUt64iw3Ggy6K3nar7CyoRw8DkN6e4xi79WTQOG5IMRV&oe=68098E01&_nc_sid=5e03e0&mms3=true",
-                  "mimetype": "audio/ogg; codecs=opus",
-                  "fileSha256": "Rr5aOoigmVyd4JP29rFGXhtApWc02ZJOduQbwqrp2AU=",
-                  "fileLength": "5646",
-                  "seconds": 2,
-                  "ptt": true,
-                  "mediaKey": "mJYRquOle2A5e60NI9rhhywLB4X1JHkIn3iAXGq7Hd8=",
-                  "fileEncSha256": "9WuZ0wzeld7Xki2DdA/2mnknI7TxqaM68IUPxEKyGy0=",
-                  "directPath": "/v/t62.7117-24/19006043_2159769321206502_8731246256272557149_n.enc?ccb=11-4&oh=01_Q5AaIUt64iw3Ggy6K3nar7CyoRw8DkN6e4xi79WTQOG5IMRV&oe=68098E01&_nc_sid=5e03e0",
-                  "mediaKeyTimestamp": "1742867019",
-                  "contextInfo": {
-                    "disappearingMode": {
-                      "initiator": "CHANGED_IN_CHAT"
-                    }
-                  },
-                  "waveform": "AwQFBwgKDA0ODw0LCQkICAsOESY6T0hAOTs9P0BAQEFBQj88OC8lGys7SzwtHRUMAwUHCQoLDA8RExIREQsFAA==",
-                  "viewOnce": false
-                },
+                "conversation": "Boa Noite!!!",
                 "messageContextInfo": {
                   "deviceListMetadata": {
                     "senderKeyHash": "OG65I6BDI4V+0g==",
@@ -3159,33 +3049,27 @@
                     "recipientTimestamp": "1742443804"
                   },
                   "deviceListMetadataVersion": 2,
-                  "messageSecret": "h3VNuEdGvmyYd3QMiI7BhISh9bBEqOjzrba5TR9SSjg="
-                },
-                "base64": "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"
-              },
-              "contextInfo": {
-                "disappearingMode": {
-                  "initiator": "CHANGED_IN_CHAT"
+                  "messageSecret": "zARK59RyCpDJC7+Ye4v1F3GwJMpRdb73WkiFBil4cYQ="
                 }
               },
-              "messageType": "audioMessage",
-              "messageTimestamp": 1742867020,
+              "messageType": "conversation",
+              "messageTimestamp": 1742955495,
               "instanceId": "8e60633a-43c9-4c90-9032-3bd6b9713741",
               "source": "web"
             },
-            "destination": "https://dinastia-n8n-editor.lfigsi.easypanel.host/webhook/paradise",
-            "date_time": "2025-03-24T22:43:41.615Z",
+            "destination": "https://dinastia-n8n-editor.lfigsi.easypanel.host/webhook-test/paradise",
+            "date_time": "2025-03-25T23:18:15.612Z",
             "sender": "5511932081209@s.whatsapp.net",
             "server_url": "https://dinastia-evolution.lfigsi.easypanel.host",
             "apikey": "46A8DD04E743-41B1-9AFD-78D9B9DB137B"
           },
-          "webhookUrl": "https://dinastia-n8n-webhook.lfigsi.easypanel.host/webhook/paradise",
-          "executionMode": "production"
+          "webhookUrl": "https://dinastia-n8n-webhook.lfigsi.easypanel.host/webhook-test/paradise",
+          "executionMode": "test"
         }
       }
     ]
   },
-  "versionId": "10dd2ef4-44b2-490d-bd1b-7bbb07b3ed25",
+  "versionId": "0331fccc-8915-4513-a320-7ea75dd9d1d6",
   "triggerCount": 3,
   "tags": [
     {
