@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-03-23T22:52:18.175Z",
-  "updatedAt": "2025-03-26T02:56:29.394Z",
+  "updatedAt": "2025-03-27T01:05:20.887Z",
   "id": "go5Vhxic99gbb4K4",
   "name": "Atendimento + Agendamento + RAG PetShop  Paradise",
   "active": true,
@@ -765,9 +765,9 @@
         "operation": "delete",
         "calendar": {
           "__rl": true,
-          "value": "o72bth54ddm831p74q6fc007fig4eri9@import.calendar.google.com",
+          "value": "divalf@gmail.com",
           "mode": "list",
-          "cachedResultName": "GTD"
+          "cachedResultName": "divalf@gmail.com"
         },
         "eventId": "={{ $fromAI('id') }}",
         "options": {}
@@ -793,9 +793,9 @@
         "toolDescription": "Use essa ferramenta para criar o agendamento do cliente, apenas um agendamento por horário, faça com que exista a consulta de horário na tool busca_eventos para não agendar dois clientes no mesmo horario.\nApenas uma e-mail de usuário por horário de atendimento\nEstá proibido agendar mais de uma vez.",
         "calendar": {
           "__rl": true,
-          "value": "o72bth54ddm831p74q6fc007fig4eri9@import.calendar.google.com",
+          "value": "divalf@gmail.com",
           "mode": "list",
-          "cachedResultName": "GTD"
+          "cachedResultName": "divalf@gmail.com"
         },
         "start": "= {{ $fromAI('start_time') }}",
         "end": "= {{ $fromAI('end_time') }}",
@@ -835,9 +835,9 @@
         "operation": "getAll",
         "calendar": {
           "__rl": true,
-          "value": "o72bth54ddm831p74q6fc007fig4eri9@import.calendar.google.com",
+          "value": "divalf@gmail.com",
           "mode": "list",
-          "cachedResultName": "GTD"
+          "cachedResultName": "divalf@gmail.com"
         },
         "returnAll": true,
         "options": {
@@ -868,9 +868,9 @@
         "operation": "getAll",
         "calendar": {
           "__rl": true,
-          "value": "o72bth54ddm831p74q6fc007fig4eri9@import.calendar.google.com",
+          "value": "divalf@gmail.com",
           "mode": "list",
-          "cachedResultName": "GTD"
+          "cachedResultName": "divalf@gmail.com"
         },
         "limit": 10,
         "options": {
@@ -954,7 +954,7 @@
     },
     {
       "parameters": {
-        "amount": 2
+        "amount": 15
       },
       "id": "a938c1b7-da33-4d9c-9a61-0132ad92fc85",
       "name": "Wait",
@@ -1247,8 +1247,8 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        980,
-        780
+        840,
+        840
       ],
       "credentials": {
         "redis": {
@@ -2998,10 +2998,10 @@
   },
   "staticData": {
     "node:File Created": {
-      "lastTimeChecked": "2025-03-26T02:56:29Z"
+      "lastTimeChecked": "2025-03-27T01:05:21Z"
     },
     "node:File Updated": {
-      "lastTimeChecked": "2025-03-26T02:56:29Z"
+      "lastTimeChecked": "2025-03-27T01:05:21Z"
     }
   },
   "meta": {
@@ -3069,7 +3069,7 @@
       }
     ]
   },
-  "versionId": "0331fccc-8915-4513-a320-7ea75dd9d1d6",
+  "versionId": "76fb01f9-d73f-4011-9c85-b6a9e11cb529",
   "triggerCount": 3,
   "tags": [
     {
