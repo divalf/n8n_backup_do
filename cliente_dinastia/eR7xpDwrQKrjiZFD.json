@@ -1,0 +1,1332 @@
+{
+  "createdAt": "2025-04-01T02:23:32.499Z",
+  "updatedAt": "2025-04-01T02:53:21.588Z",
+  "id": "eR7xpDwrQKrjiZFD",
+  "name": "Agendamento Pro - LABZ",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "be5649a9-7624-4621-bd2d-84c25577c0ce",
+              "leftValue": "={{ $json.available }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "fa06761d-c616-445b-9309-8a364cfaf822",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2320,
+        1180
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8d192ed0-aebd-404e-8339-daab0d29651f",
+              "leftValue": "={{ $item(\"0\").$node[\"Já tem um evento\"].json[\"attendees\"][\"0\"][\"email\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "3a6ef941-13eb-4d03-b992-70650e9a5418",
+      "name": "If3",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1820,
+        1020
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"Email_da_agenda\"] }}",
+          "mode": "id"
+        },
+        "timeMin": "={{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"query\"][\"start\"] }}",
+        "timeMax": "={{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"query\"][\"end\"] }}",
+        "options": {}
+      },
+      "id": "5d3e3a71-c0df-44a1-b897-c1072f40e546",
+      "name": "Disponibilidade",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.1,
+      "position": [
+        2040,
+        1100
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"Email_da_agenda\"] }}",
+          "mode": "id"
+        },
+        "start": "={{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"query\"][\"start\"] }}",
+        "end": "={{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"query\"][\"end\"] }}",
+        "additionalFields": {
+          "attendees": [
+            "={{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"query\"][\"email\"] }}"
+          ],
+          "color": "2",
+          "conferenceDataUi": {
+            "conferenceDataValues": {
+              "conferenceSolution": "hangoutsMeet"
+            }
+          },
+          "description": "=Cliente: {{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"query\"][\"nome\"] }}\nWhatsApp: {{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"Remotejid\"] }}\nAssunto: {{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"description\"] }}",
+          "summary": "={{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"query\"][\"nome\"] }}"
+        }
+      },
+      "id": "98416e7a-09c5-4b44-a2c2-784db7bd459d",
+      "name": "Marca",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.1,
+      "position": [
+        2540,
+        1080
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $item(\"0\").$node[\"If\"].json[\"query\"][\"Email_da_agenda\"] }}",
+          "mode": "id"
+        },
+        "returnAll": true,
+        "options": {
+          "timeMin": "={{ $item(\"0\").$node[\"If\"].json[\"query\"][\"query\"][\"start\"] }}",
+          "timeMax": "={{ $item(\"0\").$node[\"If\"].json[\"query\"][\"query\"][\"end\"] }}",
+          "query": "={{ $item(\"0\").$node[\"If\"].json[\"query\"][\"query\"][\"email\"] }}"
+        }
+      },
+      "id": "8de186d3-b8d3-483c-b484-d7041bb97053",
+      "name": "Já tem um evento",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        1020
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $item(\"0\").$node[\"Switch\"].json[\"query\"][\"Email_da_agenda\"] }}",
+          "mode": "id"
+        },
+        "returnAll": true,
+        "options": {
+          "timeMin": "={{ $item(\"0\").$node[\"Switch\"].json[\"query\"][\"query\"][\"start\"] }}",
+          "timeMax": "={{ $item(\"0\").$node[\"Switch\"].json[\"query\"][\"query\"][\"end\"] }}",
+          "query": "={{ $item(\"0\").$node[\"Switch\"].json[\"query\"][\"query\"][\"email\"] }}"
+        }
+      },
+      "id": "f98fb818-640e-43e0-a482-95a31a46bd53",
+      "name": "Verifica evento",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.1,
+      "position": [
+        1260,
+        1300
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "be5649a9-7624-4621-bd2d-84c25577c0ce",
+              "leftValue": "={{ $json.available }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a507ba6e-1f41-4203-991a-4781fbb2c3f6",
+      "name": "If6",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1480,
+        1600
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"Evento\"] }}",
+                    "rightValue": "agendamento",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "10e87207-6259-48e1-a540-94e8a62deede"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "agendamento"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "7a57e8e8-5227-4cde-8d58-7b447cd55a17",
+                    "leftValue": "={{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"Evento\"] }}",
+                    "rightValue": "cancelamento",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "cancelamento"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d788021f-29ab-41f2-b355-2b18963d30f2",
+                    "leftValue": "={{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"Evento\"] }}",
+                    "rightValue": "reagendamento",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "reagendamento"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "94abe616-de4d-4738-a99f-5a58f50b4808",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1360,
+        1040
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "8b11a0cd-8d82-4d7d-9764-4b7db8feb16a",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        1040
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.query.nome }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "empty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "solicitar nome"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c54eb59d-8fd2-4886-9947-d13ac59106a0",
+                    "leftValue": "={{ $json.query.email }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "empty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "solicitar email"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "23c35f0c-c116-4f7a-be44-b8bf82c36bd8",
+      "name": "Switch2",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1660,
+        620
+      ],
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "bddb50c7-4342-4dd3-91e3-9f9b93cc528a",
+              "leftValue": "={{ $item(\"0\").$node[\"Switch\"].json[\"query\"][\"query\"][\"nome\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "f776f6e1-934f-44e8-a173-5489509ac3ab",
+              "leftValue": "={{ $item(\"0\").$node[\"Switch\"].json[\"query\"][\"query\"][\"email\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "61971032-f7e3-40f3-abde-104a9fa80155",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1300,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "content": "VERIFICA SE REALMENTE ESTA COM NOME PREENCHIDO",
+        "height": 422,
+        "width": 538,
+        "color": 3
+      },
+      "id": "0b03a68a-6cbc-48e1-b3d5-77ee61835661",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "content": "VERIFICA SE POSSUI AGENDAMENTOS NA DATA",
+        "height": 351,
+        "width": 646,
+        "color": 5
+      },
+      "id": "7b694850-4677-4d4f-8c6c-5ba10357dc3f",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "content": "FAZ AGENDAMENTO",
+        "height": 422,
+        "width": 1145,
+        "color": 7
+      },
+      "id": "1e558fd4-1137-41b4-92bb-9f3dc49b22fa",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        1020
+      ]
+    },
+    {
+      "parameters": {
+        "content": "CANCELA OS AGENDAMENTOS",
+        "height": 202,
+        "width": 1032
+      },
+      "id": "aa6cc48c-e837-4e20-8825-f90b9885cd7e",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        1240
+      ]
+    },
+    {
+      "parameters": {
+        "content": "FAZ O REAGENDAMENTO",
+        "height": 372,
+        "width": 1187,
+        "color": 6
+      },
+      "id": "c623ec4b-d9c7-4249-a3da-fc4bf6f3595f",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        1460
+      ]
+    },
+    {
+      "parameters": {
+        "content": "VERIFICA SE QUER AGENDAR, CANCELAR OU REAGENDAR",
+        "height": 267,
+        "width": 280,
+        "color": 4
+      },
+      "id": "3d2206ab-df3d-43da-809f-bee7f1706aa4",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Exemplo json Para Modo teste Cancelamento\n\n[\n  {\n    \"query\": {\n      \"query\": {\n        \"nome\": \"RF\",\n        \"email\": \"exemploo@gmail.com\",\n        \"start\": \"2025-03-31T14:00:00-03:00\",\n        \"end\": \"2025-03-31T15:00:00-03:00\"\n      },\n      \"Evento\": \"cancelamento\",\n      \"Remotejid\": \"558688999999@s.whatsapp.net\",\n      \"nome_cliente\": \"rf\",\n      \"description\": \"Cancelamento da mentoria com a Labzflow\",\n      \"Email_da_agenda\": \"Aqui o Email da sua conta do calendario\"\n    }\n  }\n]",
+        "height": 360,
+        "width": 580,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -380,
+        1220
+      ],
+      "id": "4e507e08-aa95-44fd-aba7-f1265155bf6b",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Reunião:{{ $json.status }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=#Você é um assistente de agendamentos, a Sua função é apenas Formatar as informações de maneira clara e eficiente para o Leitor.\n\n##Você deve pega as informações que irei te repassar abaixo e formatar uma mensagem para ser enviada via WhatsApp para o cliente com a confirmação da nossa reunião, o que deve ser repassado para o cliente? \n\n- Nome:{{ $json.summary }}\n- Link da reunião do Google Meet:{{ $json.hangoutLink }}\n- horário: {{ $json.start.dateTime }} ás {{ $json.end.dateTime }}\n\n##Com essas informações em mãos formate uma mensagem para ser repassada ao usuário final. \n\n- Observação: Quando for escrever link como do google meet ou qual quer outro, não precisa colocar [ ] ou {} ou ()\n\n- Exeplo errado: [Google Meet](https://link do meet)\n- Exeplo Certo: Google Meet: https://link do meet\n- Apenas formate o texto para o usuário final, sem comentarios extras ou comentários desnecessarios de sistema. \n\n##Lembrando a mensagem tem que ser formatada para WhatsApp\nUse emojes com moderação para deixar tudo mais bonito e hamunico.\n- Exemplo de mensagem que achamos interessante para o usuário final: \nOlá RF! 😊\n\n🗓️Confirmando nossa reunião,\nagendada para o dia *27/03/2025*, das *15:00 às 16:00*.  \n\n🔗 **Link da reunião (Google Meet):**  \nhttps://meet.google.com/apy-dqjm-hhg  \n\nQualquer dúvida, estou à disposição! Até lá! 🙌\n\n\n\n\n"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        2760,
+        1080
+      ],
+      "id": "c0c7f5f4-ddb6-498e-9384-58ac54c21bb9",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "84f3f7ca-e52b-480d-87bf-ab220c052ca4",
+              "name": "response",
+              "value": "Informe o seu nome e E-mail, para que eu possa prosseguir com o agendamento.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0e9e87f0-d692-4135-9a40-a7ae280a074f",
+      "name": "Response01",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1880,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "84f3f7ca-e52b-480d-87bf-ab220c052ca4",
+              "name": "response",
+              "value": "Informe o seu E-mail, para que eu possa prosseguir com o agendamento",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "362428f7-5421-4a39-a85f-d9556b4ad42d",
+      "name": "Response02",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1880,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "edc090f3-5297-46f6-badf-11b0535a8a30",
+              "name": "response",
+              "value": "=Já possui uma reunião:\n\nInicio: {{ $item(\"0\").$node[\"If3\"].json[\"start\"][\"dateTime\"] }}\nFim: {{ $item(\"0\").$node[\"If3\"].json[\"end\"][\"dateTime\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5f35d33e-b6b0-4ddb-ae4a-b6123dc61c00",
+      "name": "Response03",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2040,
+        920
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "04c6ca35-7572-4699-bcb7-bbf2f2a6e6a4",
+              "name": "response",
+              "value": "horário não disponivel, peça outro horário",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "82a98044-b1b9-462b-96c9-1484bcb25a8c",
+      "name": "Response04",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2540,
+        1280
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "86ff282a-3ede-4417-98c1-0d10858bc5dc",
+              "name": "response",
+              "value": "={{ $json.response.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0e91240b-79b1-4e40-b316-b5fece5f96eb",
+      "name": "Response05",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3120,
+        1080
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7f842ffa-cd8f-40ab-a0a7-40dc173357a7",
+              "name": "response",
+              "value": "🚫 Seu Cancelamento foi realizado com sucesso,\nSempre que precisar agendar uma reunião estamos \nsempre a dispossição esperando por você. ",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a0490b76-ec8f-4c6d-83fd-27713de7f666",
+      "name": "Response06",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1720,
+        1300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "04c6ca35-7572-4699-bcb7-bbf2f2a6e6a4",
+              "name": "response",
+              "value": "horário não disponivel, peça outro horário",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "548fa0f4-7919-4649-8980-74050a025e90",
+      "name": "Response07",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1700,
+        1700
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7f842ffa-cd8f-40ab-a0a7-40dc173357a7",
+              "name": "response",
+              "value": "Que a reunião foi reagendada",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e0db144a-9749-4b81-b0ec-22415c80a96c",
+      "name": "Response08",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2140,
+        1500
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Exemplo json Para Modo teste Agendamento\n\n[\n  {\n    \"query\": {\n      \"query\": {\n        \"nome\": \"RF\",\n        \"email\": \"exemploo@gmail.com\",\n        \"start\": \"2025-03-31T14:00:00-03:00\",\n        \"end\": \"2025-03-31T15:00:00-03:00\"\n      },\n      \"Evento\": \"agendamento\",\n      \"Remotejid\": \"558688999999@s.whatsapp.net\",\n      \"nome_cliente\": \"rf\",\n      \"description\": \"Cancelamento da mentoria com a Labzflow\",\n      \"Email_da_agenda\": \"Aqui o Email da sua conta do calendario\"\n    }\n  }\n]",
+        "height": 380,
+        "width": 580,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -380,
+        820
+      ],
+      "id": "6d3933dd-8495-4168-acd3-fa3739de3fa1",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## Exemplo json Para Modo teste Reagendamento\n\n[\n  {\n    \"query\": {\n      \"query\": {\n        \"nome\": \"RF\",\n        \"email\": \"exemploo@gmail.com\",\n        \"start\": \"2025-03-31T14:00:00-03:00\",\n        \"end\": \"2025-03-31T15:00:00-03:00\"\n      },\n      \"Evento\": \"reagendamento\",\n      \"Remotejid\": \"558688999999@s.whatsapp.net\",\n      \"nome_cliente\": \"rf\",\n      \"description\": \"Cancelamento da mentoria com a Labzflow\",\n      \"Email_da_agenda\": \"Aqui o Email da sua conta do calendario\"\n    }\n  }\n]",
+        "height": 400,
+        "width": 520
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        820
+      ],
+      "id": "362b44c0-c651-41d5-98d9-4ce73c7e119d",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "## [Grupo de Networking](https://criativaevolution.top/grupowhatsapp)",
+        "height": 80,
+        "width": 323,
+        "color": 7
+      },
+      "id": "7a253b14-130c-448e-91a9-99ed9eed24b2",
+      "name": "Sticky Note31",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## N8N Versão funciona perfeitamenta da 1.70.0 a 1.84.1",
+        "height": 120,
+        "width": 283,
+        "color": 7
+      },
+      "id": "7da671d0-1fcb-4c50-9016-f457de8873f0",
+      "name": "Sticky Note32",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "content": "# Informações",
+        "height": 80,
+        "width": 243,
+        "color": 7
+      },
+      "id": "b5fe3636-8895-485f-bf27-25dff9eddfe1",
+      "name": "Sticky Note33",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 520,
+        "width": 360,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -380,
+        280
+      ],
+      "typeVersion": 1,
+      "id": "1a9ba2f2-17f8-43b1-9ece-006ef6b261f5",
+      "name": "Sticky Note34"
+    },
+    {
+      "parameters": {
+        "content": "## [Acesse nosso instagram](https://www.instagram.com/labz_flow/)",
+        "height": 80,
+        "width": 323,
+        "color": 6
+      },
+      "id": "6d2b4021-6d51-4981-a46a-ae8b1ac7ddea",
+      "name": "Sticky Note35",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "content": "![Labz Flow](https://i.postimg.cc/tgzyr9mx/solucao-definitva.png)",
+        "height": 400,
+        "width": 680,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        1240
+      ],
+      "id": "9a5c1cd5-fd3b-4ada-b565-ec8df3de2391",
+      "name": "Sticky Note25"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"Email_da_agenda\"] }}",
+          "mode": "id"
+        },
+        "returnAll": true,
+        "options": {
+          "query": "={{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"query\"][\"email\"] }}"
+        }
+      },
+      "id": "46a6b059-6bfc-4ec1-b7b4-b0e4f6ad6b11",
+      "name": "Verifica_cliente",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.1,
+      "position": [
+        1700,
+        1500
+      ],
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"Email_da_agenda\"] }}",
+          "mode": "id"
+        },
+        "eventId": "={{ $item(\"0\").$node[\"Verifica_cliente\"].json[\"id\"] }}",
+        "useDefaultReminders": false,
+        "updateFields": {
+          "end": "={{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"query\"][\"end\"] }}",
+          "sendUpdates": "all",
+          "start": "={{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"query\"][\"start\"] }}"
+        }
+      },
+      "id": "48cb52db-0073-41f5-b5d0-8064ac12f914",
+      "name": "Reagenda",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.1,
+      "position": [
+        1920,
+        1500
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $item(\"0\").$node[\"Switch\"].json[\"query\"][\"Email_da_agenda\"] }}",
+          "mode": "id"
+        },
+        "timeMin": "={{ $item(\"0\").$node[\"Switch\"].json[\"query\"][\"query\"][\"start\"] }}",
+        "timeMax": "={{ $item(\"0\").$node[\"Switch\"].json[\"query\"][\"query\"][\"end\"] }}",
+        "options": {}
+      },
+      "id": "821210f5-6b45-4ef5-ac7f-0c7f4abf2caa",
+      "name": "Verifica Disponibilidade",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.1,
+      "position": [
+        1260,
+        1600
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $item(\"0\").$node[\"Execute Workflow Trigger\"].json[\"query\"][\"Email_da_agenda\"] }}",
+          "mode": "id"
+        },
+        "eventId": "={{ $item(\"0\").$node[\"Verifica evento\"].json[\"id\"] }}",
+        "options": {}
+      },
+      "id": "ecb2599c-98a4-4b95-a0a3-625c07fab27f",
+      "name": "Deleta Evento do calendario",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.1,
+      "position": [
+        1480,
+        1300
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "mrq3mc8a3QMeRdst",
+          "name": "Google Calendar - Black"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                  ####                                                                      \n                                                                                                                                            \n                                                                                                                                            \n                                                                      ##                                                                    \n                                                                    ##  ##                                                                  \n                                                                    ##  ##                                                                  \n                                                                                                                                            \n                                                            ##  ##      ##          ##                                                      \n                                                                                  ##  ##                                                    \n                                                        ##    ##          ##  ##  ####                                                      \n                                                      ##    ##  ##      ##  ##  ##                                                          \n                                                      ##      ##          ##      ##                                                        \n                                                            ##                  ####                                                        \n                                                        ##          ##    ##      ##                                                        \n                                                      ##                ##  ##  ##  ##                                                      \n                                                      ##                    ##                                                              \n                                                        ##                    ##                                                            \n                                                                            ####                                                            \n                                                            ##        ####                                                                  \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                      ########                                                                                                              \n                      ########                ######################  ########################  ######################                      \n                      ########                ######################  ########################  ######################                      \n                      ########                ######################  ########################  ######################                      \n                      ########                ########      ########  ##########    ##########  ########    ##########                      \n                      ########                ########      ########  ##########    ##########  ####        ##########                      \n                      ########                ######################  ########################          ##############                      \n                      ########                ######################  ################            ####################                      \n                      ########                ######################  ########################  ################                            \n                      ########                ########      ########  ##########    ##########  ##########                                  \n                      ########      ########  ########      ########  ##########    ##########  ########      ########                      \n                      ########    ##########  ########      ########  ##########    ##########  ########    ##########                      \n                      ######################  ########      ########  ########################  ######################                      \n                      ######################  ########      ########  ########################  ######################                      \n                      ######################  ########      ########  ########################  ######################                      \n                                                            ####                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                      ------  --      ------    --        --                                                \n                                                      --      --    ----    --  --  ----  --                                                \n                                                      ------  --    --      --    --------::                                                \n                                                      --      --    ----    --    --------                                                  \n                                                      --      ------  ------            --                                                  \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            ",
+        "height": 800,
+        "width": 1140,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ffa4def9-0b5d-4580-a171-6eea0a0fefa8",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {
+          "maxTokens": 100,
+          "topP": 0.8
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2900,
+        1280
+      ],
+      "id": "09b93a7f-57d5-4e84-a19a-685f4039d85b",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Marca",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Response04",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Response03",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Disponibilidade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Disponibilidade": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marca": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Já tem um evento": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verifica evento": {
+      "main": [
+        [
+          {
+            "node": "Deleta Evento do calendario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If6": {
+      "main": [
+        [
+          {
+            "node": "Verifica_cliente",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Response07",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Verifica evento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Verifica Disponibilidade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "Response01",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Response02",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Já tem um evento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Response05",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verifica_cliente": {
+      "main": [
+        [
+          {
+            "node": "Reagenda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reagenda": {
+      "main": [
+        [
+          {
+            "node": "Response08",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verifica Disponibilidade": {
+      "main": [
+        [
+          {
+            "node": "If6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deleta Evento do calendario": {
+      "main": [
+        [
+          {
+            "node": "Response06",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Execute Workflow Trigger": [
+      {
+        "json": {
+          "query": {
+            "query": {
+              "nome": "Paula",
+              "email": "dsfconsult@gmail.com",
+              "start": "2025-04-02T14:00:00-03:00",
+              "end": "2025-04-02T15:00:00-03:00"
+            },
+            "Evento": "agendamento",
+            "Remotejid": "5511985401987@s.whatsapp.net",
+            "nome_cliente": "Dival",
+            "description": "Agendamento da mentoria com a Labzflow",
+            "Email_da_agenda": "divalf@gmail.com"
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "ccdaeee2-e919-4d1e-b300-e7886a345f77",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-03-23T22:52:33.937Z",
+      "updatedAt": "2025-03-23T22:52:33.937Z",
+      "id": "dmOn045yuVeVYKba",
+      "name": "labz"
+    },
+    {
+      "createdAt": "2025-04-01T02:24:01.798Z",
+      "updatedAt": "2025-04-01T02:24:01.798Z",
+      "id": "XOqxeUDFE5SFwzUw",
+      "name": "Labz_Flow"
+    }
+  ]
+}
