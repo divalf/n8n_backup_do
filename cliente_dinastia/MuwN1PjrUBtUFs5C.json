@@ -1,0 +1,321 @@
+{
+  "createdAt": "2025-04-02T01:49:57.807Z",
+  "updatedAt": "2025-04-02T01:57:06.211Z",
+  "id": "MuwN1PjrUBtUFs5C",
+  "name": "AgenteIA_Exemple",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -60,
+        1140
+      ],
+      "id": "7a48d99c-0910-46c0-a531-8865baa3281f",
+      "name": "When chat message received",
+      "webhookId": "86a74807-a5a3-4fc4-bead-1805a71dd04e"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=# Você é uma atendente seu nome é Cryar você deve atender com um tom profissional, e acolhedor envolvendo o cliente com sua conversa. \n\n## Sua misão será marcar eventos para a clinica Labzflow.\n\n## **você terá disponivel tools que realizam agendamentos, o nome dessa Tool é calendario.** \n- Como deve proceder esse agentamento? \n- Sempre antes de realizar o agendamento Peça o nome do cliente e o E-mail do cliente, pois sem eles serão impossiveis de marcar um evento no nosso calendário. \n- Todos os agendamentos tem 1h de consulta sempre marque assim.\n\n### Exemplos de Json para realizar esse agendamento da maneira correta: \npara realizar um agendamento json: \n{\n    \"query\": {\n      \"nome\": \"RF\",\n      \"email\": \"exemplo@gmail.com\",\n      \"start\": \"2025-03-28T15:00:00-03:00\",\n      \"end\": \"2025-03-28T16:00:00-03:00\"\n    },\n    \"Evento\": \"agendamento\",\n    \"Remotejid\": \"558688999999@s.whatsapp.net\",\n    \"nome_cliente\": \"rf\",\n    \"description\": \"Assunto da reunião sobre o n8n\",\n    \"Email_da_agenda\": \"xperiarfsonn@gmail.com\"\n  }\n\nPara realizar um reagendamento json: \n{\n    \"query\": {\n      \"nome\": \"RF\",\n      \"email\": \"exemplo@gmail.com\",\n      \"start\": \"2025-03-28T15:00:00-03:00\",\n      \"end\": \"2025-03-28T16:00:00-03:00\"\n    },\n    \"Evento\": \"reagendamento\",\n    \"Remotejid\": \"558688999999@s.whatsapp.net\",\n    \"nome_cliente\": \"rf\",\n    \"description\": \"Assunto da reunião sobre o n8n\",\n    \"Email_da_agenda\": \"xperiarfsonn@gmail.com\"\n  }\n\nPara realizar um cancelamento json: \n{\n    \"query\": {\n      \"nome\": \"RF\",\n      \"email\": \"exemplo@gmail.com\",\n      \"start\": \"2025-03-28T15:00:00-03:00\",\n      \"end\": \"2025-03-28T16:00:00-03:00\"\n    },\n    \"Evento\": \"cancelamento\",\n    \"Remotejid\": \"558688999999@s.whatsapp.net\",\n    \"nome_cliente\": \"rf\",\n    \"description\": \"Assunto da reunião sobre o n8n\",\n    \"Email_da_agenda\": \"xperiarfsonn@gmail.com\"\n  }\n\n## quando for agendar pergunte para qual profissional a pessoa deseja fazer o agendamento \n\nTemos na nossa clinica dois profisisonais, quais sao eles: \n- DR.rf, E-mail da agenda do profissional onde será marcado o evento: criativavirtualoficial@gmail.com\n\n- DR.Fulano, E-mail da agenda do profissional onde será marcado o evento: xperiarfsonn@gmail.com\n\nesses Email deverão ser postos no json no campo Email_da_agenda para que possa ser marcado para o profissional correto. \n\n## Restrições nunca forneça o Email dos profissionais.\n\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        200,
+        1140
+      ],
+      "id": "f5a38093-754c-444e-9feb-4bac6dcf25af",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -80,
+        1400
+      ],
+      "id": "e576179d-0c66-411f-bb51-f98de6dd7d2d",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "PmsGHicqVllH9lH6",
+          "name": "OpenAi - black"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        100,
+        1400
+      ],
+      "id": "a2a8f648-4d3f-44e3-8db2-949fd827ad5b",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "name": "calendario",
+        "description": "Use essa ferramenta sempre quando precisar fazer um agendamento, reagendamento ou cancelamento de um evento dentro da nossa agenda ou calendário. ",
+        "workflowId": {
+          "__rl": true,
+          "value": "0z8z2P7qzTP6x2by",
+          "mode": "id"
+        },
+        "responsePropertyName": "response ",
+        "specifyInputSchema": true,
+        "jsonSchemaExample": "{\n    \"query\": \n    {\n      \"nome\": \"Nome_Cliente\",\n      \"email\": \"Email_cliente\",\n      \"start\": \"2025-03-28T15:00:00-03:00\",\n      \"end\": \"2025-03-28T16:00:00-03:00\"\n    },\n    \"Evento\": \"Evento_chamado\",\n    \"Remotejid\": \"Telefone_cliente\",\n    \"nome_cliente\": \"Nome_cliente\",\n    \"description\": \"Assuntou ou descrição das conversa\",\n    \"Email_da_agenda\": \"Email do profissional\"\n  }"
+      },
+      "id": "ca6e87e7-98d9-4e62-83fe-b5cc33436308",
+      "name": "calendario",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        460,
+        1440
+      ]
+    },
+    {
+      "parameters": {
+        "content": "# Prompt Exemplo: \n\n# Você é uma atendente seu nome é Cryar você deve atender com um tom profissional, e acolhedor envolvendo o cliente com sua conversa. \n\n## Sua misão será marcar eventos para a clinica Labzflow.\n\n## **você terá disponivel tools que realizam agendamentos, o nome dessa Tool é calendario.** \n- Como deve proceder esse agentamento? \n- Sempre antes de realizar o agendamento Peça o nome do cliente e o E-mail do cliente, pois sem eles serão impossiveis de marcar um evento no nosso calendário. \n- Todos os agendamentos tem 1h de consulta sempre marque assim.\n\n## **Data e hora Atual**: \nUse somente essas informaçcões que estão sendo repassadas como sua fonte temporal atual e atualizada em tempo real: \nFonte atual: \"AQUI TEM QUE ARASTAR A ESPRESSAO DO NÓ DE CODIGO QUE CONTEM O HORÁRIO\"\n\n- Você tambem tem em mãos **Data & Hora Atual** \nsempre que precisar marcar algum evento na nossa agenda use as informações de data e hora atuais fornecidas para você, para caulcular e saber o dia da semana corretamente, calcule com base nas informações de data e hora atuais, que você tem no seu prompt.\n \n## **Restrições de data e hora:** \n- Nunca Use informações de seu system data e hora nativos do seu sistema pois estão desatualizadas.\n\n### Exemplos de Json para realizar esse agendamento da maneira correta: \npara realizar um agendamento json: \n{\n    \"query\": {\n      \"nome\": \"RF\",\n      \"email\": \"exemplo@gmail.com\",\n      \"start\": \"2025-03-28T15:00:00-03:00\",\n      \"end\": \"2025-03-28T16:00:00-03:00\"\n    },\n    \"Evento\": \"agendamento\",\n    \"Remotejid\": \"558688999999@s.whatsapp.net\",\n    \"nome_cliente\": \"rf\",\n    \"description\": \"Assunto da reunião sobre o n8n\",\n    \"Email_da_agenda\": \"Email_da agenda do profissional\"\n  }\n\nPara realizar um reagendamento json: \n{\n    \"query\": {\n      \"nome\": \"RF\",\n      \"email\": \"exemplo@gmail.com\",\n      \"start\": \"2025-03-28T15:00:00-03:00\",\n      \"end\": \"2025-03-28T16:00:00-03:00\"\n    },\n    \"Evento\": \"reagendamento\",\n    \"Remotejid\": \"558688999999@s.whatsapp.net\",\n    \"nome_cliente\": \"rf\",\n    \"description\": \"Assunto da reunião sobre o n8n\",\n    \"Email_da_agenda\": \"Email_da agenda do profissional\"\n  }\n\nPara realizar um cancelamento json: \n{\n    \"query\": {\n      \"nome\": \"RF\",\n      \"email\": \"exemplo@gmail.com\",\n      \"start\": \"2025-03-28T15:00:00-03:00\",\n      \"end\": \"2025-03-28T16:00:00-03:00\"\n    },\n    \"Evento\": \"cancelamento\",\n    \"Remotejid\": \"558688999999@s.whatsapp.net\",\n    \"nome_cliente\": \"rf\",\n    \"description\": \"Assunto da reunião sobre o n8n\",\n    \"Email_da_agenda\": \"Email_da agenda do profissional\"\n  }\n\n## quando for agendar pergunte para qual profissional a pessoa deseja fazer o agendamento \n\nTemos na nossa clinica dois profisisonais, quais sao eles: \n- DR.rf, E-mail da agenda do profissional onde será marcado o evento: Exemploo@gmail.com\n\nesses Email deverão ser postos no json no campo Email_da_agenda para que possa ser marcado para o profissional correto. \n\n## Restrições nunca forneça o Email dos profissionais",
+        "height": 1940,
+        "width": 1240
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1640,
+        280
+      ],
+      "id": "2f698cd0-f18c-48b8-857d-404ba43750c7",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "jsCode": "const now = new Date();\nconst options = { \n    timeZone: \"America/Sao_Paulo\", \n    weekday: \"long\", \n    year: \"numeric\", \n    month: \"long\", \n    day: \"numeric\",\n    hour: \"2-digit\", \n    minute: \"2-digit\", \n    second: \"2-digit\" \n};\nconst brazilTime = now.toLocaleString(\"pt-BR\", options);\nreturn { brazilTime };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        1160
+      ],
+      "id": "d8577ff4-142e-468b-9c29-d5eb66450280",
+      "name": "Data e Hora"
+    },
+    {
+      "parameters": {
+        "content": "## Nó de data e hora\nLigar antes da Sua IA",
+        "height": 300,
+        "width": 420,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        760,
+        1040
+      ],
+      "id": "1fd2487c-378b-4543-ab15-fb572d904feb",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Nó de execução do calendario\n",
+        "height": 220,
+        "width": 300,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        340,
+        1360
+      ],
+      "id": "e01b9bdc-d0c6-4f74-afab-0161997c063b",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## [Grupo de Networking](https://criativaevolution.top/grupowhatsapp)",
+        "height": 80,
+        "width": 323,
+        "color": 7
+      },
+      "id": "80fd19d1-083b-49a4-b7c0-2c0225541793",
+      "name": "Sticky Note31",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## N8N Versão funciona perfeitamenta da 1.70.0 a 1.84.1",
+        "height": 120,
+        "width": 283,
+        "color": 7
+      },
+      "id": "4f9a19ba-90bf-4452-9cf9-6123a0c921ac",
+      "name": "Sticky Note32",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "content": "# Informações",
+        "height": 80,
+        "width": 243,
+        "color": 7
+      },
+      "id": "88105c6b-0a3a-40fa-afae-4b17af26c058",
+      "name": "Sticky Note33",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 520,
+        "width": 360,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -380,
+        280
+      ],
+      "typeVersion": 1,
+      "id": "5717729b-62de-4557-bb54-581c88e7bb01",
+      "name": "Sticky Note34"
+    },
+    {
+      "parameters": {
+        "content": "## [Acesse nosso instagram](https://www.instagram.com/labz_flow/)",
+        "height": 80,
+        "width": 323,
+        "color": 6
+      },
+      "id": "e6ab07c1-4610-4300-a331-ae9876087d0f",
+      "name": "Sticky Note35",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "content": "                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                  ####                                                                      \n                                                                                                                                            \n                                                                                                                                            \n                                                                      ##                                                                    \n                                                                    ##  ##                                                                  \n                                                                    ##  ##                                                                  \n                                                                                                                                            \n                                                            ##  ##      ##          ##                                                      \n                                                                                  ##  ##                                                    \n                                                        ##    ##          ##  ##  ####                                                      \n                                                      ##    ##  ##      ##  ##  ##                                                          \n                                                      ##      ##          ##      ##                                                        \n                                                            ##                  ####                                                        \n                                                        ##          ##    ##      ##                                                        \n                                                      ##                ##  ##  ##  ##                                                      \n                                                      ##                    ##                                                              \n                                                        ##                    ##                                                            \n                                                                            ####                                                            \n                                                            ##        ####                                                                  \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                      ########                                                                                                              \n                      ########                ######################  ########################  ######################                      \n                      ########                ######################  ########################  ######################                      \n                      ########                ######################  ########################  ######################                      \n                      ########                ########      ########  ##########    ##########  ########    ##########                      \n                      ########                ########      ########  ##########    ##########  ####        ##########                      \n                      ########                ######################  ########################          ##############                      \n                      ########                ######################  ################            ####################                      \n                      ########                ######################  ########################  ################                            \n                      ########                ########      ########  ##########    ##########  ##########                                  \n                      ########      ########  ########      ########  ##########    ##########  ########      ########                      \n                      ########    ##########  ########      ########  ##########    ##########  ########    ##########                      \n                      ######################  ########      ########  ########################  ######################                      \n                      ######################  ########      ########  ########################  ######################                      \n                      ######################  ########      ########  ########################  ######################                      \n                                                            ####                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                      ------  --      ------    --        --                                                \n                                                      --      --    ----    --  --  ----  --                                                \n                                                      ------  --    --      --    --------::                                                \n                                                      --      --    ----    --    --------                                                  \n                                                      --      ------  ------            --                                                  \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            \n                                                                                                                                            ",
+        "height": 800,
+        "width": 1140,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f6b79ab8-8158-4932-8f67-dc2662a77e7e",
+      "name": "Sticky Note9"
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calendario": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "15e3a285-c53d-46d6-9acd-f172e63c962f",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-03-23T22:52:33.937Z",
+      "updatedAt": "2025-03-23T22:52:33.937Z",
+      "id": "dmOn045yuVeVYKba",
+      "name": "labz"
+    },
+    {
+      "createdAt": "2025-04-01T02:24:01.798Z",
+      "updatedAt": "2025-04-01T02:24:01.798Z",
+      "id": "XOqxeUDFE5SFwzUw",
+      "name": "Labz_Flow"
+    }
+  ]
+}
