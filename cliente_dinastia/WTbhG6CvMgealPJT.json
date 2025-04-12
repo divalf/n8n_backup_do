@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-04-11T02:35:01.736Z",
-  "updatedAt": "2025-04-11T02:35:59.106Z",
+  "updatedAt": "2025-04-11T03:15:28.028Z",
   "id": "WTbhG6CvMgealPJT",
   "name": "MCP CALENDAR - DIVAL",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -183,6 +183,6 @@
   },
   "pinData": {},
   "versionId": "64714cf0-1050-4060-8ca0-07d212b54e14",
-  "triggerCount": 0,
+  "triggerCount": 1,
   "tags": []
 }
