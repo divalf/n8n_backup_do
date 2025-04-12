@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-04-11T02:37:06.798Z",
-  "updatedAt": "2025-04-11T02:40:00.690Z",
+  "updatedAt": "2025-04-11T03:17:01.576Z",
   "id": "5iFEjHdm5mOgyDtO",
   "name": "MCP AGENDAMENTO - DIVAL",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -21,7 +21,9 @@
     },
     {
       "parameters": {
-        "options": {}
+        "options": {
+          "systemMessage": "= {{ $now.weekdayLong }},{{ $now.format('dd/MM/yyyy') }},{{ $now.hour.toString().padStart(2, '0') }}:{{ $now.minute.toString().padStart(2, '0') }}"
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.8,
@@ -59,7 +61,7 @@
     },
     {
       "parameters": {
-        "contextWindowLength": 10
+        "contextWindowLength": 50
       },
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
@@ -72,7 +74,7 @@
     },
     {
       "parameters": {
-        "sseEndpoint": "https://dinastia-n8n-editor.lfigsi.easypanel.host/mcp-test/mcp-calendar/sse"
+        "sseEndpoint": "https://dinastia-n8n-editor.lfigsi.easypanel.host/mcp/mcp-calendar/sse"
       },
       "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
       "typeVersion": 1,
@@ -138,7 +140,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "c29db703-0ef7-4ed3-bcf7-98053bdf9d7b",
-  "triggerCount": 0,
+  "versionId": "406e3b5a-f609-4053-9d75-41699c285df6",
+  "triggerCount": 1,
   "tags": []
 }
